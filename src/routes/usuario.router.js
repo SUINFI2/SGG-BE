@@ -11,6 +11,16 @@ const {
 
 
 
+router.get('/findAll',
+    validatorHandler(getUsuariosSchema, 'query'),
+    async (req, res, next) => {
+        try {
+            const usuarios = await service.findAll();
+            res.json(usuarios);
+        } catch (err) {
+            next(err);
+        }
+    })
 router.get('/findOne/:usuarioId',
     validatorHandler(getUsuarioSchema, 'params'),
     async (req, res,) => {
@@ -23,16 +33,6 @@ router.get('/findOne/:usuarioId',
         }
     }
 )
-router.get('/findAll',
-    validatorHandler(getUsuariosSchema, 'query'),
-    async (req, res, next) => {
-        try {
-            const usuarios = await service.findAll();
-            res.json(usuarios);
-        } catch (err) {
-            next(err);
-        }
-    })
 router.post('/',
     validatorHandler(createUsuarioSchema, 'body'),
     async (req, res, next) => {
@@ -77,4 +77,5 @@ router.delete('/:usuarioId',
         } catch (err) {
             next(err);
         }
-    })  
+    })
+module.exports = router;
