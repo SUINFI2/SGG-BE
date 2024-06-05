@@ -11,16 +11,16 @@ User.belongsTo(Role, { foreignKey: "id_rol" });
 Role.hasMany(User, { foreignKey: "id_rol" });
 
 // Table and User relationship
-Table.belongsTo(User, { as: "mozo", foreignKey: "id_usuario" });
-User.hasMany(Table, { foreignKey: "id_usuario" });
+Table.belongsTo(User, { foreignKey: "id_user" });
+User.hasMany(Table, { foreignKey: "id_user" });
 
 // Table and State relationship
-Table.belongsTo(State, { foreignKey: "id_estado" });
-State.hasMany(Table, { foreignKey: "id_estado" });
+Table.belongsTo(State, { foreignKey: "id_state" });
+State.hasMany(Table, { foreignKey: "id_state" });
 
 // Order and User relationship
-Order.belongsTo(User, { foreignKey: "id_usuario" });
-User.hasMany(Order, { foreignKey: "id_usuario" });
+Order.belongsTo(User, { foreignKey: "id_user" });
+User.hasMany(Order, { foreignKey: "id_user" });
 
 // Order and Table relationship
 Order.belongsTo(Table, { foreignKey: "id_mesa" });

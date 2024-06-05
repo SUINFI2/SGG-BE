@@ -1,11 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
   const State = sequelize.define("State", {
-    id_estado: {
+    id_state: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    nombre: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
