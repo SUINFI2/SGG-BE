@@ -7,14 +7,14 @@ const {
     getEstadoSchema,
     getEstadosSchema
 } = require('../schemas/estado.schema');
-
+const { create, findAll, findOne, remove, update } = require('../services/estado.services');
 
 
 router.get('/findAll',
     validatorHandler(getEstadosSchema, 'query'),
     async (req, res, next) => {
         try {
-            const estados = await service.findAll();
+            const estados = await findAll();
             res.json(estados);
         } catch (err) {
             next(err);
@@ -26,7 +26,7 @@ router.get('/findOne/:estadoId',
     async (req, res, next) => {
         try {
             const { estadoId } = req.params;
-            const estado = await service.findOne(estadoId);
+            const estado = await findOne(estadoId);
             res.json(estado);
         } catch (err) {
             next(err);
@@ -37,7 +37,7 @@ router.post('/',
     async (req, res, next) => {
         try {
             const body = req.body;
-            const newEstado = await service.create(body);
+            const newEstado = await create(body);
             res.json({
                 message: 'created',
                 data: newEstado
@@ -53,7 +53,7 @@ router.patch('/:estadoId',
         try {
             const { estadoId } = req.params;
             const body = req.body;
-            const estado = await service.update(estadoId, body);
+            const estado = await update(estadoId, body);
             res.json({
                 message: 'updated',
                 data: estado
@@ -68,10 +68,10 @@ router.delete('/:estadoId',
     async (req, res, next) => {
         try {
             const { estadoId } = req.params;
-            const estado = await service.delete(estadoId);
+            const delEstado = await remove(estadoId);
             res.json({
                 message: 'deleted',
-                data: estado
+                data: delEstado
             })
         } catch (err) {
             next(err);

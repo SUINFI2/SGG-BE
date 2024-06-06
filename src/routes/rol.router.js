@@ -2,44 +2,74 @@ const express = require('express');
 const router = express.Router();
 const validatorHandler = require('../middleware/validator.handler');
 const {
-    createMesaSchema,
-    updateMesaSchema,
-    getMesaSchema,
-    getMesasSchema
-} = require('../schemas/mesa.schema');
-
+    createRolSchema,
+    updateRolSchema,
+    getRolSchema,
+    getRolesSchema
+} = require('../schemas/rol.schema');
+const { findAll, findOne, create, update, remove } = require('../services/rol.services')
 
 router.get('/findAll',
-    validatorHandler(getMesasSchema, 'query'),
+    validatorHandler(getRolesSchema, 'query'),
     async (req, res, next) => {
         try {
-            const mesas = await service.findAll();
-            res.json(mesas);
+            const Roles = await findAll();
+            res.json(Roles);
         } catch (err) {
             next(err);
         }
     })
-router.get('/findOne/:mesaId',
-    validatorHandler(getMesaSchema, 'params'),
+router.get('/findOne/:rolId',
+    validatorHandler(getRolSchema, 'params'),
     async (req, res, next) => {
         try {
-            const { mesaId } = req.params;
-            const mesa = await service.findOne(mesaId);
-            res.json(mesa);
+            const { rolId } = req.params;
+            const Rol = await findOne(rolId);
+            res.json(Rol);
         } catch (err) {
             next(err);
         }
     })
 
 router.post('/',
-    validatorHandler(createMesaSchema, 'body'),
+    validatorHandler(createRolSchema, 'body'),
     async (req, res, next) => {
         try {
             const body = req.body;
-            const newMesa = await service.create(body);
+            const newRol = await create(body);
             res.json({
                 message: 'created',
-                data: newMesa
+                data: newRol
+            })
+        } catch (err) {
+            next(err);
+        }
+    })
+router.patch('/:rolId',
+    validatorHandler(getRolSchema, 'params'),
+    validatorHandler(updateRolSchema, 'body'),
+    async (req, res, next) => {
+        try {
+            const { mesaId } = req.params;
+            const body = req.body;
+            const mesa = await update(rolId, body);
+            res.json({
+                message: 'updated',
+                data: mesa
+            })
+        } catch (err) {
+            next(err);
+        }
+    })
+router.delete('/:rolId',
+    validatorHandler(getRolSchema, 'params'),
+    async (req, res, next) => {
+        try {
+            const { rolId } = req.params;
+            const delRol = await remove(rolId);
+            res.json({
+                message: 'deleted',
+                data: delRol
             })
         } catch (err) {
             next(err);

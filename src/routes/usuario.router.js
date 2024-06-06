@@ -7,6 +7,7 @@ const {
     getUsuarioSchema,
     getUsuariosSchema
 } = require('../schemas/usuario.Schema');
+const { create, findAll, findOne, remove, update } = require('../services/usuario.services');
 
 
 
@@ -15,7 +16,7 @@ router.get('/findAll',
     validatorHandler(getUsuariosSchema, 'query'),
     async (req, res, next) => {
         try {
-            const usuarios = await service.findAll();
+            const usuarios = await findAll();
             res.json(usuarios);
         } catch (err) {
             next(err);
@@ -26,7 +27,7 @@ router.get('/findOne/:usuarioId',
     async (req, res,) => {
         try {
             const { usuarioId } = req.params;
-            const usuario = await service.findOne(usuarioId);
+            const usuario = await findOne(usuarioId);
             res.json(usuario);
         } catch (err) {
             next(err);
@@ -38,7 +39,7 @@ router.post('/',
     async (req, res, next) => {
         try {
             const body = req.body;
-            const newUsuario = await service.create(body);
+            const newUsuario = await create(body);
             res.json({
                 message: 'created',
                 data: newUsuario
@@ -55,7 +56,7 @@ router.patch('/:usuarioId',
         try {
             const { usuarioId } = req.params;
             const body = req.body;
-            const usuario = await service.update(usuarioId, body);
+            const usuario = await update(usuarioId, body);
             res.json({
                 message: 'updated',
                 data: usuario
@@ -69,7 +70,7 @@ router.delete('/:usuarioId',
     async (req, res, next) => {
         try {
             const { usuarioId } = req.params;
-            const delUsuario = await service.delete(usuarioId);
+            const delUsuario = await remove(usuarioId);
             res.json({
                 message: 'deleted',
                 data: delUsuario

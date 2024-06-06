@@ -7,12 +7,13 @@ const {
     getPedidoSchema,
     getPedidosSchema
 } = require('../schemas/pedido.schema');
+const { findAll, findOne, create, update, remove } = require('../services/pedido.services');
 
 router.get('/findAll',
     validatorHandler(getPedidosSchema, 'query'),
     async (req, res, next) => {
         try {
-            const pedidos = await service.findAll();
+            const pedidos = await findAll();
             res.json(pedidos);
         } catch (err) {
             next(err);
@@ -24,7 +25,7 @@ router.get('/findOne/:pedidoId',
     async (req, res, next) => {
         try {
             const { pedidoId } = req.params;
-            const pedido = await service.findOne(pedidoId);
+            const pedido = await findOne(pedidoId);
             res.json(pedido);
         } catch (err) {
             next(err);
@@ -36,7 +37,7 @@ router.post('/',
     async (req, res, next) => {
         try {
             const body = req.body;
-            const newPedido = await service.create(body);
+            const newPedido = await create(body);
             res.json({
                 message: 'created',
                 data: newPedido
@@ -53,7 +54,7 @@ router.patch('/:pedidoId',
         try {
             const { pedidoId } = req.params;
             const body = req.body;
-            const pedido = await service.update(pedidoId, body);
+            const pedido = await update(pedidoId, body);
             res.json({
                 message: 'updated',
                 data: pedido
@@ -68,7 +69,7 @@ router.delete('/:pedidoId',
     async (req, res, next) => {
         try {
             const { pedidoId } = req.params;
-            const pedido = await service.delete(pedidoId);
+            const pedido = await remove(pedidoId);
             res.json({
                 message: 'deleted',
                 data: pedido
