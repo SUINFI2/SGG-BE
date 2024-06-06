@@ -7,8 +7,10 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const validatorHandler = require("../middleware/validator.handler");
 const { registerSchema, loginSchema } = require("../schemas/auth.schema");
-const AuthService = require("../services/auth.services");
-const service = new AuthService();
+const { register, login } = require("../services/auth.services");
+
+
+
 
 router.post(
   "/register",
@@ -16,7 +18,7 @@ router.post(
   async (req, res, next) => {
     try {
       const body = req.body;
-      const newUser = await service.register(body);
+      const newUser = await register(body);
       res.json({
         message: "user registered",
       });
@@ -34,7 +36,7 @@ router.post("/login", async (req, res, next) => {
     const { email, password } = req.body;
 
     // Llamar a la función de inicio de sesión del servicio de autenticación
-    const { user, token } = await service.login({ email, password });
+    const { user, token } = await login({ email, password });
 
     res.json({ user, token });
   } catch (error) {
