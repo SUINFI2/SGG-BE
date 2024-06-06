@@ -1,6 +1,7 @@
 const { User, Role } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { generateToken } = require("../helpers/jwt");
 
 // Función para registrar un usuario
 async function register(user) {
@@ -18,18 +19,17 @@ async function register(user) {
   }
 
   // Crear un nuevo usuario en la base de datos
+  const salt = bcrypt.genSaltSync();
+
   const newUser = await User.create({
     email,
-    password: bcrypt.hashSync(password, 10),
+    password: bcrypt.hashSync(password, salt),
     name,
     id_rol: 1,
   });
 
-  // Generar el token JWT
-  const token = generateToken(newUser);
-
   // Devolver el usuario y el token
-  return { user: newUser, token };
+  return { user: newUser };
 }
 
 // Función para iniciar sesión
@@ -57,27 +57,12 @@ async function login(user) {
 
   // Generar el token JWT
   const token = generateToken(existingUser);
+  console.log(token);
   // No devolver la contraseña
   existingUser.password = undefined;
 
   // Devolver el usuario y el token
   return { user: existingUser, token };
-}
-
-// Función para generar un token JWT
-function generateToken(user) {
-  const payload = {
-    id: user.id,
-    email: user.email,
-  };
-
-  const options = {
-    expiresIn: "1h", // Tiempo de expiración del token
-  };
-
-  // Firmar el token con la clave secreta
-  const token = jwt.sign(payload, "123d!@*&$%#!@#12", options);
-  return token;
 }
 
 module.exports = {

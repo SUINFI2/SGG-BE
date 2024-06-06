@@ -1,19 +1,29 @@
+const { response } = require("express");
 const jwt = require("jsonwebtoken");
-
-//middleware to validate the token
-function validateToken(req, res, next) {
-  const token = req.headers["authorization"];
+const validarJWT = (req, res = response, next) => {
+  const token = req.header("x-token");
   if (!token) {
-    return res.status(403).json({ message: "No token provided" });
+    return res.status(401).json({
+      ok: false,
+      message: "no existe el token",
+    });
   }
 
-  jwt.verify(token, "123d!@*&$%#!@#12", (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    req.userId = decoded.id;
-    next();
-  });
-}
+  try {
+    const payload = jwt.verify(token, process.env.SECRET_JWT);
+    req.uid = payload.uid;
+    req.name = payload.name;
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json({
+      ok: false,
+      message: "token no valido",
+    });
+  }
 
-module.exports = validateToken;
+  next();
+};
+
+module.exports = {
+  validarJWT,
+};

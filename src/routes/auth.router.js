@@ -9,9 +9,6 @@ const validatorHandler = require("../middleware/validator.handler");
 const { registerSchema, loginSchema } = require("../schemas/auth.schema");
 const { register, login } = require("../services/auth.services");
 
-
-
-
 router.post(
   "/register",
   validatorHandler(registerSchema, "body"),
@@ -19,8 +16,9 @@ router.post(
     try {
       const body = req.body;
       const newUser = await register(body);
-      res.json({
-        message: "user registered",
+      res.status(201).json({
+        ok: true,
+        msg: "Usuario Registrado",
       });
     } catch (err) {
       res.status(401).json({ error: err.message });
@@ -38,7 +36,12 @@ router.post("/login", async (req, res, next) => {
     // Llamar a la función de inicio de sesión del servicio de autenticación
     const { user, token } = await login({ email, password });
 
-    res.json({ user, token });
+    res.status(201).json({
+      ok: true,
+      msg: "Login Exitoso",
+      name: user,
+      token,
+    });
   } catch (error) {
     // Manejar errores de inicio de sesión
 
