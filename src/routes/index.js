@@ -8,7 +8,7 @@ const authRouter = require("./auth.router");
 
 function routes(app) {
   const router = express.Router();
-  app.use("/v1/api", router);
+  app.use("/api/v1", router);
   router.use("/usuario", usuarioRouter);
   router.use("/mesa", mesaRouter);
   router.use("/rol", rolRouter);
