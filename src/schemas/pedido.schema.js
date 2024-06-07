@@ -1,25 +1,27 @@
 const joi = require('joi');
 
 const id = joi.number().positive();
-const mesaId = joi.number().positive();
-const tipoEnvio = joi.string()
+const id_mesa = joi.number().positive();
+const typeShipping = joi.string();
+const id_user = joi.number().positive();
+
 
 const createPedidoSchema = joi.object({
-    mesaId: mesaId.required(),
-    tipoEnvio: tipoEnvio.required()
+    id_mesa: id_mesa.required(),
+    typeShipping: typeShipping.required(),
+    id_user: id_user.required()
 })
 
-
 const updatePedidoSchema = joi.object({
-    mesaId: mesaId,
-    tipoEnvio: tipoEnvio
+    id_mesa: id_mesa,
+    typeShipping: typeShipping
 })
 const getPedidoSchema = joi.object({
     pedidoId: id.required()
 })
 
 const getPedidosSchema = joi.object({
-    mesaId: mesaId
+    id_mesa: id_mesa
 })
 module.exports = {
     createPedidoSchema,

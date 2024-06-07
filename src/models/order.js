@@ -5,10 +5,6 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
     id_user: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -17,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    typeShipping: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    }
   });
   return Order;
 };

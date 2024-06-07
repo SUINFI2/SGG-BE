@@ -1,22 +1,20 @@
 const joi = require('joi');
 
 const id = joi.number().positive();
-const nombre = joi.string();
+const name = joi.string();
 
 const createEstadoSchema = joi.object({
-    nombre: nombre.required()
+    name: name.required()
 })
 
 const updateEstadoSchema = joi.object({
-    nombre: nombre
+    name: name
 })
 const getEstadoSchema = joi.object({
     estadoId: id.required()
 })
 
 const getEstadosSchema = joi.object({
-    limit: id.required(),
-    offset: id.required()
 })
 module.exports = {
     createEstadoSchema,

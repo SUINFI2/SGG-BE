@@ -11,17 +11,26 @@ async function findAll() {
     return response;
 }
 async function findOne(id) {
-    const response = await models.User.findByPk(id, {
-        include: [{
-            Association: 'role',
-            attributes: ['name', 'role_id']
-        }],
-    });
-    if (!response) {
-        throw boom.notFound('Usuario not found');
+    try {
+        const response = await models.User.findByPk(id, {
+            include: [{
+                model: models.Role,
+                attributes: ['name', 'id_rol']
+            }],
+        });
+
+        if (!response) {
+            throw boom.notFound('Usuario not found');
+        }
+
+        return response;
+    } catch (error) {
+        console.error('Error finding user:', error);
+        throw error;
     }
-    return response;
 }
+
+
 async function create(data) {
     const response = await models.User.create(data);
     if (!response) {
@@ -30,6 +39,7 @@ async function create(data) {
     return response;
 }
 async function update(id, body) {
+    console.log(id, body)
     const response = await models.User.update(body, {
         where: { id_user: id }
     });

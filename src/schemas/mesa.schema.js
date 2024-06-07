@@ -1,30 +1,29 @@
 const joi = require('joi');
 
 const id = joi.number().integer();
-const numeroMesa = joi.number().integer();
-const estadoId = joi.number().integer();
-const usuarioId = joi.number().integer();
+const number = joi.number().integer();
+const id_state = joi.number().integer();
+const id_user = joi.number().integer();
 const limit = joi.number().integer();
 const offset = joi.number().integer();
 
 const createMesaSchema = joi.object({
-    numeroMesa: numeroMesa.required(),
-    estadoId: estadoId.required(),
-    usuarioId: usuarioId.required()
+    number: number.required(),
+    id_state: id_state.required(),
+    id_user: id_user.required()
 })
 
 const updateMesaSchema = joi.object({
-    numeroMesa: numeroMesa,
-    estadoId: estadoId,
-    usuarioId: usuarioId
+    number: number,
+    id_state: id_state,
+    id_user: id_user
 })
 
 const getMesaSchema = joi.object({
     mesaId: id.required()
 })
 const getMesasSchema = joi.object({
-    limit: limit.required(),
-    offset: offset.required()
+
 })
 
 module.exports = {

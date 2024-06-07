@@ -30,7 +30,8 @@ router.get(
 router.get(
   "/:usuarioId",
   validatorHandler(getUsuarioSchema, "params"),
-  async (req, res) => {
+  async (req, res, next) => {
+    console.log("req.params", req.params);
     try {
       const { usuarioId } = req.params;
       const usuario = await findOne(usuarioId);

@@ -1,21 +1,23 @@
 const joi = require('joi');
 
 const id = joi.number().integer();
-const nombre = joi.string().min(3).max(50);
+const name = joi.string().min(3).max(50);
+const limit = joi.number().integer();
+const offset = joi.number().integer();
 
 
 const createRolSchema = joi.object({
-    nombre: nombre.required()
+    name: name.required()
 })
 const updateRolSchema = joi.object({
-    nombre: nombre
+    nombre: name
 })
 const getRolSchema = joi.object({
     rolId: id.required()
 })
 const getRolesSchema = joi.object({
-    limit: id.required(),
-    offset: id.required()
+    limit,
+    offset
 })
 
 module.exports = {

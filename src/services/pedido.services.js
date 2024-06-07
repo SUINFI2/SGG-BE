@@ -6,11 +6,11 @@ async function findAll() {
     const response = await models.Order.findAll({
         include: [
             {
-                Association: 'User',
+                model: models.User,
                 attributes: ['id_user', 'name']
             },
             {
-                Association: 'Table',
+                model: models.Table,
                 attributes: ['id_mesa']
             }
         ]
@@ -24,11 +24,11 @@ async function findOne(id) {
     const response = await models.Order.findByPk(id, {
         include: [
             {
-                Association: 'User',
+                model: models.User,
                 attributes: ['id_user', 'name']
             },
             {
-                Association: 'Table',
+                model: models.Table,
                 attributes: ['id_mesa']
             }
         ]

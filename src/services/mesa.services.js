@@ -4,63 +4,63 @@ const { Association } = require('sequelize');
 
 
 async function findAll() {
-    const response = await models.State.findAll({
+    const response = await models.Table.findAll({
         include: [
             {
-                Association: 'User',
+                model: models.User,
                 attributes: ['id_user', 'name']
             },
             {
-                Association: 'State',
+                model: models.State,
                 attributes: ['name']
             }
         ],
     });
     if (!response) {
-        throw boom.notFound('Mesa not found');
+        throw boom.notFound('Table not found');
     }
     return response;
 }
 async function findOne(id) {
-    const response = await models.State.findByPk(id, {
+    const response = await models.Table.findByPk(id, {
         include: [
             {
-                Association: 'User',
+                model: models.User,
                 attributes: ['id_user', 'name']
             },
             {
-                Association: 'State',
+                model: models.State,
                 attributes: ['name']
             }
         ],
     });
     if (!response) {
-        throw boom.notFound('State not found');
+        throw boom.notFound('Table not found');
     }
     return response;
 }
 async function create(data) {
-    const response = await models.State.create(data);
+    const response = await models.Table.create(data);
     if (!response) {
-        throw boom.badRequest('State not created');
+        throw boom.badRequest('Table not created');
     }
     return response;
 }
 async function update(id, body) {
-    const response = await models.State.update(body, {
-        where: { id_state: id }
+    const response = await models.Table.update(body, {
+        where: { id_mesa: id }
     });
     if (response[0] === 0) {
-        throw boom.badRequest('State not updated');
+        throw boom.badRequest('Table not updated');
     }
     return response;
 }
 async function remove(id) {
-    const response = await models.State.destroy({
-        where: { id_state: id }
+    const response = await models.Table.destroy({
+        where: { id_mesa: id }
     });
     if (!response) {
-        throw boom.badRequest('State not deleted');
+        throw boom.badRequest('Table not deleted');
     }
     return response;
 
