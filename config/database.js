@@ -1,7 +1,5 @@
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
-const sequelize = new Sequelize(
-  "mysql://userDBGG:Oov1jWNqkiWzKIcXd4so@191.101.234.60:3306/BDSGG"
-);
+const sequelize = new Sequelize(process.env.DATABASE_URL);
 
 module.exports = sequelize;
