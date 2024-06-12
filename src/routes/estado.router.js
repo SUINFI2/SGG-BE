@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
+const { validarJWT } = require("../middleware/validateToken");
 const {
   createEstadoSchema,
   updateEstadoSchema,
@@ -17,6 +18,7 @@ const {
 
 router.get(
   "/",
+  validarJWT,
   validatorHandler(getEstadosSchema, "query"),
   async (req, res, next) => {
     try {
@@ -30,6 +32,7 @@ router.get(
 
 router.get(
   "/:estadoId",
+  validarJWT,
   validatorHandler(getEstadoSchema, "params"),
   async (req, res, next) => {
     try {
@@ -43,6 +46,7 @@ router.get(
 );
 router.post(
   "/",
+  validarJWT,
   validatorHandler(createEstadoSchema, "body"),
   async (req, res, next) => {
     try {
@@ -59,6 +63,7 @@ router.post(
 );
 router.patch(
   "/:estadoId",
+  validarJWT,
   validatorHandler(getEstadoSchema, "params"),
   validatorHandler(updateEstadoSchema, "body"),
   async (req, res, next) => {
@@ -78,6 +83,7 @@ router.patch(
 
 router.delete(
   "/:estadoId",
+  validarJWT,
   validatorHandler(getEstadoSchema, "params"),
   async (req, res, next) => {
     try {

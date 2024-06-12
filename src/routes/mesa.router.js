@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
+const { validarJWT } = require("../middleware/validateToken");
 const {
   createMesaSchema,
   updateMesaSchema,
@@ -14,8 +15,10 @@ const {
   remove,
   update,
 } = require("../services/mesa.services");
+
 router.get(
   "/",
+  validarJWT,
   validatorHandler(getMesasSchema, "query"),
   async (req, res, next) => {
     try {
@@ -29,6 +32,7 @@ router.get(
 
 router.get(
   "/:mesaId",
+  validarJWT,
   validatorHandler(getMesaSchema, "params"),
   async (req, res, next) => {
     try {
@@ -44,6 +48,7 @@ router.get(
 router.post(
   "/",
   validatorHandler(createMesaSchema, "body"),
+  validarJWT,
   async (req, res, next) => {
     try {
       const body = req.body;
@@ -60,6 +65,7 @@ router.post(
 
 router.patch(
   "/:mesaId",
+  validarJWT,
   validatorHandler(getMesaSchema, "params"),
   validatorHandler(updateMesaSchema, "body"),
   async (req, res, next) => {
@@ -79,6 +85,7 @@ router.patch(
 
 router.delete(
   "/:mesaId",
+  validarJWT,
   validatorHandler(getMesaSchema, "params"),
   async (req, res, next) => {
     try {
@@ -89,6 +96,7 @@ router.delete(
         data: delMesa,
       });
     } catch (err) {
+      console.log(err)
       next(err);
     }
   }

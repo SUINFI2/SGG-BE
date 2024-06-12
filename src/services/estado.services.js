@@ -32,14 +32,23 @@ async function update(id, body) {
     return response;
 }
 async function remove(id) {
-    const response = await models.State.destroy({
-        where: { id_state: id }
-    });
-    if (!response) {
-        throw boom.badRequest('State not deleted');
-    }
-    return response;
+    try {
+        const state = await models.State.findByPk(id);
+        if (!state) {
+            throw boom.notFound('State not found');
+        }
 
+        const response = await models.State.destroy({
+            where: { id_state: id }
+        });
+        if (!response) {
+            throw boom.badRequest('State not deleted');
+        }
+        return response;
+    } catch (error) {
+        console.error('Error in remove function:', error);
+        throw error;
+    }
 }
 module.exports = {
     findAll,

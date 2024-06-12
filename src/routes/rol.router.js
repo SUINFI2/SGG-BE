@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
+const { validarJWT } = require("../middleware/validateToken");
 const {
   createRolSchema,
   updateRolSchema,
@@ -17,6 +18,7 @@ const {
 
 router.get(
   "/",
+  validarJWT,
   validatorHandler(getRolesSchema, "query"),
   async (req, res, next) => {
     try {
@@ -29,6 +31,7 @@ router.get(
 );
 router.get(
   "/:rolId",
+  validarJWT,
   validatorHandler(getRolSchema, "params"),
   async (req, res, next) => {
     try {
@@ -43,6 +46,7 @@ router.get(
 
 router.post(
   "/",
+  validarJWT,
   validatorHandler(createRolSchema, "body"),
   async (req, res, next) => {
     try {
@@ -59,6 +63,7 @@ router.post(
 );
 router.patch(
   "/:rolId",
+  validarJWT,
   validatorHandler(getRolSchema, "params"),
   validatorHandler(updateRolSchema, "body"),
   async (req, res, next) => {
@@ -77,6 +82,7 @@ router.patch(
 );
 router.delete(
   "/:rolId",
+  validarJWT,
   validatorHandler(getRolSchema, "params"),
   async (req, res, next) => {
     try {

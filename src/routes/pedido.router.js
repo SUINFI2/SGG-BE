@@ -14,9 +14,11 @@ const {
   update,
   remove,
 } = require("../services/pedido.services");
+const { validarJWT } = require("../middleware/validateToken");
 
 router.get(
   "/",
+  validarJWT,
   validatorHandler(getPedidosSchema, "query"),
   async (req, res, next) => {
     try {
@@ -30,6 +32,7 @@ router.get(
 
 router.get(
   "/:pedidoId",
+  validarJWT,
   validatorHandler(getPedidoSchema, "params"),
   async (req, res, next) => {
     try {
@@ -44,6 +47,7 @@ router.get(
 
 router.post(
   "/",
+  validarJWT,
   validatorHandler(createPedidoSchema, "body"),
   async (req, res, next) => {
     try {
@@ -61,6 +65,7 @@ router.post(
 
 router.patch(
   "/:pedidoId",
+  validarJWT,
   validatorHandler(getPedidoSchema, "params"),
   validatorHandler(updatePedidoSchema, "body"),
   async (req, res, next) => {
@@ -80,6 +85,7 @@ router.patch(
 
 router.delete(
   "/:pedidoId",
+  validarJWT,
   validatorHandler(getPedidoSchema, "params"),
   async (req, res, next) => {
     try {

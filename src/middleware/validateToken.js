@@ -1,11 +1,22 @@
 const { response } = require("express");
 const jwt = require("jsonwebtoken");
+
 const validarJWT = (req, res = response, next) => {
-  const token = req.header("x-token");
+  const authHeader = req.header("Authorization");
+  console.log(authHeader)
+  if (!authHeader) {
+    return res.status(401).json({
+      ok: false,
+      message: "No existe el token",
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+
   if (!token) {
     return res.status(401).json({
       ok: false,
-      message: "no existe el token",
+      message: "Formato de token no válido",
     });
   }
 
@@ -17,7 +28,7 @@ const validarJWT = (req, res = response, next) => {
     console.log(error);
     return res.status(401).json({
       ok: false,
-      message: "token no valido",
+      message: "Token no válido",
     });
   }
 

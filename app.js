@@ -7,6 +7,7 @@ const passport = require("passport");
 const session = require("express-session");
 const { sequelize } = require("./src/models");
 const port = process.env.PORT || 3000;
+const morgan = require('morgan');
 
 dotenv.config();
 app.use(bodyParser.json());
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 routerApi(app);
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(morgan("dev"));
 
 // Verificar la conexión a la base de datos
 sequelize
