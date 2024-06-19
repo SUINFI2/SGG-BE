@@ -7,7 +7,7 @@ const passport = require("passport");
 const session = require("express-session");
 const { sequelize } = require("./src/models");
 const port = process.env.PORT || 3000;
-const morgan = require('morgan');
+const morgan = require("morgan");
 
 dotenv.config();
 app.use(bodyParser.json());
@@ -16,7 +16,10 @@ routerApi(app);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(morgan("dev"));
-
+//cors
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+});
 // Verificar la conexión a la base de datos
 sequelize
   .authenticate()
