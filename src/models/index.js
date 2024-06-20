@@ -6,6 +6,7 @@ const Role = require("./role")(sequelize, DataTypes);
 const Table = require("./table")(sequelize, DataTypes);
 const Order = require("./order")(sequelize, DataTypes);
 const State = require("./state")(sequelize, DataTypes);
+const workday = require("./workday")(sequelize, DataTypes);
 // User and Role relationship
 User.belongsTo(Role, { foreignKey: "id_rol" });
 Role.hasMany(User, { foreignKey: "id_rol" });
@@ -26,6 +27,10 @@ User.hasMany(Order, { foreignKey: "id_user" });
 Order.belongsTo(Table, { foreignKey: "id_mesa" });
 Table.hasMany(Order, { foreignKey: "id_mesa" });
 
+//user and workday relationship
+User.hasMany(workday, { foreignKey: "id_user" });
+workday.belongsTo(User, { foreignKey: "id_user" });
+
 module.exports = {
   sequelize,
   User,
@@ -33,4 +38,5 @@ module.exports = {
   Table,
   Order,
   State,
+  workday,
 };
