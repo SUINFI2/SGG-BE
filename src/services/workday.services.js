@@ -40,7 +40,6 @@ const getWorkday = async (userId) => {
         id_user: userId,
         isActive: true,
       },
-
       include: [
         {
           model: models.User,

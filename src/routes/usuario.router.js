@@ -7,7 +7,7 @@ const {
   updateUsuarioSchema,
   getUsuarioSchema,
   getUsuariosSchema,
-} = require("../schemas/usuario.Schema");
+} = require("../schemas/usuario.schema");
 const {
   create,
   findAll,
