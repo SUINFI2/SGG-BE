@@ -8,6 +8,7 @@ const session = require("express-session");
 const { sequelize } = require("./src/models");
 const port = process.env.PORT || 3000;
 const morgan = require("morgan");
+const cors = require("cors");
 
 dotenv.config();
 app.use(bodyParser.json());
@@ -17,9 +18,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(morgan("dev"));
 //cors
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-});
+// Configurar CORS
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
 // Verificar la conexión a la base de datos
 sequelize
   .authenticate()
