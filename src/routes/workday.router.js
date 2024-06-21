@@ -23,9 +23,9 @@ router.post("/start", validarJWT, async (req, res, next) => {
 });
 
 router.post("/end", validarJWT, async (req, res, next) => {
-  const { workdayId } = req.body;
+  const { userId } = req.body;
   try {
-    const workday = await endWorkday(workdayId);
+    const workday = await endWorkday(userId);
 
     if (!workday) {
       return res.status(400).json({

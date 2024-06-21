@@ -18,15 +18,25 @@ const createWorkday = async (userId) => {
   }
 };
 
-const endWorkday = async (workdayId) => {
+const endWorkday = async (userId) => {
   try {
-    const workday = await models.workday.findByPk(workdayId);
-    if (workday && workday.isActive) {
-      workday.end_time = new Date();
-      workday.isActive = false;
-      await workday.save();
-      return workday;
+    const workday = await models.workday.findOne({
+      where: {
+        id_user: userId,
+        isActive: true,
+      },
+      order: [["start_time", "DESC"]],
+    });
+
+    if (!workday) {
+      throw new Error(`No active workday found for user ID ${userId}`);
     }
+    workday.end_time = new Date();
+    workday.isActive = false;
+
+    await workday.save();
+
+    return workday;
   } catch (error) {
     console.error("Error finding workday:", error);
     throw error;

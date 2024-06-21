@@ -9,15 +9,6 @@ const { sequelize } = require("./src/models");
 const port = process.env.PORT || 3000;
 const morgan = require("morgan");
 const cors = require("cors");
-
-dotenv.config();
-app.use(bodyParser.json());
-
-routerApi(app);
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(morgan("dev"));
-//cors
 // Configurar CORS
 app.use(
   cors({
@@ -26,6 +17,15 @@ app.use(
     credentials: true,
   })
 );
+dotenv.config();
+app.use(bodyParser.json());
+
+routerApi(app);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(morgan("dev"));
+//cors
+
 // Verificar la conexión a la base de datos
 sequelize
   .authenticate()
