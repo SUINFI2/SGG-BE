@@ -2,23 +2,21 @@ const express = require("express");
 const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
 const { validarJWT } = require("../middleware/validateToken");
-const { default: axios } = require("axios");
+const {
+  obtenerProductos,
+  obtenerProductosPaginados,
+  createProducts,
+  updateProduct,
+  deleteProduct,
+} = require("../services/productos.services");
 
-const obtenerProductos = async () => {
-  try {
-    const response = await axios.get(
-      `${process.env.BASE_URL_INVENTARIO}/negocios/findAll`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error al obtener los productos:", error);
-    throw error;
-  }
-};
-
+//obtener prodcutos
 router.get("/", async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const query = req.query.q || "";
   try {
-    const productos = await obtenerProductos();
+    const productos = await obtenerProductosPaginados(page, limit, query);
     res.status(200).json({
       ok: true,
       data: productos,
@@ -27,5 +25,41 @@ router.get("/", async (req, res) => {
     res.status(500).send("Error al obtener los productos");
   }
 });
-
+//guardar productos
+router.post("/", async (req, res) => {
+  try {
+    const body = req.body;
+    const newProducto = await createProducts(body);
+    res.status(200).json({
+      data: newProducto,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+//actualizar productos
+router.patch("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const producto = await updateProduct(id, body);
+    res.status(200).json({
+      producto,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+//eliminar productos
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const producto = await deleteProduct(id);
+    res.status(200).json({
+      producto,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = router;
