@@ -7,6 +7,7 @@ const estadoRouter = require("./estado.router");
 const authRouter = require("./auth.router");
 const workdayRouter = require("./workday.router");
 const productosRouter = require("./productos.router");
+const categoriasRouter = require("./categoria.router");
 
 function routes(app) {
   const router = express.Router();
@@ -19,6 +20,7 @@ function routes(app) {
   router.use("/auth", authRouter);
   router.use("/workday", workdayRouter);
   router.use("/productos", productosRouter);
+  router.use("/categorias", categoriasRouter);
 }
 
 module.exports = routes;
