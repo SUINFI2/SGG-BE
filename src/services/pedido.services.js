@@ -11,7 +11,11 @@ async function findAll() {
             },
             {
                 model: models.Table,
-                attributes: ['id_mesa', 'id_state', 'number']
+                attributes: ['number']
+            },
+            {
+                model: models.State,
+                attributes: ['name']
             }
         ]
     })
@@ -29,7 +33,11 @@ async function findOne(id) {
             },
             {
                 model: models.Table,
-                attributes: ['id_mesa']
+                attributes: ['number']
+            },
+            {
+                model: models.State,
+                attributes: ['name']
             }
         ]
     })

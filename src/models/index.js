@@ -31,6 +31,11 @@ Table.hasMany(Order, { foreignKey: "id_mesa" });
 User.hasMany(workday, { foreignKey: "id_user" });
 workday.belongsTo(User, { foreignKey: "id_user" });
 
+//order and state
+Order.belongsTo(State, { foreignKey: "id_state" });
+State.hasMany(Order, { foreignKey: "id_state" });
+
+
 module.exports = {
   sequelize,
   User,

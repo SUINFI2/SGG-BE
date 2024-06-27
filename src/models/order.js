@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    id_state: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     typeShipping: {
       type: DataTypes.STRING,
       allowNull: false,
