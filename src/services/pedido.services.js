@@ -11,7 +11,7 @@ async function findAll() {
             },
             {
                 model: models.Table,
-                attributes: ['id_mesa']
+                attributes: ['id_mesa', 'id_state', 'number']
             }
         ]
     })
