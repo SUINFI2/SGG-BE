@@ -7,11 +7,18 @@ const id_user = joi.number().positive();
 const id_state = joi.number().positive();
 
 
+const createItemOrderProduct = joi.object({
+    id_product: joi.number().positive(),
+    cnt: joi.number().positive(),
+    precio: joi.number().positive()
+});
+
 const createPedidoSchema = joi.object({
     id_mesa: id_mesa.required(),
     typeShipping: typeShipping.required(),
     id_user: id_user.required(),
-    id_state: id_state.required()
+    id_state: id_state.required(),
+    items: joi.array().items(createItemOrderProduct)
 })
 
 const updatePedidoSchema = joi.object({
