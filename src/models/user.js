@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   });
   return User;
 };

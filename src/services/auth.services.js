@@ -5,7 +5,7 @@ const { generateToken } = require("../helpers/jwt");
 
 // Función para registrar un usuario
 async function register(user) {
-  const { email, password, name } = user;
+  const { email, password, name, id_rol, active } = user;
 
   // Verificar si el usuario ya existe
   const existingUser = await User.findOne({
@@ -18,6 +18,7 @@ async function register(user) {
     throw new Error("User already exists");
   }
 
+
   // Crear un nuevo usuario en la base de datos
   const salt = bcrypt.genSaltSync();
 
@@ -25,8 +26,13 @@ async function register(user) {
     email,
     password: bcrypt.hashSync(password, salt),
     name,
-    id_rol: 1,
+    id_rol,
+    active
   });
+
+
+
+
 
   // Devolver el usuario y el token
   return { user: newUser };
@@ -46,6 +52,9 @@ async function login(user) {
 
   if (!existingUser) {
     throw new Error("User not found");
+  }
+  if (!existingUser.active) {
+    throw new Error("User not active");
   }
 
   // Verificar la contraseña

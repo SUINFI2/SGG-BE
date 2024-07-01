@@ -8,6 +8,8 @@ const authRouter = require("./auth.router");
 const workdayRouter = require("./workday.router");
 const productosRouter = require("./productos.router");
 const categoriasRouter = require("./categoria.router");
+const proveedorRouter = require("./proveedor.router");
+const cuentaRouter = require("./cuenta.router");
 
 function routes(app) {
   const router = express.Router();
@@ -21,6 +23,8 @@ function routes(app) {
   router.use("/workday", workdayRouter);
   router.use("/productos", productosRouter);
   router.use("/categorias", categoriasRouter);
+  router.use("/proveedor", proveedorRouter);
+  router.use("/cuentas", cuentaRouter);
 }
 
 module.exports = routes;
