@@ -1,11 +1,11 @@
-const { User, Role } = require("../models");
+const { User, Role, Sucursal } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { generateToken } = require("../helpers/jwt");
 
 // Función para registrar un usuario
 async function register(user) {
-  const { email, password, name, id_rol, active } = user;
+  const { email, password, name, id_rol, active, id_sucursal } = user;
 
   // Verificar si el usuario ya existe
   const existingUser = await User.findOne({
@@ -27,13 +27,9 @@ async function register(user) {
     password: bcrypt.hashSync(password, salt),
     name,
     id_rol,
-    active
+    active,
+    id_sucursal
   });
-
-
-
-
-
   // Devolver el usuario y el token
   return { user: newUser };
 }
@@ -47,7 +43,8 @@ async function login(user) {
     where: {
       email,
     },
-    include: [{ model: Role, attributes: ["name"] }], // Incluir el modelo de Role y seleccionar solo el atributo 'name'
+    include: [{ model: Role, attributes: ["name"] }],
+    include: [{ model: Sucursal, attributes: ["id_sucursal"] }]
   });
 
   if (!existingUser) {

@@ -8,6 +8,8 @@ const Order = require("./order")(sequelize, DataTypes);
 const State = require("./state")(sequelize, DataTypes);
 const workday = require("./workday")(sequelize, DataTypes);
 const orderProduct = require("./orderProduct")(sequelize, DataTypes);
+const Negocio = require("./negocio")(sequelize, DataTypes);
+const Sucursal = require("./sucursal")(sequelize, DataTypes);
 
 
 // User and Role relationship
@@ -39,8 +41,16 @@ Order.belongsTo(State, { foreignKey: "id_state" });
 State.hasMany(Order, { foreignKey: "id_state" });
 
 Order.hasMany(orderProduct, { foreignKey: "id_order" });
-
 orderProduct.belongsTo(Order, { foreignKey: "id_order" });
+
+// Negocio and Sucursal relationship
+Negocio.hasMany(Sucursal, { foreignKey: "id_negocio" });
+Sucursal.belongsTo(Negocio, { foreignKey: "id_negocio" });
+
+// Sucursal and User relationship
+Sucursal.hasMany(User, { foreignKey: 'id_sucursal' });
+User.belongsTo(Sucursal, { foreignKey: 'id_sucursal' });
+
 
 module.exports = {
   sequelize,

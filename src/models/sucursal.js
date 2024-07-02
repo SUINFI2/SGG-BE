@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Role = sequelize.define("Role", {
-    id: {
+  const Sucursal = sequelize.define("Sucursal", {
+    id_sucursal: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -18,5 +18,5 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
   });
-  return Role;
+  return Sucursal;
 };

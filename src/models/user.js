@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    id_sucursal: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     }
   });
   return User;
