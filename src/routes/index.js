@@ -11,6 +11,9 @@ const categoriasRouter = require("./categoria.router");
 const proveedorRouter = require("./proveedor.router");
 const cuentaRouter = require("./cuenta.router");
 
+const negocioRouter = require("./negocio.router");
+const sucursalRouter = require("./sucursal.router");
+
 function routes(app) {
   const router = express.Router();
   app.use("/api/v1", router);
@@ -25,6 +28,11 @@ function routes(app) {
   router.use("/categorias", categoriasRouter);
   router.use("/proveedor", proveedorRouter);
   router.use("/cuentas", cuentaRouter);
+
+
+  router.use("/negocios", negocioRouter);
+  router.use("/sucursales", sucursalRouter);
+
 }
 
 module.exports = routes;

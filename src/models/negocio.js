@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Role = sequelize.define("Role", {
+  const Role = sequelize.define("Negocio", {
     id: {
       type: DataTypes.STRING,
       primaryKey: true,

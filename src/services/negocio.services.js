@@ -24,6 +24,7 @@ async function generarTokenId() {
   }
 
 async function findAll() {
+
   const response = await models.Negocio.findAll();
   if (!response) {
     throw boom.notFound("Negocio not found");
@@ -44,7 +45,8 @@ async function findOne(id) {
   return response;
 }
 async function create(data) {
-    const tokenId = await this.generarTokenId();
+
+  const tokenId = await this.generarTokenId();
   const response = await models.Negocio.create({
     id: tokenId,
     ...data,
@@ -58,25 +60,27 @@ async function create(data) {
   return response;
 }
 async function update(id, body) {
+
   const negocio = await this.findOne(id);
   const response = await negocio.update(body);
   if (!response) {
     throw boom.badRequest("Negocio not updated");
   }
 
-  const rta = await apiInventario.patch(`/negocios/`, body,{params:{negocioId: id}});
-  const rta2 = await apiContable.patch(`/negocios/`, body,{params:{negocioId: id}});
+  const rta = await apiInventario.patch(`/negocios/${id}`, body);
+  const rta2 = await apiContable.patch(`/negocios/${id}`, body);
 
   return response;
 }
 async function remove(id) {
-  const negocio = await screenthis.findOne(id);
+  const negocio = await this.findOne(id);
   const response = await negocio.destroy();
   if (!response) {
     throw boom.badRequest("Negocio not deleted");
   }
   const rta = await apiInventario.delete(`/negocios/${id}`);
   const rta2 = await apiContable.delete(`/negocios/${id}`);
+  
   return response;
 }
 module.exports = {
