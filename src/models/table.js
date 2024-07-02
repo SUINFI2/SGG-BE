@@ -5,6 +5,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    id_sucursal: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     number: {
       type: DataTypes.INTEGER,
       allowNull: false,

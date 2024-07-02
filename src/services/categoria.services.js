@@ -1,6 +1,8 @@
 const { default: axios } = require("axios");
 
 const getCategories = async () => {
+    // debe colocarse una funcion proveniente de middlewares
+    
     try {
         const response = await axios.get(
             `${process.env.BASE_URL_INVENTARIO}/categorias/findAll`

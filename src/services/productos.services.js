@@ -1,6 +1,8 @@
 const { default: axios } = require("axios");
 
 const obtenerProductos = async () => {
+
+  
   try {
     const response = await axios.get(
       `${process.env.BASE_URL_INVENTARIO}/productos/findAll`

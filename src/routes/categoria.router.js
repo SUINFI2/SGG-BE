@@ -13,6 +13,7 @@ const {
 //Obtener categorias
 router.get("/", async (req, res) => {
     try {
+        // analizar el req 
         const categorias = await getCategories();
         res.status(200).json({
             ok: true,

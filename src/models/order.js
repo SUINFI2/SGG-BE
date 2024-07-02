@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    id_sucursal: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     id_mesa: {
       type: DataTypes.INTEGER,
       allowNull: false,
