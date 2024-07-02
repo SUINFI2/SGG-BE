@@ -11,10 +11,13 @@ const {
 } = require("../services/categoria.services");
 
 //Obtener categorias
-router.get("/", async (req, res) => {
+router.get("/", 
+    //validatorHandler(,'query'),
+    async (req, res) => {
     try {
+        const negocioId = req.query;
         // analizar el req 
-        const categorias = await getCategories();
+        const categorias = await getCategories(negocioId);
         res.status(200).json({
             ok: true,
             data: categorias,
