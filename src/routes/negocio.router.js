@@ -18,7 +18,7 @@ const {
 
 router.get(
   "/",
- // validarJWT,
+  validarJWT,
   validatorHandler(getNegociosSchema, "query"),
   async (req, res, next) => {
     try {

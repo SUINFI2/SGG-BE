@@ -18,7 +18,7 @@ const {
 
 router.get(
   "/",
- // validarJWT,
+  validarJWT,
   validatorHandler(getSucursalsSchema, "query"),
   async (req, res, next) => {
     try {
