@@ -60,5 +60,7 @@ module.exports = {
   Order,
   State,
   workday,
-  orderProduct
+  orderProduct,
+  Negocio,
+  Sucursal
 };
