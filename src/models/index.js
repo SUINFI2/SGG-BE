@@ -48,8 +48,8 @@ Negocio.hasMany(Sucursal, { foreignKey: "id_negocio" });
 Sucursal.belongsTo(Negocio, { foreignKey: "id_negocio" });
 
 // Sucursal and User relationship
-Sucursal.hasMany(User, { foreignKey: 'id_sucursal' });
-User.belongsTo(Sucursal, { foreignKey: 'id_sucursal' });
+//Sucursal.hasMany(User, { foreignKey: 'id_sucursal' });
+//User.belongsTo(Sucursal, { foreignKey: 'id_sucursal' });
 
 
 module.exports = {

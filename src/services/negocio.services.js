@@ -9,19 +9,25 @@ const apiContable = require("../module/apiContable");
 const { token } = require("morgan");
 
 async function generarTokenId() {
-    let tokenId;
-    let unique = false;
-  
-    while (!unique) {
-      tokenId = uuidv4(); // Genera un token único
-        const negocio = await models.Negocio.findByPk(tokenId);
-        if (!negocio) {
-          unique = true;
-        }
+  let tokenId;
+  let unique = false;
+
+
+  while (!unique) {
+    tokenId = uuidv4(); // Genera un token único
+    try {
+      const negocio = await models.Negocio.findByPk(tokenId);
+      if (!negocio) {
+        unique = true;
+      }
+    } catch (error) {
+      console.error('Error while checking unique token ID:', error);
+      throw new Error('Error while generating unique token ID');
     }
-  
-    return tokenId;
   }
+
+  return tokenId;
+}
 
 async function findAll() {
 
@@ -46,9 +52,9 @@ async function findOne(id) {
 }
 async function create(data) {
 
-  const tokenId = await this.generarTokenId();
+  const tokenId = await generarTokenId();
   const response = await models.Negocio.create({
-    id: tokenId,
+    id_negocio: tokenId,
     ...data,
   });
   if (!response) {
@@ -80,7 +86,7 @@ async function remove(id) {
   }
   const rta = await apiInventario.delete(`/negocios/${id}`);
   const rta2 = await apiContable.delete(`/negocios/${id}`);
-  
+
   return response;
 }
 module.exports = {

@@ -29,9 +29,10 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const body = req.body;
-    const newProducto = await createProducts(body);
+    //const newProducto = await createProducts(body);
     res.status(200).json({
-      data: newProducto,
+      body
+
     });
   } catch (err) {
     next(err);
