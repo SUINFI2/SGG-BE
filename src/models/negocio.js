@@ -1,6 +1,7 @@
+// Modelo de Negocio
 module.exports = (sequelize, DataTypes) => {
   const Negocio = sequelize.define("Negocio", {
-    id_negocio: {
+    id: {
       allowNull: false,
       primaryKey: true,
       unique: true,
@@ -29,6 +30,9 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: sequelize.NOW
     }
 
+  }, {
+    tableName: 'Negocios',
   });
+
   return Negocio;
 };

@@ -1,8 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Sucursal = sequelize.define("Sucursal", {
-    id_sucursal: {
+    id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
       type: DataTypes.STRING(36),
       unique: true
@@ -13,15 +12,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     direccion: {
       allowNull: false,
-      type: DataTypes.STRING(512), unique: true
-
+      type: DataTypes.STRING(512),
+      unique: true
     },
-    id_negocio: {
-      field: 'id_negocio',
+    negocioId: {
       allowNull: false,
       type: DataTypes.STRING(36),
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      field: 'negocio_id',
+      references: {
+        model: 'Negocios',
+        key: 'id'
+      }
     },
     createdAt: {
       allowNull: false,
@@ -35,6 +36,9 @@ module.exports = (sequelize, DataTypes) => {
       field: 'updated_at',
       defaultValue: sequelize.NOW
     }
+  }, {
+    tableName: 'Sucursals',
   });
+
   return Sucursal;
 };

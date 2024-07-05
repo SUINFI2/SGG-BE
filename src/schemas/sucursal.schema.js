@@ -2,7 +2,7 @@ const joi = require('joi');
 
 const id = joi.number().integer();
 const nombre = joi.string().min(3).max(50);
-const negocioId = joi.number().integer();
+const negocioId = joi.string();
 const limit = joi.number().integer();
 const offset = joi.number().integer();
 const email = joi.string().email();

@@ -5,7 +5,7 @@ const { generateToken } = require("../helpers/jwt");
 
 // Función para registrar un usuario
 async function register(user) {
-  const { email, password, name, id_rol, active } = user;
+  const { email, password, name, id_rol, active, sucursalId } = user;
 
   // Verificar si el usuario ya existe
   const existingUser = await User.findOne({
@@ -28,7 +28,7 @@ async function register(user) {
     name,
     id_rol,
     active,
-    //id_sucursal
+    sucursalId
   });
   // Devolver el usuario y el token
   return { user: newUser };
@@ -44,7 +44,7 @@ async function login(user) {
       email,
     },
     include: [{ model: Role, attributes: ["name"] }],
-    //include: [{ model: Sucursal, attributes: ["id_sucursal"] }]
+    include: [{ model: Sucursal, attributes: ["id", "nombre", "direccion"] }]
   });
 
   if (!existingUser) {

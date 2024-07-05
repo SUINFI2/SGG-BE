@@ -5,7 +5,7 @@ const obtenerProductos = async () => {
 
   try {
     const response = await axios.get(
-      `${process.env.BASE_URL_INVENTARIO}/productos/findAll`
+      `${process.env.BASE_URL_INVENTARIO}/productos/findAll/`
     );
     return response.data;
   } catch (error) {

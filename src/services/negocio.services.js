@@ -54,7 +54,7 @@ async function create(data) {
 
   const tokenId = await generarTokenId();
   const response = await models.Negocio.create({
-    id_negocio: tokenId,
+    id: tokenId,
     ...data,
   });
   if (!response) {

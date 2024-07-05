@@ -7,11 +7,31 @@ const apiInventario = require("../module/apiInventario");
 const apiContable = require("../module/apiContable");
 
 const { token } = require("morgan");
+async function generarTokenId() {
+  let tokenId;
+  let unique = false;
+
+
+  while (!unique) {
+    tokenId = uuidv4(); // Genera un token único
+    try {
+      const sucursal = await models.Sucursal.findByPk(tokenId);
+      if (!sucursal) {
+        unique = true;
+      }
+    } catch (error) {
+      console.error('Error while checking unique token ID:', error);
+      throw new Error('Error while generating unique token ID');
+    }
+  }
+
+  return tokenId;
+}
 
 
 
 async function findAll() {
-  
+
   const response = await models.Sucursal.findAll();
   if (!response) {
     throw boom.notFound("Sucursal not found");
@@ -33,12 +53,16 @@ async function findOne(id) {
 }
 async function create(data) {
 
-  const response = await models.Sucursal.create(data);
+  const tokenId = await generarTokenId();
+  const response = await models.Sucursal.create({
+    id: tokenId,
+    ...data,
+  });
   if (!response) {
-    throw boom.badRequest("Sucursal not created");
+    throw boom.badRequest("Negocio not created");
   }
-  const rta = await apiInventario.post(`/sucursal/`, response.dataValue);
-  const rta2 = await apiContable.post(`/sucursal/`, response.dataValue);
+  const rta = await apiInventario.post(`/negocios/`, response.dataValue);
+  const rta2 = await apiContable.post(`/negocios/`, response.dataValue);
 
   return response;
 }
@@ -63,7 +87,7 @@ async function remove(id) {
   }
   const rta = await apiInventario.delete(`/sucursal/${id}`);
   const rta2 = await apiContable.delete(`/sucursal/${id}`);
-  
+
   return response;
 }
 module.exports = {

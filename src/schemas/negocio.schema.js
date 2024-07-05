@@ -1,6 +1,6 @@
 const joi = require('joi');
 
-const id = joi.number().integer();
+const id = joi.string().uuid();
 const nombre = joi.string().min(3).max(50);
 const direccion = joi.string().min(3).max(50);
 
