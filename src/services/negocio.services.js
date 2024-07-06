@@ -19,6 +19,8 @@ async function generarTokenId() {
           unique = true;
         }
     }
+
+    //falta verificara con el baack de contabilidad
   
     return tokenId;
   }
@@ -47,6 +49,7 @@ async function findOne(id) {
 async function create(data) {
 
   const tokenId = await this.generarTokenId();
+
   const response = await models.Negocio.create({
     id: tokenId,
     ...data,
@@ -54,8 +57,14 @@ async function create(data) {
   if (!response) {
     throw boom.badRequest("Negocio not created");
   }
+
+
+  // definir al enviar
   const rta = await apiInventario.post(`/negocios/`, response.dataValue);
   const rta2 = await apiContable.post(`/negocios/`, response.dataValue);
+
+
+  // crear datos estandar de categorias, sucursal y deposito
 
   return response;
 }
@@ -66,7 +75,7 @@ async function update(id, body) {
   if (!response) {
     throw boom.badRequest("Negocio not updated");
   }
-
+  // propagar los cambios de los diferentes backs
   const rta = await apiInventario.patch(`/negocios/${id}`, body);
   const rta2 = await apiContable.patch(`/negocios/${id}`, body);
 
@@ -78,9 +87,12 @@ async function remove(id) {
   if (!response) {
     throw boom.badRequest("Negocio not deleted");
   }
+  // propagar en los diferentes negocios? 
   const rta = await apiInventario.delete(`/negocios/${id}`);
   const rta2 = await apiContable.delete(`/negocios/${id}`);
   
+  //implementar rollback por si ocurre un error
+
   return response;
 }
 module.exports = {

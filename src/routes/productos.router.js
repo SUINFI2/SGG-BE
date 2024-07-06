@@ -3,20 +3,23 @@ const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
 const { validarJWT } = require("../middleware/validateToken");
 const {
-  obtenerProductos,
-  obtenerProductosPaginados,
+  findAll,
   createProducts,
   updateProduct,
   deleteProduct,
 } = require("../services/productos.services");
 
+const {createProductoSchema,
+  updateProductoSchema,
+  getProductoSchema,
+  queryProductoSchema} = require('../schemas/producto.schema');
+
 //obtener prodcutos
-router.get("/", async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const query = req.query.q || "";
+router.get("/",
+  validatorHandler(queryProductoSchema, 'query'),
+  async (req, res) => {
   try {
-    const productos = await obtenerProductosPaginados(page, limit, query);
+    const productos = await findAll(req.query);
     res.status(200).json({
       ok: true,
       data: productos,
@@ -26,23 +29,32 @@ router.get("/", async (req, res) => {
   }
 });
 //guardar productos
-router.post("/", async (req, res) => {
+router.post("/", 
+  validatorHandler(createProductoSchema, "body"),
+  async (req, res) => {
   try {
     const body = req.body;
-    const newProducto = await createProducts(body);
+    const productos = await createProducts(body);
+
     res.status(200).json({
-      data: newProducto,
+      message: "product created",
+      data: {
+        creted: "creted"
+      }
     });
   } catch (err) {
     next(err);
   }
 });
 //actualizar productos
-router.patch("/:id", async (req, res) => {
+router.patch("/:productoId",
+  validatorHandler(getProductoSchema,'params'),
+  validatorHandler(updateProductoSchema,'body'),
+  async (req, res) => {
   try {
-    const { id } = req.params;
+    const { productoId } = req.params;
     const body = req.body;
-    const producto = await updateProduct(id, body);
+    const producto = await updateProduct(productoId, body);
     res.status(200).json({
       producto,
     });
@@ -51,10 +63,12 @@ router.patch("/:id", async (req, res) => {
   }
 });
 //eliminar productos
-router.delete("/:id", async (req, res) => {
+router.delete("/:productoId", 
+  validatorHandler(getProductoSchema,'params'),
+  async (req, res) => {
   try {
-    const { id } = req.params;
-    const producto = await deleteProduct(id);
+    const { productoId } = req.params;
+    const producto = await deleteProduct(productoId);
     res.status(200).json({
       producto,
     });

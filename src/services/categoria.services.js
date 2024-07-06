@@ -1,72 +1,52 @@
 const { default: axios } = require("axios");
+const apiInventario = require("../module/apiInventario");
 
-const getCategories = async () => {
-    // debe colocarse una funcion proveniente de middlewares
-    
-    try {
-        const response = await axios.get(
-            `${process.env.BASE_URL_INVENTARIO}/categorias/findAll`
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al obtener las categorias:", error);
-        throw error;
-    }
-}
+const getCategories = async (negocioId) => {
+
+  const rta = await apiInventario.get(`/categoria/findAll`,{params:{negocioId}});
+  if(!rta){
+    throw { message: "Error"};
+   }
+  return rta;
+};
 const getCategory = async (id) => {
-    try {
-        const response = await axios.get(
-            `${process.env.BASE_URL_INVENTARIO}/categorias/findOne/${id}`
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al obtener la categoria:", error);
-        throw error;
-    }
-}
+
+    const rta = await apiInventario.get(`/categoria/findOne${id}`);
+    if(!rta){
+        throw { message: "Error"};
+       }
+    return rta;
+};
 const createCategory = async (body) => {
-    try {
-        const response = await axios.post(
-            `${process.env.BASE_URL_INVENTARIO}/categorias`,
-            body
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al crear la categoria:", error);
-        throw error;
-    }
-}
+
+    const rta = await apiInventario.post(`/categoria/`,body);
+    if(!rta){
+        throw { message: "Error"};
+       }
+    return rta;
+};
 
 const EditCategory = async (id, body) => {
-    try {
-        const response = await axios.patch(
-            `${process.env.BASE_URL_INVENTARIO}/categorias/${id}`,
-            body
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al editar la categoria:", error);
-        throw error;
-    }
-}
+
+    const rta = await apiInventario.patch(`/categoria/${id}`,body);
+    if(!rta){
+        throw { message: "Error"};
+       }
+    return rta;
+};
 const deleteCategory = async (id) => {
-    try {
-        const response = await axios.delete(
-            `${process.env.BASE_URL_INVENTARIO}/categorias/${id}`
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al eliminar la categoria:", error);
-        throw error;
-    }
-}
 
-
+    const rta = await apiInventario.post(`/categoria/${id}`);
+    if(!rta){
+        throw { message: "Error"};
+       }
+    return rta;
+};
 
 module.exports = {
-    getCategories,
-    getCategory,
-    createCategory,
-    EditCategory,
-    deleteCategory
-}
+  getCategories,
+  getCategory,
+  createCategory,
+  EditCategory,
+  deleteCategory,
+};

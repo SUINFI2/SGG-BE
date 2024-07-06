@@ -3,18 +3,26 @@ const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
 const { validarJWT } = require("../middleware/validateToken");
 const {
-    getProveedor,
-    getProveedores,
+    findAll,
+    findOne,
     createProveedor,
     EditProveedor,
     deleteProveedor
 } = require("../services/proveedor.services");
 
-
+const {
+    createProveedorSchema,
+    updateProveedorSchema,
+    getProveedorSchema,
+    queryProveedorSchema
+    }=require('../schemas/proveedor.schema')
 //FindAll Proveedor
-router.get("/", async (req, res) => {
+router.get("/", 
+    validatorHandler(queryProveedorSchema,'query'),
+    async (req, res) => {
     try {
-        const proveedores = await getProveedores();
+        const {negocioId}=req.query;
+        const proveedores = await findAll(negocioId);
         res.status(200).json({
             ok: true,
             data: proveedores,
@@ -25,10 +33,13 @@ router.get("/", async (req, res) => {
 });
 
 //FindOne Proveedor
-router.get("/:id", async (req, res) => {
+router.get("/:proveedorId", 
+    validatorHandler(getProveedorSchema,'params'),
+
+    async (req, res) => {
     try {
-        const { id } = req.params;
-        const proovedor = await getProveedor(id);
+        const { proveedorId } = req.params;
+        const proovedor = await findOne(proveedorId);
         res.status(200).json({
             categoria,
         });
@@ -38,7 +49,9 @@ router.get("/:id", async (req, res) => {
 });
 
 //Create Proveedor  
-router.post("/", async (req, res) => {
+router.post("/", 
+    validatorHandler(createProveedorSchema,'body'),
+    async (req, res) => {
     try {
         const body = req.body;
         const newProveedor = await createProveedor(body);
@@ -51,11 +64,14 @@ router.post("/", async (req, res) => {
 });
 
 //Update Proveedor
-router.patch("/:id", async (req, res) => {
+router.patch("/:proveedorId", 
+    validatorHandler(getProveedorSchema,'params'),
+    validatorHandler(updateProveedorSchema,'body'),
+    async (req, res) => {
     try {
-        const { id } = req.params;
+        const { proveedorId } = req.params;
         const body = req.body;
-        const proveedor = await EditProveedor(id, body);
+        const proveedor = await EditProveedor(proveedorId, body);
         res.status(200).json({
             proveedor,
         });
@@ -65,10 +81,12 @@ router.patch("/:id", async (req, res) => {
 });
 
 //Delete Proveedor
-router.delete("/:id", async (req, res) => {
+router.delete("/:proveedorId",
+    validatorHandler(getProveedorSchema,'params'),
+    async (req, res) => {
     try {
-        const { id } = req.params;
-        const proveedor = await deleteProveedor(id);
+        const { proveedorId } = req.params;
+        const proveedor = await deleteProveedor(proveedorId);
         res.status(200).json({
             proveedor,
         });

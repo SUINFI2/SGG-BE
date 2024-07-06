@@ -6,7 +6,7 @@ const {
   createNegocioSchema,
   updateNegocioSchema,
   getNegocioSchema,
-  getNegociosSchema,
+  queryNegocioSchema,
 } = require("../schemas/negocio.schema");
 const {
   create,
@@ -19,10 +19,10 @@ const {
 router.get(
   "/",
   validarJWT,
-  validatorHandler(getNegociosSchema, "query"),
+  validatorHandler(queryNegocioSchema, "query"),
   async (req, res, next) => {
     try {
-      console.log("entro");
+      
       const Negocios = await findAll();
       res.json(Negocios);
     } catch (err) {
@@ -35,7 +35,6 @@ router.get(
   validarJWT,
   validatorHandler(getNegocioSchema, "params"),
   async (req, res, next) => {
-    console.log("req.params", req.params);
     try {
       const { negocioId } = req.params;
       const Negocio = await findOne(negocioId);

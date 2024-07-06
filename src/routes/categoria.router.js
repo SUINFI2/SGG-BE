@@ -10,13 +10,20 @@ const {
     deleteCategory
 } = require("../services/categoria.services");
 
+
+const {
+    createCategoriaSchema,
+    updateCategoriaSchema,
+    getCategoriaSchema,
+    queryCategoriaSchema
+}= require('../schemas/categoria.schema');
+
 //Obtener categorias
 router.get("/", 
-    //validatorHandler(,'query'),
+    validatorHandler(queryCategoriaSchema,'query'),
     async (req, res) => {
     try {
         const negocioId = req.query;
-        // analizar el req 
         const categorias = await getCategories(negocioId);
         res.status(200).json({
             ok: true,
@@ -27,10 +34,12 @@ router.get("/",
     }
 });
 //Obtener categoria por id
-router.get("/:id", async (req, res) => {
+router.get("/:categoriaId", 
+    validatorHandler(getCategoriaSchema,'params'),
+    async (req, res) => {
     try {
-        const { id } = req.params;
-        const categoria = await getCategory(id);
+        const { categoriaId } = req.params;
+        const categoria = await getCategory(categoriaId);
         res.status(200).json({
             categoria,
         });
@@ -39,7 +48,10 @@ router.get("/:id", async (req, res) => {
     }
 });
 //Crear categoria
-router.post("/", async (req, res) => {
+router.post("/",
+    validatorHandler(createCategoriaSchema,'body'),
+
+    async (req, res) => {
     try {
         const body = req.body;
         const newCategoria = await createCategory(body);
@@ -50,11 +62,15 @@ router.post("/", async (req, res) => {
         next(err);
     }
 });
-router.patch("/:id", async (req, res) => {
+router.patch("/:categoriaId", 
+    validatorHandler(getCategoriaSchema,'params'),
+    validatorHandler(updateCategoriaSchema,'body'),
+
+    async (req, res) => {
     try {
-        const { id } = req.params;
+        const { categoriaId } = req.params;
         const body = req.body;
-        const categoria = await EditCategory(id, body);
+        const categoria = await EditCategory(categoriaId, body);
         res.status(200).json({
             categoria,
         });
@@ -62,10 +78,12 @@ router.patch("/:id", async (req, res) => {
         next(err);
     }
 });
-router.delete("/:id", async (req, res) => {
+router.delete("/:categoriaId",
+    validatorHandler(getCategoriaSchema,'params'),
+    async (req, res) => {
     try {
-        const { id } = req.params;
-        const categoria = await deleteCategory(id);
+        const { categoriaId } = req.params;
+        const categoria = await deleteCategory(categoriaId);
         res.status(200).json({
             categoria,
         });

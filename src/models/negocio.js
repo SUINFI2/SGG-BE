@@ -1,14 +1,25 @@
 module.exports = (sequelize, DataTypes) => {
-  const Role = sequelize.define("Negocio", {
+  const Negocio = sequelize.define("Negocio", {
     id: {
       type: DataTypes.STRING,
       primaryKey: true,
+      unique: true,
+      allowNull: false
+    },
+    nombre: {
+      allowNull: false,
+      type: DataTypes.STRING(128),
       unique: true
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    direccion: {
+      allowNull: true,
+      type: DataTypes.STRING(256)
     },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: sequelize.NOW
+    }
   });
-  return Role;
+  return Negocio;
 };

@@ -1,65 +1,44 @@
 const { default: axios } = require("axios");
-
+const apiContable = require("../module/apiContable");
 const getCuentas = async () => {
-    try {
-        const response = await axios.get(
-            `${process.env.BASE_URL_CONTABLE}/cuentas/findAll`
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al obtener las cuentas:", error);
-        throw error;
-    }
+
+    const rta = await apiContable.get(`/cuentas/findAll`,{params:{negocioId}});
+    if(!rta){
+      throw { message: "Error"};
+     }
+    return rta;
 }
 
 const getCuenta = async (id) => {
-    try {
-        const response = await axios.get(
-            `${process.env.BASE_URL_CONTABLE}/cuentas/findOne/${id}`
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al obtener la cuenta:", error);
-        throw error;
-    }
+     const rta = await apiContable.get(`/cuentas/findOne/${id}`);
+  if(!rta){
+    throw { message: "Error"};
+   }
+  return rta;
 }
 
 const createCuenta = async (body) => {
-    try {
-        const response = await axios.post(
-            `${process.env.BASE_URL_CONTABLE}/cuentas/`,
-            body
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al crear la cuenta:", error);
-        throw error;
-    }
+    const rta = await apiContable.post(`/cuentas/findAll`,body);
+  if(!rta){
+    throw { message: "Error"};
+   }
+  return rta;
 }
 
 const EditCuenta = async (id, body) => {
-    try {
-        const response = await axios.patch(
-            `${process.env.BASE_URL_CONTABLE}/cuentas/${id}`,
-            body
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al editar la cuenta:", error);
-        throw error;
-    }
+    const rta = await apiContable.patch(`/cuentas/${id}`,body);
+  if(!rta){
+    throw { message: "Error"};
+   }
+  return rta;
 }
 
 const deleteCuenta = async (id) => {
-    try {
-        const response = await axios.delete(
-            `${process.env.BASE_URL_CONTABLE}/cuentas/${id}`
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error al eliminar la cuenta:", error);
-        throw error;
-    }
+    const rta = await apiContable.delete(`/cuentas/${id}`);
+    if(!rta){
+      throw { message: "Error"};
+     }
+    return rta;
 }
 
 module.exports = {

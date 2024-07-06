@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "migrations:generate": "sequelize-cli migration:generate --name",
+    "migrations:run": "sequelize-cli db:migrate",
+    "migrations:revert": "sequelize-cli db:migrate:undo",
+    "migrations:delete": "sequelize-cli db:migrate:undo:all"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +30,7 @@
     "mysql2": "^3.9.9",
     "passport": "^0.7.0",
     "sequelize": "^6.37.3",
+    "sequelize-cli": "^6.6.2",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

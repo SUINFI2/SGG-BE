@@ -8,12 +8,19 @@ const {
     EditCuenta,
     deleteCuenta
 } = require("../services/cuenta.services");
-
+const {
+    createCuentaSchema,
+    updateCuentaSchema,
+    getCuentaSchema,
+    queryCuentaSchema
+} = require("../schemas/cuenta.schema");
 
 //FindAll Cuenta
-router.get("/", async (req, res) => {
+router.get("/",
+    validatorHandler(queryCuentaSchema,'query'),
+    async (req, res) => {
     try {
-        const cuentas = await getCuentas();
+        const cuentas = await getCuentas(req.query);
         res.status(200).json({
             ok: true,
             data: cuentas,
@@ -24,10 +31,12 @@ router.get("/", async (req, res) => {
 });
 
 //FindOne Cuenta
-router.get("/:id", async (req, res) => {
+router.get("/:cuentaId", 
+    validatorHandler(getCuentaSchema,'params'),
+    async (req, res) => {
     try {
-        const { id } = req.params;
-        const cuenta = await getCuenta(id);
+        const { cuentaId } = req.params;
+        const cuenta = await getCuenta(cuentaId);
         res.status(200).json({
             cuenta,
         });
@@ -37,7 +46,9 @@ router.get("/:id", async (req, res) => {
 });
 
 //Create Cuenta
-router.post("/", async (req, res) => {
+router.post("/",
+    validatorHandler(createCuentaSchema,'body'),
+    async (req, res) => {
     try {
         const body = req.body;
         const newCuenta = await createCuenta(body);
@@ -50,11 +61,14 @@ router.post("/", async (req, res) => {
 });
 
 //Update Cuenta
-router.patch("/:id", async (req, res) => {
+router.patch("/:cuentaId",
+    validatorHandler(getCuentaSchema,'params'),
+    validatorHandler(updateCuentaSchema,'body'),
+    async (req, res) => {
     try {
-        const { id } = req.params;
+        const { cuentaId } = req.params;
         const body = req.body;
-        const cuenta = await EditCuenta(id, body);
+        const cuenta = await EditCuenta(cuentaId, body);
         res.status(200).json({
             cuenta,
         });
@@ -64,10 +78,12 @@ router.patch("/:id", async (req, res) => {
 });
 
 //Delete Cuenta
-router.delete("/:id", async (req, res) => {
+router.delete("/:cuentaId", 
+    validatorHandler(getCuentaSchema,'params'),
+    async (req, res) => {
     try {
-        const { id } = req.params;
-        const cuenta = await deleteCuenta(id);
+        const { cuentaId } = req.params;
+        const cuenta = await deleteCuenta(cuentaId);
         res.status(200).json({
             cuenta,
         });

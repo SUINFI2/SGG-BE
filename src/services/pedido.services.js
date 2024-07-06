@@ -2,6 +2,9 @@ const boom = require('@hapi/boom');
 const models = require('../models');
 const { Association } = require('sequelize');
 
+const apiInventario = require("../module/apiInventario");
+const apiContable = require("../module/apiContable");
+
 async function findAll() {
     const response = await models.Order.findAll({
         include: [

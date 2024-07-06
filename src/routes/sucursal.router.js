@@ -6,7 +6,7 @@ const {
   createSucursalSchema,
   updateSucursalSchema,
   getSucursalSchema,
-  getSucursalsSchema,
+  querySucursalSchema,
 } = require("../schemas/sucursal.schema");
 const {
   create,
@@ -19,12 +19,12 @@ const {
 router.get(
   "/",
   validarJWT,
-  validatorHandler(getSucursalsSchema, "query"),
+  validatorHandler(querySucursalSchema, "query"),
   async (req, res, next) => {
     try {
-      console.log("entro");
+      
 
-      const Sucursals = await findAll();
+      const Sucursals = await findAll(req.query);
       res.json(Sucursals);
     } catch (err) {
       next(err);
@@ -36,7 +36,6 @@ router.get(
   validarJWT,
   validatorHandler(getSucursalSchema, "params"),
   async (req, res, next) => {
-    console.log("req.params", req.params);
     try {
       const { sucursalId } = req.params;
       const Sucursal = await findOne(sucursalId);

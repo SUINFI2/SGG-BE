@@ -10,7 +10,7 @@ const { token } = require("morgan");
 
 
 
-async function findAll() {
+async function findAll(query) {
   
   const response = await models.Sucursal.findAll();
   if (!response) {
@@ -19,6 +19,8 @@ async function findAll() {
   return response;
 }
 async function findOne(id) {
+
+ 
   const response = await await models.Sucursal.findByPk(id, {
     include: [
       {
@@ -33,12 +35,18 @@ async function findOne(id) {
 }
 async function create(data) {
 
+
+ //crear uuid
+  //verificar existencia de la sucursal en otros backs
   const response = await models.Sucursal.create(data);
   if (!response) {
     throw boom.badRequest("Sucursal not created");
   }
+  // definir estrucutra para los diferetes backs
   const rta = await apiInventario.post(`/sucursal/`, response.dataValue);
   const rta2 = await apiContable.post(`/sucursal/`, response.dataValue);
+
+  
 
   return response;
 }
