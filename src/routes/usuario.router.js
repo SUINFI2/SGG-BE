@@ -22,6 +22,7 @@ router.get(
   validatorHandler(getUsuariosSchema, "query"),
   async (req, res, next) => {
     try {
+      console.log(req.query)
       const usuarios = await findAll();
       res.json(usuarios);
     } catch (err) {

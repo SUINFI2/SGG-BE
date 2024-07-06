@@ -1,10 +1,11 @@
+// Modelo de Negocio
 module.exports = (sequelize, DataTypes) => {
   const Negocio = sequelize.define("Negocio", {
     id: {
-      type: DataTypes.STRING,
+      allowNull: false,
       primaryKey: true,
       unique: true,
-      allowNull: false
+      type: DataTypes.STRING(36)
     },
     nombre: {
       allowNull: false,
@@ -12,14 +13,26 @@ module.exports = (sequelize, DataTypes) => {
       unique: true
     },
     direccion: {
-      allowNull: true,
-      type: DataTypes.STRING(256)
+      allowNull: false,
+      type: DataTypes.STRING(256),
+      unique: true
     },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
+      field: 'created_at',
+      defaultValue: sequelize.NOW
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      field: 'updated_at',
       defaultValue: sequelize.NOW
     }
+
+  }, {
+    tableName: 'Negocios',
   });
+
   return Negocio;
 };

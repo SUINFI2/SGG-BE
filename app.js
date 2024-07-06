@@ -9,6 +9,7 @@ const { sequelize } = require("./src/models");
 const port = process.env.PORT || 3000;
 const morgan = require("morgan");
 const cors = require("cors");
+const config = require("./config/config");
 // Configurar CORS
 app.use(
   cors({
@@ -19,7 +20,11 @@ app.use(
 );
 dotenv.config();
 app.use(bodyParser.json());
-
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}));
 routerApi(app);
 app.use(passport.initialize());
 app.use(passport.session());

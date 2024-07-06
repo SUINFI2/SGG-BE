@@ -7,6 +7,26 @@ const apiInventario = require("../module/apiInventario");
 const apiContable = require("../module/apiContable");
 
 const { token } = require("morgan");
+async function generarTokenId() {
+  let tokenId;
+  let unique = false;
+
+
+  while (!unique) {
+    tokenId = uuidv4(); // Genera un token único
+    try {
+      const sucursal = await models.Sucursal.findByPk(tokenId);
+      if (!sucursal) {
+        unique = true;
+      }
+    } catch (error) {
+      console.error('Error while checking unique token ID:', error);
+      throw new Error('Error while generating unique token ID');
+    }
+  }
+
+  return tokenId;
+}
 
 
 
@@ -40,7 +60,7 @@ async function create(data) {
   //verificar existencia de la sucursal en otros backs
   const response = await models.Sucursal.create(data);
   if (!response) {
-    throw boom.badRequest("Sucursal not created");
+    throw boom.badRequest("Negocio not created");
   }
   // definir estrucutra para los diferetes backs
   const rta = await apiInventario.post(`/sucursal/`, response.dataValue);
@@ -71,7 +91,7 @@ async function remove(id) {
   }
   const rta = await apiInventario.delete(`/sucursal/${id}`);
   const rta2 = await apiContable.delete(`/sucursal/${id}`);
-  
+
   return response;
 }
 module.exports = {

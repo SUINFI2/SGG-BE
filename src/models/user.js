@@ -22,9 +22,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    id_sucursal: {
-      type: DataTypes.INTEGER,
+    sucursalId: {
+      type: DataTypes.STRING(36),
       allowNull: false,
+      references: {
+        model: 'Sucursals',
+        key: 'id'
+      }
     }
   });
   return User;

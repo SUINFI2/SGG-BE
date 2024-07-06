@@ -44,12 +44,12 @@ Order.hasMany(orderProduct, { foreignKey: "id_order" });
 orderProduct.belongsTo(Order, { foreignKey: "id_order" });
 
 // Negocio and Sucursal relationship
-Negocio.hasMany(Sucursal, { foreignKey: "id_negocio" });
-Sucursal.belongsTo(Negocio, { foreignKey: "id_negocio" });
+Negocio.hasMany(Sucursal, { foreignKey: "negocioId" });
+Sucursal.belongsTo(Negocio, { foreignKey: "negocioId" });
 
 // Sucursal and User relationship
-Sucursal.hasMany(User, { foreignKey: 'id_sucursal' });
-User.belongsTo(Sucursal, { foreignKey: 'id_sucursal' });
+Sucursal.hasMany(User, { foreignKey: 'sucursalId' });
+User.belongsTo(Sucursal, { foreignKey: 'sucursalId' });
 
 
 module.exports = {
@@ -60,5 +60,7 @@ module.exports = {
   Order,
   State,
   workday,
-  orderProduct
+  orderProduct,
+  Negocio,
+  Sucursal
 };

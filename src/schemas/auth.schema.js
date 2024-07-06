@@ -9,6 +9,7 @@ const name = Joi.string().min(3);
 const id = Joi.number().positive();
 const id_rol = Joi.number().positive();
 const active = Joi.boolean();
+const sucursalId = Joi.string().uuid();
 
 const registerSchema = Joi.object({
   email: email.required(),
@@ -16,6 +17,8 @@ const registerSchema = Joi.object({
   name: name.required(),
   id_rol: id_rol.required(),
   active: active.required(),
+  sucursalId: sucursalId.required(),
+
 });
 const loginSchema = Joi.object({
   email: email.required(),
