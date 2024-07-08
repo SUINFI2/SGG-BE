@@ -18,7 +18,6 @@ const {
 
 router.get(
   "/",
-  validarJWT,
   validatorHandler(getUsuariosSchema, "query"),
   async (req, res, next) => {
     try {

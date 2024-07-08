@@ -34,13 +34,9 @@ router.post("/login", async (req, res, next) => {
     const { email, password } = req.body;
 
     // Llamar a la función de inicio de sesión del servicio de autenticación
-    const { user, token } = await login({ email, password });
-
+    const response = await login({ email, password });
     res.status(201).json({
-      ok: true,
-      msg: "Login Exitoso",
-      name: user,
-      token,
+      response
     });
   } catch (error) {
     // Manejar errores de inicio de sesión

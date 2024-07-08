@@ -68,7 +68,24 @@ async function login(user) {
   existingUser.password = undefined;
 
   // Devolver el usuario y el token
-  return { user: existingUser, token };
+  const response = {
+    ok: true,
+    msg: "Login Exitoso",
+    data: {
+      id_user: existingUser.id_user,
+      name: existingUser.name,
+      email: existingUser.email,
+      active: existingUser.active,
+      id_sucursal: existingUser.Sucursal.id,
+      nombre_sucursal: existingUser.Sucursal.nombre,
+      direccion_sucursal: existingUser.Sucursal.direccion,
+      id_rol: existingUser.id_rol
+    },
+    token
+
+  };
+  console.log(response);
+  return response;
 }
 
 module.exports = {
