@@ -76,7 +76,7 @@ async function login(user) {
       name: existingUser.name,
       email: existingUser.email,
       active: existingUser.active,
-      id_sucursal: existingUser.Sucursal.id,
+      sucursalId: existingUser.Sucursal.id,
       nombre_sucursal: existingUser.Sucursal.nombre,
       direccion_sucursal: existingUser.Sucursal.direccion,
       id_rol: existingUser.id_rol

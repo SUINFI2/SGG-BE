@@ -51,6 +51,9 @@ Sucursal.belongsTo(Negocio, { foreignKey: "negocioId" });
 Sucursal.hasMany(User, { foreignKey: 'sucursalId' });
 User.belongsTo(Sucursal, { foreignKey: 'sucursalId' });
 
+// Sucursal and Order relationship
+// Sucursal.hasMany(Order, { foreignKey: 'sucursalId' });
+// Order.belongsTo(Sucursal, { foreignKey: 'sucursalId' });
 
 module.exports = {
   sequelize,

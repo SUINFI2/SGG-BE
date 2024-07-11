@@ -21,8 +21,8 @@ async function findAll() {
                 attributes: ['name']
             },
             {
-              model: models.orderProduct
-          },
+                model: models.orderProduct
+            },
         ]
     })
     if (!response) {
@@ -53,15 +53,15 @@ async function findOne(id) {
     return response
 }
 async function create(data) {
-  // sacar de data -> items
+    // sacar de data -> items
     const response = await models.Order.create(data)
     if (!response) {
         throw boom.badRequest('Pedido not created')
     }
 
     await data.items.forEach(async element => {
-      const rta = await models.OrderProduct.create({...element, id_order: response.id });
-    
+        const rta = await models.orderProduct.create({ ...element, id_order: response.id });
+
     });
     return response
 }

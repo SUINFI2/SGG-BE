@@ -7,7 +7,7 @@ const name = joi.string().min(3).max(50);
 const apellido = joi.string().min(3).max(50);
 const id_rol = joi.number().integer();
 const active = joi.boolean(); // 0 o 1, true o false,
-const id_sucursal = joi.number().integer();
+const sucursalId = joi.string().uuid();
 const limit = joi.number().integer();
 const offset = joi.number().integer();
 const email = joi.string().email();
@@ -20,7 +20,7 @@ const createUsuarioSchema = joi.object({
     apellido: apellido.required(),
     id_rol: id_rol.required(),
     email: email.required(),
-    id_sucursal: id_sucursal.required()
+    sucursalId: sucursalId.required()
 })
 const updateUsuarioSchema = joi.object({
     usuario: usuario,
@@ -30,7 +30,7 @@ const updateUsuarioSchema = joi.object({
     id_rol: id_rol,
     email: email,
     active: active,
-    id_sucursal: id_sucursal
+    sucursalId: sucursalId
 })
 const getUsuarioSchema = joi.object({
     usuarioId: id.required()

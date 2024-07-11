@@ -43,7 +43,7 @@ async function update(id, body) {
     const response = await models.User.update(body, {
         where: { id_user: id }
     });
-    if (response[0] === 0) {
+    if (!response) {
         throw boom.badRequest('Usuario not updated');
     }
     return response;

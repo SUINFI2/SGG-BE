@@ -57,8 +57,11 @@ router.post(
         message: "created",
         data: newPedido,
       });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al obtener los egresos",
+        error: error.message,
+      })
     }
   }
 );

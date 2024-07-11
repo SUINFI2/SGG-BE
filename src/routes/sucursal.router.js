@@ -22,8 +22,6 @@ router.get(
   validatorHandler(querySucursalSchema, "query"),
   async (req, res, next) => {
     try {
-      
-
       const Sucursals = await findAll(req.query);
       res.json(Sucursals);
     } catch (err) {

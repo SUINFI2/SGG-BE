@@ -31,7 +31,7 @@ async function generarTokenId() {
 
 
 async function findAll(query) {
-  
+
   const response = await models.Sucursal.findAll();
   if (!response) {
     throw boom.notFound("Sucursal not found");
@@ -40,7 +40,7 @@ async function findAll(query) {
 }
 async function findOne(id) {
 
- 
+
   const response = await await models.Sucursal.findByPk(id, {
     include: [
       {
@@ -54,22 +54,24 @@ async function findOne(id) {
   return response;
 }
 async function create(data) {
+  try {
+    const tokenId = await generarTokenId();
+    const createdSucursal = await models.Sucursal.create({
+      id: tokenId,
+      ...data,
+    });
 
+    if (!createdSucursal) {
+      throw boom.badRequest("Sucursal not created");
+    }
 
- //crear uuid
-  //verificar existencia de la sucursal en otros backs
-  const response = await models.Sucursal.create(data);
-  if (!response) {
-    throw boom.badRequest("Negocio not created");
+    return createdSucursal;
+  } catch (error) {
+    console.error("Error creating Sucursal:", error);
+    throw boom.badRequest("Error creating Sucursal");
   }
-  // definir estrucutra para los diferetes backs
-  const rta = await apiInventario.post(`/sucursal/`, response.dataValue);
-  const rta2 = await apiContable.post(`/sucursal/`, response.dataValue);
-
-  
-
-  return response;
 }
+
 async function update(id, body) {
 
   const Sucursal = await this.findOne(id);

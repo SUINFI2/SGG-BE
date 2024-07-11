@@ -5,6 +5,7 @@ const id_mesa = joi.number().positive();
 const typeShipping = joi.string();
 const id_user = joi.number().positive();
 const id_state = joi.number().positive();
+const id_sucursal = joi.string().uuid();
 
 
 const createItemOrderProduct = joi.object({
@@ -18,6 +19,7 @@ const createPedidoSchema = joi.object({
     typeShipping: typeShipping.required(),
     id_user: id_user.required(),
     id_state: id_state.required(),
+    id_sucursal: id_sucursal.required(),
     items: joi.array().items(createItemOrderProduct)
 })
 

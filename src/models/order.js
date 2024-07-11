@@ -1,3 +1,5 @@
+const { ref } = require("joi");
+
 module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define("Order", {
     id_order: {
@@ -12,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     id_sucursal: {
       type: DataTypes.STRING(252),
       allowNull: false,
+      references: {
+        model: 'Sucursal',
+        key: 'id'
+      }
     },
     id_mesa: {
       type: DataTypes.INTEGER,
