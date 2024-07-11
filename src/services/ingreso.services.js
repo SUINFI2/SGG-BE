@@ -1,4 +1,5 @@
 const { default: axios } = require("axios");
+const boom = require("@hapi/boom");
 
 const apiInventario = require("../module/apiInventario");
 
