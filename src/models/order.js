@@ -11,13 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    id_sucursal: {
+    sucursalId: {
       type: DataTypes.STRING(252),
-      allowNull: false,
-      references: {
-        model: 'Sucursal',
-        key: 'id'
-      }
+      allowNull: false
     },
     id_mesa: {
       type: DataTypes.INTEGER,

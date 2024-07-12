@@ -59,7 +59,7 @@ router.post(
       });
     } catch (error) {
       res.status(500).json({
-        message: "Error al obtener los egresos",
+        message: "Error al obtener los pedidos",
         error: error.message,
       })
     }

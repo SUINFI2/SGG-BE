@@ -8,7 +8,13 @@ async function findAll() {
         include: [
             {
                 model: models.User,
-                attributes: ['id_user', 'name']
+                attributes: ['id_user', 'name'],
+                include: [
+                    {
+                        model: models.Sucursal,
+                        attributes: ['id', 'nombre', 'direccion'],
+                    }
+                ]
             },
             {
                 model: models.State,
@@ -16,11 +22,14 @@ async function findAll() {
             }
         ],
     });
-    if (!response) {
-        throw boom.notFound('Table not found');
+
+    if (!response || response.length === 0) {
+        throw new Error('Mesas no encontradas');
     }
+
     return response;
 }
+
 async function findOne(id) {
     const response = await models.Table.findByPk(id, {
         include: [
@@ -39,12 +48,21 @@ async function findOne(id) {
     }
     return response;
 }
-async function create(data) {
-    const response = await models.Table.create(data);
-    if (!response) {
-        throw boom.badRequest('Table not created');
+async function create(mesaData) {
+    const { id_user, id_state, number } = mesaData;
+
+    const user = await models.User.findByPk(id_user);
+    if (!user) {
+        throw new Error('Usuario no encontrado');
     }
-    return response;
+
+    const newTable = await models.Table.create({
+        id_user,
+        id_state,
+        number,
+    });
+
+    return newTable;
 }
 async function update(id, body) {
     const response = await models.Table.update(body, {

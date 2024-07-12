@@ -24,8 +24,11 @@ router.get(
     try {
       const mesas = await findAll();
       res.json(mesas);
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al obtener las mesas",
+        error: error.message,
+      })
     }
   }
 );
@@ -50,15 +53,18 @@ router.post(
   validatorHandler(createMesaSchema, "body"),
   validarJWT,
   async (req, res, next) => {
+    const mesaData = req.body
     try {
-      const body = req.body;
-      const newMesa = await create(body);
+      const newMesa = await create(mesaData);
       res.json({
         message: "created",
         data: newMesa,
       });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al obtener las mesas",
+        error: error.message,
+      })
     }
   }
 );

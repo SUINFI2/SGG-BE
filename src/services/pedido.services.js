@@ -58,11 +58,10 @@ async function create(data) {
     if (!response) {
         throw boom.badRequest('Pedido not created')
     }
+    // await Promise.all(data.items.map(async (element) => {
+    //     await models.orderProduct.create({ ...element, id_order: response.id })
 
-    await data.items.forEach(async element => {
-        const rta = await models.orderProduct.create({ ...element, id_order: response.id });
-
-    });
+    // }));
     return response
 }
 async function update(id, body) {
