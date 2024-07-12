@@ -9,71 +9,78 @@ const {
   deleteProduct,
 } = require("../services/productos.services");
 
-const {createProductoSchema,
+const { createProductoSchema,
   updateProductoSchema,
   getProductoSchema,
-  queryProductoSchema} = require('../schemas/producto.schema');
+  queryProductoSchema } = require('../schemas/producto.schema');
 
 //obtener prodcutos
 router.get("/",
   validatorHandler(queryProductoSchema, 'query'),
   async (req, res) => {
-  try {
-    const productos = await findAll(req.query);
-    res.status(200).json({
-      ok: true,
-      data: productos,
-    });
-  } catch (error) {
-    res.status(500).send("Error al obtener los productos");
-  }
-});
+    try {
+      const { negocioId } = req.query;
+      const productos = await findAll(negocioId);
+      res.status(200).json({
+        ok: true,
+        data: productos,
+
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al obtener los productos",
+        error: error.message,
+      })
+
+
+    }
+  });
 //guardar productos
-router.post("/", 
+router.post("/",
   validatorHandler(createProductoSchema, "body"),
   async (req, res) => {
-  try {
-    const body = req.body;
-    const productos = await createProducts(body);
+    try {
+      const body = req.body;
+      const productos = await createProducts(body);
 
-    res.status(200).json({
-      message: "product created",
-      data: {
-        creted: "creted"
-      }
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+      res.status(200).json({
+        message: "product created",
+        data: {
+          creted: "creted"
+        }
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
 //actualizar productos
 router.patch("/:productoId",
-  validatorHandler(getProductoSchema,'params'),
-  validatorHandler(updateProductoSchema,'body'),
+  validatorHandler(getProductoSchema, 'params'),
+  validatorHandler(updateProductoSchema, 'body'),
   async (req, res) => {
-  try {
-    const { productoId } = req.params;
-    const body = req.body;
-    const producto = await updateProduct(productoId, body);
-    res.status(200).json({
-      producto,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+    try {
+      const { productoId } = req.params;
+      const body = req.body;
+      const producto = await updateProduct(productoId, body);
+      res.status(200).json({
+        producto,
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
 //eliminar productos
-router.delete("/:productoId", 
-  validatorHandler(getProductoSchema,'params'),
+router.delete("/:productoId",
+  validatorHandler(getProductoSchema, 'params'),
   async (req, res) => {
-  try {
-    const { productoId } = req.params;
-    const producto = await deleteProduct(productoId);
-    res.status(200).json({
-      producto,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+    try {
+      const { productoId } = req.params;
+      const producto = await deleteProduct(productoId);
+      res.status(200).json({
+        producto,
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
 module.exports = router;

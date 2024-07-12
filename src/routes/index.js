@@ -15,6 +15,8 @@ const negocioRouter = require("./negocio.router");
 const sucursalRouter = require("./sucursal.router");
 const egresoRouter = require("./egreso.router");
 const ingresoRouter = require("./ingreso.router");
+const perfilRouter = require("./perfil.router");
+
 function routes(app) {
   const router = express.Router();
   app.use("/api/v1", router);
@@ -31,6 +33,7 @@ function routes(app) {
   router.use("/cuentas", cuentaRouter);
   router.use("/egreso", egresoRouter);
   router.use("/ingreso", ingresoRouter);
+  router.use("/perfil", perfilRouter);
 
 
   router.use("/negocios", negocioRouter);
