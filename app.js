@@ -14,8 +14,7 @@ const config = require("./config/config");
 //quiero tambien que se use esta https://app.suinfi.com/ y http://localhost:5173 en el cors
 app.options("*", cors({
   origin: ["http://localhost:5173", "https://app.suinfi.com"],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
 }));
 dotenv.config();
 app.use(bodyParser.json());
