@@ -11,20 +11,23 @@ const morgan = require("morgan");
 const cors = require("cors");
 const config = require("./config/config");
 // Configurar CORS
+//quiero tambien que se use esta https://app.suinfi.com/ y http://localhost:5173 en el cors
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://app.suinfi.com/"],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
 );
 dotenv.config();
 app.use(bodyParser.json());
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 routerApi(app);
 app.use(passport.initialize());
 app.use(passport.session());
@@ -38,7 +41,7 @@ sequelize
     console.log("Connection has been established successfully.");
 
     // Sincronizar los modelos con la base de datos
-    return sequelize.sync() //({alter:true}); //  asegura que las tablas se ajusten a cualquier cambio en los modelos
+    return sequelize.sync(); //({alter:true}); //  asegura que las tablas se ajusten a cualquier cambio en los modelos
   })
   .then(() => {
     app.listen(port, () => {
