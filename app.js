@@ -11,11 +11,13 @@ const morgan = require("morgan");
 const cors = require("cors");
 const config = require("./config/config");
 // Configurar CORS
-app.use(cors());
-app.options("*", cors({
-  origin: ["http://localhost:5173", "https://app.suinfi.com"],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://app.suinfi.com"],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
 dotenv.config();
 app.use(bodyParser.json());
 app.use(
