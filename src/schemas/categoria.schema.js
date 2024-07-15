@@ -5,12 +5,15 @@ const text = joi.string();
 const number = joi.number().positive();
 const limit = joi.number().integer();
 const offset = joi.number().integer();
+const negocioId = joi.string();
+const nombre = joi.string();
+const codigo = joi.string()
 
 
 const createCategoriaSchema = joi.object({
-negocioId: text.required(),
-nombre: text.required(),
-codigo: text.required()
+  negocioId: negocioId.required(),
+  nombre: nombre.required(),
+  codigo: codigo.required()
 });
 
 const updateCategoriaSchema = joi.object({
@@ -22,16 +25,16 @@ const getCategoriaSchema = joi.object({
   categoriaId: id.required()
 });
 const queryCategoriaSchema = joi.object({
-  negocioId: text.required()
+  negocioId: negocioId.required()
 });
 
 
 
 
 
-module.exports ={
+module.exports = {
   createCategoriaSchema,
   updateCategoriaSchema,
   getCategoriaSchema,
   queryCategoriaSchema
-  };
+};

@@ -34,7 +34,7 @@ const getProductoSchema = joi.object({
 });
 
 const queryProductoSchema = joi.object({
-  negocioId: text.required(),
+  negocioId: text,
   sucursalId: text,
   depositoId: text,
   categoriaId: id
@@ -42,8 +42,9 @@ const queryProductoSchema = joi.object({
 
 
 
-module.exports ={
+module.exports = {
   createProductoSchema,
   updateProductoSchema,
   getProductoSchema,
-  queryProductoSchema};
+  queryProductoSchema
+};

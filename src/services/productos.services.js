@@ -23,6 +23,7 @@ const findAll = async (query) => {
   return productos.data;
 };
 
+
 const findOne = async (productoId) => {
   const productos = await apiInventario.get(`/productos/findOne/${productoId}`);
 
@@ -107,6 +108,7 @@ async function deleteProduct(id) {
 }
 module.exports = {
   findAll,
+  findOne,
   createProducts,
   updateProduct,
   deleteProduct,

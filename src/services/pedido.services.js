@@ -4,6 +4,7 @@ const { Association } = require('sequelize');
 
 const apiInventario = require("../module/apiInventario");
 const apiContable = require("../module/apiContable");
+const service = require('../services/productos.services');
 
 async function findAll() {
     const response = await models.Order.findAll({
@@ -54,15 +55,20 @@ async function findOne(id) {
 }
 async function create(data) {
     // sacar de data -> items
-    const response = await models.Order.create(data)
-    if (!response) {
-        throw boom.badRequest('Pedido not created')
-    }
-    // await Promise.all(data.items.map(async (element) => {
-    //     await models.orderProduct.create({ ...element, id_order: response.id })
-
-    // }));
-    return response
+    // const { items, ...orderData } = data
+    // const response = await models.Order.create(orderData)
+    // if (!response) {
+    //     throw boom.badRequest('Pedido not created')
+    // }
+    // // recorrer items
+    // for (let i = 0; i < items.length; i++) {
+    //     const item = items[i]
+    //     const product = await service.findOne(item.id_product)
+    //     if (product.cnt < item.cnt) {
+    //         throw boom.badRequest('Cantidad de producto no disponible')
+    //     }
+    //     const total = item.cnt * item.precio
+    // }
 }
 async function update(id, body) {
     const response = await models.Order.update(body, {

@@ -14,6 +14,7 @@ const getCategories = async (negocioId) => {
     console.log(rta)
   return rta.data;
 };
+
 const getCategory = async (id) => {
 
     const rta = await apiInventario.get(`/categorias/findOne/${id}`);
@@ -49,9 +50,9 @@ const deleteCategory = async (id) => {
 };
 
 module.exports = {
-  getCategories,
-  getCategory,
-  createCategory,
-  EditCategory,
-  deleteCategory,
+    getCategories,
+    getCategory,
+    createCategory,
+    EditCategory,
+    deleteCategory,
 };

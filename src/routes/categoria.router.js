@@ -16,7 +16,7 @@ const {
     updateCategoriaSchema,
     getCategoriaSchema,
     queryCategoriaSchema
-}= require('../schemas/categoria.schema');
+} = require('../schemas/categoria.schema');
 
 //Obtener categorias
 router.get("/", 
@@ -32,10 +32,11 @@ router.get("/",
     } catch (error) {
         res.status(500).send("Error al obtener las categorias");
     }
+
 });
 //Obtener categoria por id
-router.get("/:categoriaId", 
-    validatorHandler(getCategoriaSchema,'params'),
+router.get("/:categoriaId",
+    validatorHandler(getCategoriaSchema, 'params'),
     async (req, res) => {
     try {
         const { categoriaId } = req.params;
@@ -47,47 +48,49 @@ router.get("/:categoriaId",
 });
 //Crear categoria
 router.post("/",
-    validatorHandler(createCategoriaSchema,'body'),
+    validatorHandler(createCategoriaSchema, 'body'),
+    async (req, res) => {
+        try {
+            const body = req.body;
+            const newCategoria = await createCategory(body);
+            res.status(200).json({
+                newCategoria,
+            });
+        } catch (err) {
+            res.status(500).json({
+                message: "Error al crear la categoria",
+                error: err.message
+            });
+        }
+    });
+router.patch("/:categoriaId",
+    validatorHandler(getCategoriaSchema, 'params'),
+    validatorHandler(updateCategoriaSchema, 'body'),
 
     async (req, res) => {
-    try {
-        const body = req.body;
-        const newCategoria = await createCategory(body);
-        res.status(200).json({
-            newCategoria,
-        });
-    } catch (err) {
-        next(err);
-    }
-});
-router.patch("/:categoriaId", 
-    validatorHandler(getCategoriaSchema,'params'),
-    validatorHandler(updateCategoriaSchema,'body'),
-
-    async (req, res) => {
-    try {
-        const { categoriaId } = req.params;
-        const body = req.body;
-        const categoria = await EditCategory(categoriaId, body);
-        res.status(200).json({
-            categoria,
-        });
-    } catch (err) {
-        next(err);
-    }
-});
+        try {
+            const { categoriaId } = req.params;
+            const body = req.body;
+            const categoria = await EditCategory(categoriaId, body);
+            res.status(200).json({
+                categoria,
+            });
+        } catch (err) {
+            next(err);
+        }
+    });
 router.delete("/:categoriaId",
-    validatorHandler(getCategoriaSchema,'params'),
+    validatorHandler(getCategoriaSchema, 'params'),
     async (req, res) => {
-    try {
-        const { categoriaId } = req.params;
-        const categoria = await deleteCategory(categoriaId);
-        res.status(200).json({
-            categoria,
-        });
-    } catch (err) {
-        next(err);
-    }
-});
+        try {
+            const { categoriaId } = req.params;
+            const categoria = await deleteCategory(categoriaId);
+            res.status(200).json({
+                categoria,
+            });
+        } catch (err) {
+            next(err);
+        }
+    });
 
 module.exports = router;
