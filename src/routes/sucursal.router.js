@@ -14,11 +14,12 @@ const {
   findOne,
   remove,
   update,
+  createSucursal
 } = require("../services/sucursal.services");
 
 router.get(
   "/",
-  validarJWT,
+  //validarJWT,
   validatorHandler(querySucursalSchema, "query"),
   async (req, res, next) => {
     try {
@@ -31,7 +32,7 @@ router.get(
 );
 router.get(
   "/:sucursalId",
-  validarJWT,
+  //validarJWT,
   validatorHandler(getSucursalSchema, "params"),
   async (req, res, next) => {
     try {
@@ -45,12 +46,12 @@ router.get(
 );
 router.post(
   "/",
-  validarJWT,
+  //validarJWT,
   validatorHandler(createSucursalSchema, "body"),
   async (req, res, next) => {
     try {
       const body = req.body;
-      const newSucursal = await create(body);
+      const newSucursal = await createSucursal(body);
       res.json({
         message: "created",
         data: newSucursal,

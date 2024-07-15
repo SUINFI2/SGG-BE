@@ -9,12 +9,12 @@ const rolId = joi.number().integer();
 const limit = joi.number().integer();
 const offset = joi.number().integer();
 const email = joi.string().email();
-const id_negocio=joi.string().min(36).max(36);
+const negocioId=joi.string().min(36).max(36);
 const nombre = joi.string().min(3).max(56);
 const direccion = joi.string().min(3).max(156);
 
 const createSucursalSchema = joi.object({
-   id_negocio: id_negocio.required(),
+   negocioId: negocioId.required(),
    nombre: nombre.required(),
    direccion: direccion.required(),
 })
@@ -26,6 +26,7 @@ const getSucursalSchema = joi.object({
     sucursalId: Sucursal.required()
 })
 const querySucursalSchema = joi.object({
+    negocioId: negocioId.required()
 })
 
 module.exports = {

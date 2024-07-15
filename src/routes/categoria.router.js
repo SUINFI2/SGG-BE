@@ -23,7 +23,7 @@ router.get("/",
     validatorHandler(queryCategoriaSchema,'query'),
     async (req, res) => {
     try {
-        const negocioId = req.query;
+        const {negocioId} = req.query;
         const categorias = await getCategories(negocioId);
         res.status(200).json({
             ok: true,
@@ -40,9 +40,7 @@ router.get("/:categoriaId",
     try {
         const { categoriaId } = req.params;
         const categoria = await getCategory(categoriaId);
-        res.status(200).json({
-            categoria,
-        });
+        res.status(200).json(categoria);
     } catch (error) {
         res.status(500).send("Error al obtener la categoria");
     }

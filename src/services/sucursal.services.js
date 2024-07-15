@@ -1,79 +1,97 @@
 const boom = require("@hapi/boom");
 const models = require("../models");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 const { Association } = require("sequelize");
 const apiInventario = require("../module/apiInventario");
 const apiContable = require("../module/apiContable");
 
-const { token } = require("morgan");
-async function generarTokenId() {
+async function generarTokenSucursalId() {
   let tokenId;
   let unique = false;
 
-
   while (!unique) {
     tokenId = uuidv4(); // Genera un token único
-    try {
-      const sucursal = await models.Sucursal.findByPk(tokenId);
-      if (!sucursal) {
-        unique = true;
-      }
-    } catch (error) {
-      console.error('Error while checking unique token ID:', error);
-      throw new Error('Error while generating unique token ID');
+
+    const negocio = await apiContable.get(`/sucursales/findOne/${tokenId}`);
+    if (negocio.data.statusCode == 404) {
+      unique = true;
     }
   }
 
   return tokenId;
 }
 
-
-
 async function findAll(query) {
+  const { negocioId } = query;
+  let options = { where: { negocioId } };
 
-  const response = await models.Sucursal.findAll();
+  const response = await models.Sucursal.findAll(options);
   if (!response) {
     throw boom.notFound("Sucursal not found");
   }
   return response;
 }
 async function findOne(id) {
-
-
-  const response = await await models.Sucursal.findByPk(id, {
-    include: [
-      {
-        model: models.Sucursal,
-      },
-    ],
-  });
+  const response = await await models.Sucursal.findByPk(id);
   if (!response) {
     throw boom.notFound("Sucursal not found");
   }
   return response;
 }
-async function create(data) {
-  try {
-    const tokenId = await generarTokenId();
-    const createdSucursal = await models.Sucursal.create({
-      id: tokenId,
-      ...data,
-    });
 
-    if (!createdSucursal) {
-      throw boom.badRequest("Sucursal not created");
-    }
+async function createSucursal(data) {
+  // create sucursales
+  const tokenId = await generarTokenSucursalId();
+  console.log("fin generar token sucursal");
 
-    return createdSucursal;
-  } catch (error) {
-    console.error("Error creating Sucursal:", error);
-    throw boom.badRequest("Error creating Sucursal");
+  console.log(data);
+  //gastronomia
+  const sucursalGastronomica = await models.Sucursal.create({
+    id: tokenId,
+    nombre: data.nombre,
+    direccion: data.direccion,
+    negocioId: data.negocioId,
+  });
+
+
+  if (!sucursalGastronomica) {
+    // rollaback inventarios
+    // rollback contabilidad
+    throw boom.notFound("Sucursal not found in inventario");
   }
+  console.log("fin sucursal gastronomia");
+
+  //contabilidad
+  const sucursalContable = await apiContable.post(`/sucursales/`, {
+    id: tokenId,
+    nombre: data.nombre,
+    direccion: data.direccion,
+    negocioId: data.negocioId,
+  });
+  if (sucursalContable.data.statusCode == 404) {
+    console.log(sucursalContable.data);
+    throw boom.notFound("Sucursal not found in contabilidad");
+  }
+  console.log("fin sucursal contabilidad");
+
+  //inventarios
+  const sucursalInventario = await apiInventario.post(`/sucursales/`, {
+    id: tokenId,
+    nombre: data.nombre,
+    direccion: data.direccion,
+    negocioId: data.negocioId,
+  });
+  if (sucursalInventario.data.statusCode == 404) {
+    console.log(sucursalInventario.data);
+    // rollback contabilidad
+    throw boom.notFound("Sucursal not found in inventario");
+  }
+  console.log("fin sucursal invetarios");
+
+  return sucursalGastronomica;
 }
-
 async function update(id, body) {
-
   const Sucursal = await this.findOne(id);
   const response = await Sucursal.update(body);
   if (!response) {
@@ -99,7 +117,7 @@ async function remove(id) {
 module.exports = {
   findAll,
   findOne,
-  create,
   update,
   remove,
+  createSucursal,
 };

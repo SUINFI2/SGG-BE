@@ -7,48 +7,58 @@ const {
   createProducts,
   updateProduct,
   deleteProduct,
+  findOne
 } = require("../services/productos.services");
 
 const { createProductoSchema,
   updateProductoSchema,
   getProductoSchema,
-  queryProductoSchema } = require('../schemas/producto.schema');
+  queryProductoSchema,
+   } = require('../schemas/producto.schema');
 
 //obtener prodcutos
 router.get("/",
   validatorHandler(queryProductoSchema, 'query'),
   async (req, res) => {
     try {
-      const { negocioId } = req.query;
-      const productos = await findAll(negocioId);
-      res.status(200).json({
-        ok: true,
-        data: productos,
-
-      });
+      const query = req.query;
+      const productos = await findAll(query);
+      res.status(200).json(productos);
     } catch (error) {
       res.status(500).json({
         message: "Error al obtener los productos",
         error: error.message,
       })
-
-
     }
   });
+
+  router.get("/:productoId",
+    validatorHandler(getProductoSchema, 'params'),
+    async (req, res) => {
+      try {
+        const { negocioId } = req.params;
+        const productos = await findOne(negocioId);
+        res.status(200).json({
+          ok: true,
+          data: productos,
+  
+        });
+      } catch (error) {
+        res.status(500).json({
+          message: "Error al obtener los productos",
+          error: error.message,
+        })
+      }
+    });
 //guardar productos
 router.post("/",
   validatorHandler(createProductoSchema, "body"),
-  async (req, res) => {
+  async (req, res,next) => {
     try {
       const body = req.body;
-      const productos = await createProducts(body);
+      const producto = await createProducts(body);
 
-      res.status(200).json({
-        message: "product created",
-        data: {
-          creted: "creted"
-        }
-      });
+      res.status(200).json(producto);
     } catch (err) {
       next(err);
     }

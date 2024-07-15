@@ -1,13 +1,12 @@
 const boom = require("@hapi/boom");
 const models = require("../models");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 const { Association } = require("sequelize");
 const apiInventario = require("../module/apiInventario");
 const apiContable = require("../module/apiContable");
-const sucursalService = require("./sucursal.services");
 
-const { token } = require("morgan");
+const { createSucursal } = require("./sucursal.services");
 
 async function generarTokenId() {
   let tokenId;
@@ -15,19 +14,17 @@ async function generarTokenId() {
 
   while (!unique) {
     tokenId = uuidv4(); // Genera un token único
-    const negocio = await models.Negocio.findByPk(tokenId);
-    if (!negocio) {
+
+    const negocio = await apiContable.get(`/negocios/findOne/${tokenId}`);
+    if (negocio.data.statusCode == 404) {
       unique = true;
     }
   }
-
-  //falta verificara con el baack de contabilidad
 
   return tokenId;
 }
 
 async function findAll() {
-
   const response = await models.Negocio.findAll();
   if (!response) {
     throw boom.notFound("Negocio not found");
@@ -48,53 +45,75 @@ async function findOne(id) {
   return response;
 }
 async function create(data) {
-  try {
-    const tokenId = await generarTokenId();
+  const tokenId = await generarTokenId();
 
-    const createdNegocio = await models.Negocio.create({
-      id: tokenId,
-      ...data,
-    });
-
-    if (!createdNegocio) {
-      throw boom.badRequest("Negocio not created");
-    }
-
-    // Sincronización con otros sistemas
-    // const rta1 = await apiInventario.post(`/negocios/`, createdNegocio.dataValues);
-    // const rta2 = await apiContable.post(`/negocios/`, createdNegocio.dataValues);
-
-    // Creación automática de la sucursal
-    const sucursalData = {
-      nombre: "Sucursal Principal",
-      direccion: createdNegocio.direccion,
-      negocioId: tokenId,
-    };
-    const createdSucursal = await sucursalService.create(sucursalData);
-
-    // const categorias = ["Bebidas", "Hamburguesas", "Postres"];
-
-    // for (const categoria of categorias) {
-    //   const categoriaData = {
-    //     nombre: categoria,
-    //     negocioId: tokenId,
-    //   };
-    //   await apiInventario.post(`/categorias/`, categoriaData);
-    // }
-
-    if (!createdSucursal) {
-      throw boom.badRequest("Sucursal not created");
-    }
-
-    return createdNegocio;
-  } catch (error) {
-    console.error("Error creating Negocio:", error);
-    throw boom.badRequest("Error creating Negocio");
+  // create negocios
+  // contabilidad
+  const negocioContable = await apiContable.post(`/negocios/`, {
+    id: tokenId,
+    nombre: data.nombre,
+    direccion: data.direccion,
+  });
+  if (negocioContable.data.statusCode == 404) {
+    console.log(negocioContable.data);
+    throw boom.notFound("Negocio not found in contabilidad");
   }
+
+  //inventarios
+  const negocioInventario = await apiInventario.post(`/negocios/`, {
+    id: tokenId,
+    nombre: data.nombre,
+    direccion: data.direccion,
+  });
+  if (negocioInventario.data.statusCode == 404) {
+    console.log(negocioInventario.data);
+    //rollback in contabilidad
+    throw boom.notFound("Negocio not found in inventarios");
+  }
+
+  // gastronomia
+  const negocioGastronomico = await models.Negocio.create({
+    id: tokenId,
+    ...data,
+  });
+  if (!negocioGastronomico) {
+    // rollback inventarios
+    // rollaback contabilidad
+    throw boom.badRequest("Negocio not created");
+  }
+
+  console.log('fin negocios');
+
+  const sucursal = await createSucursal({
+    negocioId: tokenId,
+    nombre: data.nombre,
+    direccion: data.direccion,
+  });
+  if (!sucursal) {
+    //implementar rollbacks
+    throw boom.notFound("sucursal not found");
+  }
+  console.log('fin sucursales');
+  // categorias por default
+
+  const categoriasStandar = [
+    { nombre: "Bebidas", codigo: "1" },
+    { nombre: "Cafetería", codigo: "2" },
+    { nombre: "Comida", codigo: "3" },
+  ];
+  for (const categoria of categoriasStandar) {
+    const rta = await apiInventario.post(`/categorias/`, {
+      ...categoria,
+      negocioId: tokenId,
+    });
+  }
+
+  console.log('fin categorias');
+
+  return negocioGastronomico;
 }
 
 async function update(id, body) {
-
   const negocio = await this.findOne(id);
   const response = await negocio.update(body);
   if (!response) {
@@ -112,7 +131,7 @@ async function remove(id) {
   if (!response) {
     throw boom.badRequest("Negocio not deleted");
   }
-  // propagar en los diferentes negocios? 
+  // propagar en los diferentes negocios?
   const rta = await apiInventario.delete(`/negocios/${id}`);
   const rta2 = await apiContable.delete(`/negocios/${id}`);
 

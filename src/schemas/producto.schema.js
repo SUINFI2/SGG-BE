@@ -5,20 +5,29 @@ const text = joi.string();
 const number = joi.number().positive();
 const limit = joi.number().integer();
 const offset = joi.number().integer();
-
+const imagen = joi.string().uri();
 
 const createProductoSchema = joi.object({
+sucursalId: text.required(),
 descripcion: text.required(),
 nombre: text.required(),
 codigo: text.required(),
-categoriaId: id.required()
+categoriaId: id.required(),
+imagen: imagen,
+cantidad: number,
+precio: number,
+margen: number
 });
 
 const updateProductoSchema = joi.object({
   descripcion: text,
   nombre: text,
   codigo: text,
-  categoriaId: id
+  categoriaId: id,
+  imagen:imagen,
+  cantidad: number,
+precio: number,
+margen: number
 });
 const getProductoSchema = joi.object({
   productoId: id.required()

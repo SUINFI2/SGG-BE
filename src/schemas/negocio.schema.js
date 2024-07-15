@@ -1,6 +1,7 @@
 const joi = require('joi');
 
 const id = joi.number().integer();
+const tokenId= joi.string().max(36);
 const Negocio = joi.string().min(3).max(50);
 const password = joi.string().min(3).max(50);
 const apellido = joi.string().min(3).max(50);
@@ -21,7 +22,7 @@ const updateNegocioSchema = joi.object({
     direccion: direccion
 })
 const getNegocioSchema = joi.object({
-    negocioId: id.required()
+    negocioId: tokenId.required()
 })
 const queryNegocioSchema = joi.object({
 })
