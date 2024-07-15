@@ -17,6 +17,8 @@ const egresoRouter = require("./egreso.router");
 const ingresoRouter = require("./ingreso.router");
 const perfilRouter = require("./perfil.router");
 const orderProduct = require("./orderProduct.router");
+const informeVenta = require("./informeVenta.router");
+const balanceRouter = require("./balance.router");
 function routes(app) {
   const router = express.Router();
   app.use("/api/v1", router);
@@ -37,6 +39,8 @@ function routes(app) {
   router.use("/orderProduct", orderProduct);
   router.use("/negocios", negocioRouter);
   router.use("/sucursales", sucursalRouter);
+  router.use("/informeVenta", informeVenta);
+  router.use("/balance", balanceRouter);
 }
 
 module.exports = routes;
