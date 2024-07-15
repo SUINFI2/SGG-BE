@@ -16,80 +16,83 @@ const {
     updateCategoriaSchema,
     getCategoriaSchema,
     queryCategoriaSchema
-}= require('../schemas/categoria.schema');
+} = require('../schemas/categoria.schema');
 
 //Obtener categorias
-router.get("/", 
-    validatorHandler(queryCategoriaSchema,'query'),
-    async (req, res) => {
-    try {
-        const negocioId = req.query;
-        const categorias = await getCategories(negocioId);
-        res.status(200).json({
-            ok: true,
-            data: categorias,
-        });
-    } catch (error) {
-        res.status(500).send("Error al obtener las categorias");
+router.get('/', async (req, res) => {
+    const { negocioId } = req.query;
+    if (!negocioId) {
+        return res.status(400).send('negocioId es requerido');
     }
+
+    const categorias = await getCategories(negocioId);
+    if (!categorias) {
+        return res.status(404).send('No se encontraron categorías');
+    }
+    res.status(200).json(categorias);
 });
 //Obtener categoria por id
-router.get("/:categoriaId", 
-    validatorHandler(getCategoriaSchema,'params'),
+router.get("/:categoriaId",
+    validatorHandler(getCategoriaSchema, 'params'),
     async (req, res) => {
-    try {
-        const { categoriaId } = req.params;
-        const categoria = await getCategory(categoriaId);
-        res.status(200).json({
-            categoria,
-        });
-    } catch (error) {
-        res.status(500).send("Error al obtener la categoria");
-    }
-});
+        try {
+            const { categoriaId } = req.params;
+            const categoria = await getCategory(categoriaId);
+            res.status(200).json({
+                categoria,
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: "Error al obtener la categoria",
+                error: error.message
+            });
+        }
+    });
 //Crear categoria
 router.post("/",
-    validatorHandler(createCategoriaSchema,'body'),
+    validatorHandler(createCategoriaSchema, 'body'),
+    async (req, res) => {
+        try {
+            const body = req.body;
+            const newCategoria = await createCategory(body);
+            res.status(200).json({
+                newCategoria,
+            });
+        } catch (err) {
+            res.status(500).json({
+                message: "Error al crear la categoria",
+                error: err.message
+            });
+        }
+    });
+router.patch("/:categoriaId",
+    validatorHandler(getCategoriaSchema, 'params'),
+    validatorHandler(updateCategoriaSchema, 'body'),
 
     async (req, res) => {
-    try {
-        const body = req.body;
-        const newCategoria = await createCategory(body);
-        res.status(200).json({
-            newCategoria,
-        });
-    } catch (err) {
-        next(err);
-    }
-});
-router.patch("/:categoriaId", 
-    validatorHandler(getCategoriaSchema,'params'),
-    validatorHandler(updateCategoriaSchema,'body'),
-
-    async (req, res) => {
-    try {
-        const { categoriaId } = req.params;
-        const body = req.body;
-        const categoria = await EditCategory(categoriaId, body);
-        res.status(200).json({
-            categoria,
-        });
-    } catch (err) {
-        next(err);
-    }
-});
+        try {
+            const { categoriaId } = req.params;
+            const body = req.body;
+            const categoria = await EditCategory(categoriaId, body);
+            res.status(200).json({
+                categoria,
+            });
+        } catch (err) {
+            next(err);
+        }
+    });
 router.delete("/:categoriaId",
-    validatorHandler(getCategoriaSchema,'params'),
+    validatorHandler(getCategoriaSchema, 'params'),
     async (req, res) => {
-    try {
-        const { categoriaId } = req.params;
-        const categoria = await deleteCategory(categoriaId);
-        res.status(200).json({
-            categoria,
-        });
-    } catch (err) {
-        next(err);
-    }
-});
+        try {
+            const { categoriaId } = req.params;
+            const categoria = await deleteCategory(categoriaId);
+            res.status(200).json({
+                categoria,
+            });
+        } catch (err) {
+            next(err);
+        }
+    });
 
 module.exports = router;

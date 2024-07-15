@@ -23,7 +23,7 @@ router.get(
   async (req, res) => {
     try {
       const { negocioId } = req.query;
-      const productos = await findAll(negocioId);
+      //const productos = await findAll(negocioId);
       //se debe poder filtra por sucursal y categoria
       res.status(200).json({
         ok: true,
