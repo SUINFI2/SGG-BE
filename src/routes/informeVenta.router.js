@@ -11,29 +11,29 @@ router.get("/",
             data: [
                 {
                     "id": 1,
-                    "date": "Ene 22",
+                    "date": "Julio 24",
                     "month": 1,
                     "year": 2022,
-                    "Ingresos": 500000,
+                    "Ingresos": 50000,
                     "Ventas": 2338,
                     "turno": "Mañana"
                 },
                 {
                     "id": 2,
-                    "date": "Ene 22",
+                    "date": "Feb 22",
                     "month": 1,
                     "year": 2022,
-                    "Ingresos": 500000,
-                    "Ventas": 2338,
+                    "Ingresos": 100000,
+                    "Ventas": 3248,
                     "turno": "Tarde"
                 },
                 {
                     "id": 3,
-                    "date": "Ene 22",
+                    "date": "Ene 19",
                     "month": 1,
                     "year": 2022,
-                    "Ingresos": 500000,
-                    "Ventas": 2338,
+                    "Ingresos": 50000,
+                    "Ventas": 4238,
                     "turno": "Noche"
                 }
             ]
