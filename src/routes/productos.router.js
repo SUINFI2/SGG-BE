@@ -38,6 +38,7 @@ router.get(
               nombre: "bebidas",
             },
             imagen: null,
+            codigo: "0001"
           },
           {
             nombre: "pepsi",
@@ -49,6 +50,7 @@ router.get(
               nombre: "bebidas",
             },
             imagen: null,
+            codigo: "0002"
           },
 
           {
@@ -61,6 +63,7 @@ router.get(
               nombre: "snacks",
             },
             imagen: null,
+            codigo: "0003"
           },
         ],
       });
