@@ -16,7 +16,6 @@ const sucursalRouter = require("./sucursal.router");
 const egresoRouter = require("./egreso.router");
 const ingresoRouter = require("./ingreso.router");
 const perfilRouter = require("./perfil.router");
-const perfilRouter = require("./perfil.router");
 const orderProduct = require("./orderProduct.router");
 function routes(app) {
   const router = express.Router();
