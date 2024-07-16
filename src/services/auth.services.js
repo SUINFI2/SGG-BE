@@ -1,4 +1,4 @@
-const { User, Role, Sucursal } = require("../models");
+const { User, Role, Sucursal, Negocio } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { generateToken } = require("../helpers/jwt");
@@ -43,8 +43,15 @@ async function login(user) {
     where: {
       email,
     },
-    include: [{ model: Role, attributes: ["name"] }],
-    include: [{ model: Sucursal, attributes: ["id", "nombre", "direccion"] }]
+    include: [
+      { model: Role, attributes: ["name"] },
+      {
+        model: Sucursal,
+        attributes: ["id", "nombre", "direccion"],
+        include: [{ model: Negocio, attributes: ["id", "nombre"] }]
+      }
+    ]
+
   });
 
   if (!existingUser) {
@@ -79,6 +86,8 @@ async function login(user) {
       sucursalId: existingUser.Sucursal.id,
       nombre_sucursal: existingUser.Sucursal.nombre,
       direccion_sucursal: existingUser.Sucursal.direccion,
+      id_negocio: existingUser.Sucursal.Negocio.id,
+      nombre_negocio: existingUser.Sucursal.Negocio.nombre,
       id_rol: existingUser.id_rol
     },
     token
