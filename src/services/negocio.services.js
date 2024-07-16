@@ -110,7 +110,9 @@ async function create(data) {
 
   console.log('fin categorias');
 
-  return negocioGastronomico;
+  return {negocio: negocioGastronomico,
+      sucursal: sucursal
+  };
 }
 
 async function update(id, body) {
