@@ -18,11 +18,10 @@ const {
 
 router.get(
   "/",
-  validarJWT,
   //validatorHandler(queryNegocioSchema, "query"),
   async (req, res, next) => {
     try {
-      
+
       const Negocios = await findAll();
       res.json(Negocios);
     } catch (err) {
