@@ -45,7 +45,7 @@ router.get(
 );
 router.post(
   "/",
-  validarJWT,
+  //validarJWT,
   validatorHandler(createNegocioSchema, "body"),
   async (req, res, next) => {
     try {
