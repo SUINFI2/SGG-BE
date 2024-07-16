@@ -19,8 +19,24 @@ const findAll = async (query) => {
       "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
     );
   }
+  const arrayProducts = [];
+  await productos.data.forEach(async item => {
+   
+    arrayProducts.push({
+            nombre: item.nombre,
+            precio: item.depositoProducto && item.depositoProducto.precio ? item.depositoProducto.precio : null,
+            descipcion: item.descipcion,
+            sucursalId: sucursalId,
+            categoria: {
+              idCategoria: item.categoriaId,
+              nombre: item.categoria.nombre,
+            },
+            imagen: item.imagen,
+            codigo: item.codigo,
+    })
+  });
 
-  return productos.data;
+  return arrayProducts;
 };
 
 
@@ -77,18 +93,20 @@ async function createProducts( body) {
   if(body.margen){newProductoDeposito.margen = body.margen;}
 
   console.log(newProductoDeposito);
+
   const productoDeposito = await apiInventario.post(
     `/depositoProductos/`,
-    newProducto
+    newProductoDeposito
   );
 
+  
   if (productoDeposito.status != 200) {
     throw boom.notFound(
       "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
       // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
     );
   }
-  return{ producto: producto.data.data, productoDeposito: productoDeposito };
+  return{ producto: producto.data.data, productoDeposito: productoDeposito.data.data };
 }
 
 async function updateProduct(id, body) {

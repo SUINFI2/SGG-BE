@@ -18,8 +18,8 @@ const {
 
 router.get(
   "/",
-  //validarJWT,
-  validatorHandler(queryNegocioSchema, "query"),
+  validarJWT,
+  //validatorHandler(queryNegocioSchema, "query"),
   async (req, res, next) => {
     try {
       
@@ -32,7 +32,7 @@ router.get(
 );
 router.get(
   "/:negocioId",
-  //validarJWT,
+  validarJWT,
   validatorHandler(getNegocioSchema, "params"),
   async (req, res, next) => {
     try {
@@ -46,7 +46,7 @@ router.get(
 );
 router.post(
   "/",
-  //validarJWT,
+  validarJWT,
   validatorHandler(createNegocioSchema, "body"),
   async (req, res, next) => {
     try {

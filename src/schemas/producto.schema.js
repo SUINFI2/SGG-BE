@@ -34,8 +34,8 @@ const getProductoSchema = joi.object({
 });
 
 const queryProductoSchema = joi.object({
-  negocioId: text,
-  sucursalId: text,
+  negocioId: text.required(),
+  sucursalId: text.required(),
   depositoId: text,
   categoriaId: id
 });

@@ -25,49 +25,11 @@ router.get(
     try {
       const query = req.query;
       const productos = await findAll(query);
-
-      //se debe poder filtra por sucursal y categoria
       res.status(200).json({
         ok: true,
-        data: [
-          {
-            nombre: "coca cola",
-            precio: 10,
-            descipcion: "aaaa",
-            sucursalId: 2,
-            categoria: {
-              idCategoria: 8,
-              nombre: "bebidas",
-            },
-            imagen: null,
-            codigo: "0001",
-          },
-          {
-            nombre: "pepsi",
-            precio: 15,
-            descipcion: "aaaa",
-            sucursalId: 1,
-            categoria: {
-              idCategoria: 8,
-              nombre: "bebidas",
-            },
-            imagen: null,
-            codigo: "0002",
-          },
-          {
-            nombre: "papas",
-            precio: 5,
-            descipcion: "aaaa",
-            sucursalId: 2,
-            categoria: {
-              idCategoria: 9,
-              nombre: "snacks",
-            },
-            imagen: null,
-            codigo: "0003",
-          },
-        ],
+        data: productos,
       });
+    
     } catch (error) {
       res.status(500).json({
         message: "Error al obtener los productos",

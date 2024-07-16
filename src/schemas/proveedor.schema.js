@@ -2,14 +2,20 @@ const joi = require('joi');
 
 const id = joi.number().integer();
 const text = joi.string();
-
+const number = joi.number().positive();
 const limit = joi.number().integer();
 const offset = joi.number().integer();
 
 
 const createProveedorSchema = joi.object({
-  perfilId: id.required(),
-  negocioId: text.required()
+  
+  negocioId: text.required(),
+  nombre: text.required(),
+  apellido: text.required(),
+  cedula: number.required(),
+  tipCedula: text.required(),
+  razonSocial: text.required(),
+  direccion: text.required(),
 
 });
 
