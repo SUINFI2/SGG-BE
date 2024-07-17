@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
-const { validarJWT } = require("../middleware/validateToken");
+const { //validarJWT } = require("../middleware/validateToken");
 const {
   createSucursalSchema,
   updateSucursalSchema,
@@ -19,7 +19,7 @@ const {
 
 router.get(
   "/",
-  validarJWT,
+  //validarJWT,
   validatorHandler(querySucursalSchema, "query"),
   async (req, res, next) => {
     try {
@@ -32,7 +32,7 @@ router.get(
 );
 router.get(
   "/:sucursalId",
-  validarJWT,
+  //validarJWT,
   validatorHandler(getSucursalSchema, "params"),
   async (req, res, next) => {
     try {
@@ -46,7 +46,7 @@ router.get(
 );
 router.post(
   "/",
-  validarJWT,
+  //validarJWT,
   validatorHandler(createSucursalSchema, "body"),
   async (req, res, next) => {
     try {
@@ -64,7 +64,7 @@ router.post(
 
 router.patch(
   "/:sucursalId",
-  validarJWT,
+  //validarJWT,
   validatorHandler(getSucursalSchema, "params"),
   validatorHandler(updateSucursalSchema, "body"),
   async (req, res, next) => {
@@ -83,7 +83,7 @@ router.patch(
 );
 router.delete(
   "/:sucursalId",
-  validarJWT,
+  //validarJWT,
   validatorHandler(getSucursalSchema, "params"),
   async (req, res, next) => {
     try {

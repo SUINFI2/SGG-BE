@@ -31,7 +31,7 @@ router.get(
 );
 router.get(
   "/:negocioId",
-  validarJWT,
+  //validarJWT,
   validatorHandler(getNegocioSchema, "params"),
   async (req, res, next) => {
     try {
@@ -63,7 +63,7 @@ router.post(
 
 router.patch(
   "/:negocioId",
-  validarJWT,
+//  validarJWT,
   validatorHandler(getNegocioSchema, "params"),
   validatorHandler(updateNegocioSchema, "body"),
   async (req, res, next) => {
@@ -82,7 +82,7 @@ router.patch(
 );
 router.delete(
   "/:negocioId",
-  validarJWT,
+ // validarJWT,
   validatorHandler(getNegocioSchema, "params"),
   async (req, res, next) => {
     try {
