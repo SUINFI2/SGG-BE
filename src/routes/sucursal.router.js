@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
-const { //validarJWT } = require("../middleware/validateToken");
+const { validarJWT } = require("../middleware/validateToken");
 const {
   createSucursalSchema,
   updateSucursalSchema,
