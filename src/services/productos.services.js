@@ -23,6 +23,7 @@ const findAll = async (query) => {
   await productos.data.forEach(async item => {
    
     arrayProducts.push({
+            id: item.id,
             nombre: item.nombre,
             precio: item.depositoProducto && item.depositoProducto.precio ? item.depositoProducto.precio : null,
             descipcion: item.descipcion,
@@ -69,7 +70,6 @@ async function createProducts( body) {
     );
   }
 
-    console.log("producto creado")
   //crear producto en el unico deposito asociado a la sucursal por defecto
 
   //buscar por sucursal los depositos asociados
@@ -79,7 +79,6 @@ async function createProducts( body) {
       "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
     );
   }
-  console.log("sucursal obtenida")
   // crear productoDeposito
   //por logica de negocio gastronómico cada sucursal tiene un unico deposito
 
@@ -92,7 +91,6 @@ async function createProducts( body) {
   if(body.precio){newProductoDeposito.precio = body.precio;}
   if(body.margen){newProductoDeposito.margen = body.margen;}
 
-  console.log(newProductoDeposito);
 
   const productoDeposito = await apiInventario.post(
     `/depositoProductos/`,
@@ -118,11 +116,18 @@ async function updateProduct(id, body) {
 }
 
 async function deleteProduct(id) {
-  const rta = await apiInventario.delete(`/productos/${id}`);
-  if (!rta) {
-    throw { message: "Error" };
+  
+  const productoDeposito = await apiInventario.post(`/depositoProductos/${id}` );
+  
+
+  
+  if (productoDeposito.status != 200) {
+    throw boom.notFound(
+      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+      // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
+    );
   }
-  return rta;
+  return productoDeposito.data.data;
 }
 module.exports = {
   findAll,

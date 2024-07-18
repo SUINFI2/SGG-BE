@@ -82,7 +82,6 @@ async function create(data) {
     throw boom.badRequest("Negocio not created");
   }
 
-  console.log('fin negocios');
 
   const sucursal = await createSucursal({
     negocioId: tokenId,
@@ -93,7 +92,8 @@ async function create(data) {
     //implementar rollbacks
     throw boom.notFound("sucursal not found");
   }
-  console.log('fin sucursales');
+
+  
   // categorias por default
 
   const categoriasStandar = [
@@ -108,7 +108,6 @@ async function create(data) {
     });
   }
 
-  console.log('fin categorias');
 
   return {negocio: negocioGastronomico,
       sucursal: sucursal

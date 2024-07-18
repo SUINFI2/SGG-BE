@@ -43,9 +43,6 @@ async function findOne(id) {
 async function createSucursal(data) {
   // create sucursales
   const tokenId = await generarTokenSucursalId();
-  console.log("fin generar token sucursal");
-
-  console.log(data);
   //gastronomia
   const sucursalGastronomica = await models.Sucursal.create({
     id: tokenId,
@@ -56,11 +53,8 @@ async function createSucursal(data) {
 
 
   if (!sucursalGastronomica) {
-    // rollaback inventarios
-    // rollback contabilidad
     throw boom.notFound("Sucursal not found in inventario");
   }
-  console.log("fin sucursal gastronomia");
 
   //contabilidad
   const sucursalContable = await apiContable.post(`/sucursales/`, {
@@ -73,7 +67,6 @@ async function createSucursal(data) {
     console.log(sucursalContable.data);
     throw boom.notFound("Sucursal not found in contabilidad");
   }
-  console.log("fin sucursal contabilidad");
 
   //inventarios
   const sucursalInventario = await apiInventario.post(`/sucursales/`, {
@@ -87,7 +80,6 @@ async function createSucursal(data) {
     // rollback contabilidad
     throw boom.notFound("Sucursal not found in inventario");
   }
-  console.log("fin sucursal invetarios");
 
   return sucursalGastronomica;
 }
