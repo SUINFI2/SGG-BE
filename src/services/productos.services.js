@@ -46,7 +46,7 @@ const findOne = async (productoId) => {
 
   if (productos.status != 200) {
     throw boom.notFound(
-      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+      'producto not found'
     );
   }
 
@@ -108,18 +108,11 @@ async function createProducts( body) {
 }
 
 async function updateProduct(id, body) {
-  const rta = await apiInventario.patch(`/productos/${id}`, body);
-  if (!rta) {
-    throw { message: "Error" };
-  }
-  return rta;
-}
 
-async function deleteProduct(id) {
-  
-  const productoDeposito = await apiInventario.post(`/depositoProductos/${id}` );
-  
+// implementar logica separada por cada tabla
+  const productoDeposito = await apiInventario.patch(`/depositoProductos/${id}`,{
 
+  } );
   
   if (productoDeposito.status != 200) {
     throw boom.notFound(
@@ -127,7 +120,34 @@ async function deleteProduct(id) {
       // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
     );
   }
-  return productoDeposito.data.data;
+
+  const productos = await apiInventario.patch(`/productos/${id}`,{
+
+  } );
+  
+  if (productos.status != 200) {
+    throw boom.notFound(
+      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+      // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
+    );
+  }
+
+
+  return 'updated';
+}
+
+async function deleteProduct(id) {
+
+  const producto = await apiInventario.delete(`/productos/${id}` );
+  
+  if (producto.status != 200) {
+    throw boom.notFound(
+      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+      // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
+    );
+  }
+
+  return producto.data.data;
 }
 module.exports = {
   findAll,

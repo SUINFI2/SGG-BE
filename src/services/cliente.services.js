@@ -1,42 +1,95 @@
-const { default: axios } = require("axios");
 
 const apiContable = require("../module/apiContable");
 
 const findAll = async (negocioId) => {
-    const rta = await apiContable.get(`/clientes/findAll`,{params:{negocioId}});
-    if(!rta){
-      throw { message: "Error"};
+
+    const cliente = await apiContable.get(`/clientes/findAll?negocioId=${negocioId}`);
+
+    if(cliente.status!=200){
+      throw boom.notFound(
+        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+      );
      }
-    return rta;
+
+     const arrayclientes=[];
+     cliente.data.forEach(item => {
+      arrayclientes.push({
+        nombre: item.perfil.nombre + " "+ item.perfil.apellido,
+        email: "en desarrollo",
+        telefono: "en desarrollo",
+        direccion: item.perfil.direccion,
+        saldo: 0,
+        estado: "activo",
+      });
+     });
+
+    return arrayclientes;
 }
 const findOne = async (id) => {
-    const rta = await apiContable.get(`/clientes/findOne/${id}`);
-    if(!rta){
-      throw { message: "Error"};
-     }
-    return rta;
+    const cliente = await apiContable.get(`/clientes/findOne/${id}`);
+    if(cliente.status!=200){
+      throw boom.notFound(
+        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+      );     }
+    return {
+      id: cliente.data.data.id,
+      nombre: cliente.data.perfil.nombre + " "+ cliente.data.perfil.apellido,
+      email: "en desarrollo",
+      telefono: "en desarrollo",
+      direccion: cliente.data.perfil.direccion,
+      saldo: 0,
+      estado: "activo",
+    };
 }
-const createCliente = async (body) => {
-    const rta = await apiContable.post(`/clientes/findAll`,body);
-  if(!rta){
-    throw { message: "Error"};
+const createcliente = async (data) => {
+
+// create perfil
+  const perfil = await apiContable.post(`/perfiles/`,{
+    nombre: data.nombre ,
+    apellido: data.apellido,
+    cedula: data.cedula,
+    tipCedula: data.tipCedula,
+    razonSocial: data.razonSocial,
+    direccion: data.direccion
+  });
+if(perfil.status!=200){
+  throw boom.notFound(
+    "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+  );
+  
+ }
+
+  //crear cliente
+    const cliente = await apiContable.post(`/clientes/`,{
+      perfilId: perfil.data.data.id,
+      negocioId: data.negocioId
+    });
+  if(cliente.status!=200){
+    throw boom.notFound(
+      // aplicar rollback con un delete perfil a la api de CONTABILIDAD
+      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+    );
+    
    }
-  return rta;
+
+  return {cliente: cliente.data.data, perfil: perfil.data.data};
 }
 
 const EditCliente = async (id, body) => {
-    const rta = await apiContable.patch(`/clientes/${id}`,body);
-    if(!rta){
-      throw { message: "Error"};
-     }
-    return rta;
+    const cliente = await apiContable.patch(`/clientes/${id}`,body);
+    if(cliente.status!=200){
+      throw boom.notFound(
+        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+      );     }
+    return cliente.data;
 }
 const deleteCliente = async (id) => {
-    const rta = await apiContable.delete(`/clientes/${id}`);
-    if(!rta){
-      throw { message: "Error"};
-     }
-    return rta;
+    const cliente = await apiContable.delete(`/clientes/${id}`);
+    if(cliente.status!=200){
+      throw boom.notFound(
+        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+      );     }
+    return cliente.data;
 }
 
 module.exports = {

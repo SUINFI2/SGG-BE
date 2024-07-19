@@ -1,10 +1,8 @@
-const { default: axios } = require("axios");
 
 const apiContable = require("../module/apiContable");
 
 const findAll = async (negocioId) => {
 
-    console.log("volvi a entrar")
     const proveedor = await apiContable.get(`/proveedores/findAll?negocioId=${negocioId}`);
 
     if(proveedor.status!=200){
@@ -34,6 +32,7 @@ const findOne = async (id) => {
         "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
       );     }
     return {
+      id: proveedor.data.data.id,
       nombre: proveedor.data.perfil.nombre + " "+ proveedor.data.perfil.apellido,
       email: "en desarrollo",
       telefono: "en desarrollo",
@@ -60,8 +59,6 @@ if(perfil.status!=200){
   
  }
 
- console.log("Perfil creado")
- console.log(perfil.data.data)
   //crear proveedor
     const proveedor = await apiContable.post(`/proveedores/`,{
       perfilId: perfil.data.data.id,

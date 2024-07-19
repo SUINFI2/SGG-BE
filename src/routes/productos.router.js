@@ -44,8 +44,8 @@ router.get(
   validatorHandler(getProductoSchema, "params"),
   async (req, res) => {
     try {
-      const { negocioId } = req.params;
-      const producto = await findOne(negocioId);
+      const { productoId } = req.params;
+      const producto = await findOne(productoId);
       res.status(200).json({
         ok: true,
         data: producto,
@@ -98,9 +98,12 @@ router.delete(
   async (req, res) => {
     try {
       const { productoId } = req.params;
+      console.log(productoId);
+      console.log("product delete")
       const producto = await deleteProduct(productoId);
       res.status(200).json({
-        producto,
+        message: "deleted",
+        data: producto
       });
     } catch (err) {
       next(err);

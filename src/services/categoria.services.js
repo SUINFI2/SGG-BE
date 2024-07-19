@@ -3,15 +3,13 @@ const apiInventario = require("../module/apiInventario");
 const boom = require("@hapi/boom");
 
 const getCategories = async (negocioId) => {
-    console.log(negocioId)
 
   const rta = await apiInventario.get(`/categorias/findAll?negocioId=${negocioId}`);
     
   if(rta.status!=200){
     throw boom.notFound("Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint")
 }
-    console.log("Muestra de productos")
-    console.log(rta)
+
   return rta.data;
 };
 
