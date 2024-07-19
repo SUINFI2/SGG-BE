@@ -61,6 +61,7 @@ router.post(
     }
   }
 );
+
 router.patch(
   "/:rolId",
   validarJWT,
@@ -68,12 +69,12 @@ router.patch(
   validatorHandler(updateRolSchema, "body"),
   async (req, res, next) => {
     try {
-      const { mesaId } = req.params;
+      const { rolId } = req.params;
       const body = req.body;
-      const mesa = await update(rolId, body);
+      const updatedRole = await update(rolId, body);
       res.json({
         message: "updated",
-        data: mesa,
+        data: updatedRole,
       });
     } catch (err) {
       next(err);

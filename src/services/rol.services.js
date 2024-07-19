@@ -22,15 +22,16 @@ async function create(data) {
     }
     return response;
 }
-async function update(id, body) {
+async function update(id_rol, body) {
     const response = await models.Role.update(body, {
-        where: { role_id: id }
+        where: { id_rol: id_rol }
     });
     if (response[0] === 0) {
         throw boom.badRequest('Role not updated');
     }
     return response;
 }
+
 async function remove(id) {
     const response = await models.Role.destroy({
         where: { role_id: id }
