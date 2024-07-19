@@ -26,6 +26,7 @@ const findAll = async (query) => {
             id: item.id,
             nombre: item.nombre,
             precio: item.depositoProducto && item.depositoProducto.precio ? item.depositoProducto.precio : null,
+            cantidad: item.depositoProducto && item.depositoProducto.cantidad ? item.depositoProducto.cantidad : null,
             descipcion: item.descipcion,
             sucursalId: sucursalId,
             categoria: {
