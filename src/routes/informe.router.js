@@ -82,4 +82,54 @@ router.get("/balance/",
         })
     }
 );
+
+router.get("/gastos/",
+    async (req, res) => {
+        res.status(200).json({
+            ok: true,
+            data: [
+                {
+                    "Fecha de Creacion": "2024-3-20",
+                    "Tipo de gasto": "Luz",
+                    "Descripcion": "Pago de boleta de luz",
+                    "Medio de Pago": "Efectivo",
+                    "Importe": "2000"
+                },
+                {
+                    "Fecha de Creacion": "2024-6-10",
+                    "Tipo de gasto": "Agua",
+                    "Descripcion": "Pago de boleta de agua",
+                    "Medio de Pago": "Efectivo",
+                    "Importe": "1000"
+                },
+                {
+                    "Fecha de Creacion": "2024-5-15",
+                    "Tipo de gasto": "Mercaderia",
+                    "Descripcion": "Pan de lomo",
+                    "Medio de Pago": "Transferencia",
+                    "Importe": "50000"
+                }
+            ]
+        }
+        )
+    }
+);
+
+router.post("/gastos/",
+    async (req, res) => {
+        //falta hacer service y schema
+        res.status(200).json({
+            ok: true,
+            message: "Gasto creado",
+            data: {
+                "Fecha de Creacion": "2024-3-20",
+                "Tipo de gasto": "Luz",
+                "Descripcion": "Pago de boleta de luz",
+                "Medio de Pago": "Efectivo",
+                "Importe": "2000"
+            }
+
+        })
+    }
+);
 module.exports = router;

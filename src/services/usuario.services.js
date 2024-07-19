@@ -4,7 +4,13 @@ const { Association } = require('sequelize');
 
 
 async function findAll() {
-    const response = await models.User.findAll();
+    const response = await models.User.findAll({
+        include
+            : [{
+                model: models.Role,
+                attributes: ['name']
+            }]
+    });
     if (!response) {
         throw boom.notFound('Usuario not found');
     }
@@ -38,6 +44,7 @@ async function create(data) {
     }
     return response;
 }
+
 async function update(id, body) {
     console.log(id, body)
     const response = await models.User.update(body, {
@@ -46,7 +53,8 @@ async function update(id, body) {
     if (!response) {
         throw boom.badRequest('Usuario not updated');
     }
-    return response;
+    const updatedUser = await models.User.findOne({ where: { id_user: id } });
+    return updatedUser;
 }
 async function remove(id) {
     const response = await models.User.destroy({
