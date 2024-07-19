@@ -14,12 +14,14 @@ const findAll = async (negocioId) => {
      const arrayProveedores=[];
      proveedor.data.forEach(item => {
       arrayProveedores.push({
+        id: item.id,
         nombre: item.perfil.nombre + " "+ item.perfil.apellido,
         email: "en desarrollo",
         telefono: "en desarrollo",
         direccion: item.perfil.direccion,
         saldo: 0,
         estado: "activo",
+        //colocar una funcion ciclica cada dos meses para que verificar
       });
      });
 
