@@ -50,6 +50,8 @@ router.post(
   validarJWT,
   validatorHandler(createPedidoSchema, "body"),
   async (req, res, next) => {
+    console.log(req.body);
+
     try {
       const body = req.body;
       const newPedido = await create(body);
@@ -61,7 +63,7 @@ router.post(
       res.status(500).json({
         message: "Error al obtener los pedidos",
         error: error.message,
-      })
+      });
     }
   }
 );
