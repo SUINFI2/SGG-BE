@@ -71,6 +71,8 @@ async function update(id, body) {
     if (response[0] === 0) {
         throw boom.badRequest('Pedido not updated')
     }
+
+    
     return response
 }
 async function remove(id) {
