@@ -110,10 +110,17 @@ async function createProducts( body) {
 
 async function updateProduct(id, body) {
 
-// implementar logica separada por cada tabla
-  const productoDeposito = await apiInventario.patch(`/depositoProductos/${id}`,{
 
-  } );
+
+  const bodyProductoDeposito = {
+    ...(body.precio && { precio: body.precio }),
+    ...(body.margen && { margen: body.margen }),
+    ...(body.cantidad && { cantidad: body.cantidad })
+  }
+
+  if (Object.keys(bodyProductoDeposito).length > 0) {
+    // implementar logica separada por cada tabla
+  const productoDeposito = await apiInventario.patch(`/depositoProductos/${id}`,bodyProductoDeposito);
   
   if (productoDeposito.status != 200) {
     throw boom.notFound(
@@ -121,20 +128,29 @@ async function updateProduct(id, body) {
       // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
     );
   }
-
-  const productos = await apiInventario.patch(`/productos/${id}`,{
-
-  } );
-  
-  if (productos.status != 200) {
-    throw boom.notFound(
-      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
-      // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
-    );
   }
 
 
-  return 'updated';
+
+  const bodyProducto = {
+    ...(body.descripcion && { descripcion: body.descripcion }),
+    ...(body.nombre && { nombre: body.nombre }),
+    ...(body.codigo && { codigo: body.codigo }),
+    ...(body.categoriaId && { categoriaId: body.categoriaId }),
+    ...(body.imagen && { imagen: body.imagen })
+  }
+  if (Object.keys(bodyProducto).length > 0) {
+    const productos = await apiInventario.patch(`/productos/${id}`, bodyProducto);
+  
+    if (productos.status != 200) {
+      throw boom.notFound(
+        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+        // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
+      );
+    }
+  } 
+ 
+  return true;
 }
 
 async function deleteProduct(id) {

@@ -19,15 +19,15 @@ precio: number,
 margen: number
 });
 
-const updateProductoSchema = joi.object({
+const   updateProductoSchema = joi.object({
   descripcion: text,
   nombre: text,
   codigo: text,
   categoriaId: id,
   imagen:imagen,
   cantidad: number,
-precio: number,
-margen: number
+  precio: number,
+  margen: number
 });
 const getProductoSchema = joi.object({
   productoId: id.required()
