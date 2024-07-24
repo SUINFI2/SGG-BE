@@ -35,6 +35,8 @@ const findAll = async (query) => {
             },
             imagen: item.imagen,
             codigo: item.codigo,
+            depositoProductoId: item.depositoProducto && item.depositoProducto.id ? item.depositoProducto.id : null,
+
     })
   });
 
@@ -108,29 +110,31 @@ async function createProducts( body) {
   return{ producto: producto.data.data, productoDeposito: productoDeposito.data.data };
 }
 
-async function updateProduct(id, body) {
+async function updateProduct(query, body) {
 
 
+  const {productoId, depositoProductoId} = query;
 
-  const bodyProductoDeposito = {
-    ...(body.precio && { precio: body.precio }),
-    ...(body.margen && { margen: body.margen }),
-    ...(body.cantidad && { cantidad: body.cantidad })
-  }
-
-  if (Object.keys(bodyProductoDeposito).length > 0) {
-    // implementar logica separada por cada tabla
-  const productoDeposito = await apiInventario.patch(`/depositoProductos/${id}`,bodyProductoDeposito);
+  if(depositoProductoId){
+    const bodyProductoDeposito = {
+      ...(body.precio && { precio: body.precio }),
+      ...(body.margen && { margen: body.margen }),
+      ...(body.cantidad && { cantidad: body.cantidad })
+    }
   
-  if (productoDeposito.status != 200) {
-    throw boom.notFound(
-      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
-      // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
-    );
+    
+    if (Object.keys(bodyProductoDeposito).length > 0) {
+      // implementar logica separada por cada tabla
+    const productoDeposito = await apiInventario.patch(`/depositoProductos/${depositoProductoId}`,bodyProductoDeposito);
+    
+    if (productoDeposito.status != 200) {
+      throw boom.notFound(
+        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+        // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
+      );
+    }
+    }
   }
-  }
-
-
 
   const bodyProducto = {
     ...(body.descripcion && { descripcion: body.descripcion }),
@@ -140,7 +144,7 @@ async function updateProduct(id, body) {
     ...(body.imagen && { imagen: body.imagen })
   }
   if (Object.keys(bodyProducto).length > 0) {
-    const productos = await apiInventario.patch(`/productos/${id}`, bodyProducto);
+    const productos = await apiInventario.patch(`/productos/${productoId}`, bodyProducto);
   
     if (productos.status != 200) {
       throw boom.notFound(

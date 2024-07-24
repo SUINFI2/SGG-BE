@@ -15,8 +15,8 @@ const findAll = async (negocioId) => {
      cliente.data.forEach(item => {
       arrayclientes.push({
         nombre: item.perfil.nombre + " "+ item.perfil.apellido,
-        email: "en desarrollo",
-        telefono: "en desarrollo",
+        email: cliente.data.perfil.email,
+        telefono: cliente.data.perfil.telefono,
         direccion: item.perfil.direccion,
         saldo: 0,
         estado: "activo",
@@ -34,8 +34,8 @@ const findOne = async (id) => {
     return {
       id: cliente.data.data.id,
       nombre: cliente.data.perfil.nombre + " "+ cliente.data.perfil.apellido,
-      email: "en desarrollo",
-      telefono: "en desarrollo",
+      email: cliente.data.perfil.email,
+      telefono: cliente.data.perfil.telefono,
       direccion: cliente.data.perfil.direccion,
       saldo: 0,
       estado: "activo",

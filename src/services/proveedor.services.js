@@ -16,8 +16,8 @@ const findAll = async (negocioId) => {
       arrayProveedores.push({
         id: item.id,
         nombre: item.perfil.nombre + " "+ item.perfil.apellido,
-        email: "en desarrollo",
-        telefono: "en desarrollo",
+        email: item.perfil.email,
+        telefono: item.perfil.telefono,
         direccion: item.perfil.direccion,
         saldo: 0,
         estado: "activo",
@@ -36,8 +36,8 @@ const findOne = async (id) => {
     return {
       id: proveedor.data.data.id,
       nombre: proveedor.data.perfil.nombre + " "+ proveedor.data.perfil.apellido,
-      email: "en desarrollo",
-      telefono: "en desarrollo",
+      email: proveedor.data.perfil.email,
+      telefono: proveedor.data.perfil.telefono,
       direccion: proveedor.data.perfil.direccion,
       saldo: 0,
       estado: "activo",

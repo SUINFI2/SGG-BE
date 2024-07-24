@@ -12,6 +12,8 @@ const createProveedorSchema = joi.object({
   negocioId: text.required(),
   nombre: text.required(),
   apellido: text.required(),
+  telefono: text.required(),
+  email: text.required(),
   cedula: number.required(),
   tipCedula: text.required(),
   razonSocial: text.required(),
@@ -22,7 +24,9 @@ const createProveedorSchema = joi.object({
 const updateProveedorSchema = joi.object({
   perfilId: id,
   cuentaId: id,
-  negocioId: text
+  negocioId: text,
+  telefono: text,
+  email: text
 });
 const getProveedorSchema = joi.object({
   proveedorId: id.required()

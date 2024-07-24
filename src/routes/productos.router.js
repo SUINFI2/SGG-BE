@@ -75,14 +75,14 @@ router.post(
 );
 //actualizar productos
 router.patch(
-  "/:productoId",
-  validatorHandler(getProductoSchema, "params"),
+  "/",
+  validatorHandler(getProductoSchema, "query"),
   validatorHandler(updateProductoSchema, "body"),
   async (req, res) => {
     try {
-      const { productoId } = req.params;
+      const query = req.query;
       const body = req.body;
-      const producto = await updateProduct(productoId, body);
+      const producto = await updateProduct(query, body);
       res.status(200).json({
         producto,
       });

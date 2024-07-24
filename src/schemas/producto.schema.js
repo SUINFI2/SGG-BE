@@ -18,7 +18,7 @@ cantidad: number,
 precio: number,
 margen: number
 });
-
+ 
 const   updateProductoSchema = joi.object({
   descripcion: text,
   nombre: text,
@@ -30,7 +30,8 @@ const   updateProductoSchema = joi.object({
   margen: number
 });
 const getProductoSchema = joi.object({
-  productoId: id.required()
+  productoId: id.required(),
+  depositoProductoId: id
 });
 
 const queryProductoSchema = joi.object({
