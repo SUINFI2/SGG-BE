@@ -90,14 +90,14 @@ router.get("/gastos/",
             data: [
                 {
                     "FechadeCreacion": "2024-3-20",
-                    "Tipodegasto": "Luz",
+                    "TipodeGasto": "Luz",
                     "Descripcion": "Pago de boleta de luz",
                     "MediodePago": "Efectivo",
                     "Importe": "2000"
                 },
                 {
                     "FechadeCreacion": "2024-6-10",
-                    "Tipodegasto": "Agua",
+                    "TipodeGasto": "Agua",
                     "Descripcion": "Pago de boleta de agua",
                     "MediodePago": "Efectivo",
                     "Importe": "1000"
@@ -123,7 +123,7 @@ router.post("/gastos/",
             message: "Gasto creado",
             data: {
                 "FechadeCreacion": "2024-3-20",
-                "Tipodegasto": "Luz",
+                "TipodeGasto": "Luz",
                 "Descripcion": "Pago de boleta de luz",
                 "MediodePago": "Efectivo",
                 "Importe": "2000"
