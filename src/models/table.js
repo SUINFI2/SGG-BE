@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     id_state: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },
+    }
   });
   return Table;
 };

@@ -54,50 +54,62 @@ async function findOne(id) {
   return response;
 }
 async function create(data) {
-  const { id_mesa, typeShipping, id_user, id_state, sucursalId, items } = data;
+  const { id_mesa, typeShipping, id_user, id_state, sucursalId, clientes, comentario, personas, items } = data;
   const dataOrder = {
     id_mesa,
     typeShipping,
     id_user,
     id_state,
     sucursalId,
+    clientes,
+    comentario,
+    personas
   };
   const response = await models.Order.create(dataOrder);
   if (!response) {
     throw boom.badRequest("Pedido not created");
   }
-  await Promise.all(
-    items.map(async (element) => {
-      await models.orderProduct.create({
-        ...element,
-        id_order: response.id_order,
-        id_prduct: element.id_product,
-      });
-    })
-  );
+  if (items) {
+    await Promise.all(
+      items.map(async (element) => {
+        await models.orderProduct.create({
+          ...element,
+          id_order: response.id_order,
+          id_prduct: element.id_product,
+        });
+      })
+    );
+  }
 
   return response;
 }
 async function update(id, body) {
-    const response = await models.Order.update(body, {
-        where: { id_order: id }
-    })
-    if (response[0] === 0) {
-        throw boom.badRequest('Pedido not updated')
-    }
+  const response = await models.Order.update(body, {
+    where: { id_order: id }
+  })
+  if (response[0] === 0) {
+    throw boom.badRequest('Pedido not updated')
+  }
 
-    
-    return response
+
+  return response
 }
 async function remove(id) {
   const response = await models.Order.destroy({
     where: { id_order: id },
   });
-  if (!response) {
+  if (response === 0) {
     throw boom.badRequest("Pedido not deleted");
   }
-  return response;
+  return {
+    message: "Pedido eliminado",
+    data: {
+      id_order: id,
+      deletedCount: response
+    }
+  };
 }
+
 module.exports = {
   findAll,
   findOne,

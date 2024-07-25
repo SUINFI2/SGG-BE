@@ -26,6 +26,18 @@ module.exports = (sequelize, DataTypes) => {
     typeShipping: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    comentario: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    personas: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    clientes: {
+      type: DataTypes.STRING,
+      allowNull: true,
     }
   });
   return Order;

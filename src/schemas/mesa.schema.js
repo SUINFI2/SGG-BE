@@ -6,6 +6,7 @@ const id_state = joi.number().integer();
 const id_user = joi.number().integer();
 const limit = joi.number().integer();
 const offset = joi.number().integer();
+const estado = joi.boolean();
 
 const createMesaSchema = joi.object({
     number: number.required(),
