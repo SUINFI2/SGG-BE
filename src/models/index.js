@@ -10,7 +10,7 @@ const workday = require("./workday")(sequelize, DataTypes);
 const orderProduct = require("./orderProduct")(sequelize, DataTypes);
 const Negocio = require("./negocio")(sequelize, DataTypes);
 const Sucursal = require("./sucursal")(sequelize, DataTypes);
-
+const Sales = require("./sales")(sequelize, DataTypes);
 
 // User and Role relationship
 User.belongsTo(Role, { foreignKey: "id_rol" });
@@ -48,12 +48,16 @@ Negocio.hasMany(Sucursal, { foreignKey: "negocioId" });
 Sucursal.belongsTo(Negocio, { foreignKey: "negocioId" });
 
 // Sucursal and User relationship
-Sucursal.hasMany(User, { foreignKey: 'sucursalId' });
-User.belongsTo(Sucursal, { foreignKey: 'sucursalId' });
+Sucursal.hasMany(User, { foreignKey: "sucursalId" });
+User.belongsTo(Sucursal, { foreignKey: "sucursalId" });
 
 // Sucursal and Order relationship
-Sucursal.hasMany(Order, { foreignKey: 'sucursalId' });
-Order.belongsTo(Sucursal, { foreignKey: 'sucursalId' });
+Sucursal.hasMany(Order, { foreignKey: "sucursalId" });
+Order.belongsTo(Sucursal, { foreignKey: "sucursalId" });
+
+//Sales and Order relationship
+Sales.belongsTo(Order, { foreignKey: "id_order" });
+Order.hasMany(Sales, { foreignKey: "id_order" });
 
 module.exports = {
   sequelize,
@@ -65,5 +69,6 @@ module.exports = {
   workday,
   orderProduct,
   Negocio,
-  Sucursal
+  Sucursal,
+  Sales,
 };

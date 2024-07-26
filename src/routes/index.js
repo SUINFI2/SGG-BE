@@ -18,6 +18,7 @@ const ingresoRouter = require("./ingreso.router");
 const perfilRouter = require("./perfil.router");
 const orderProduct = require("./orderProduct.router");
 const informeRouter = require("./informe.router");
+const salesRouter = require("./sales.router");
 
 function routes(app) {
   const router = express.Router();
@@ -40,7 +41,7 @@ function routes(app) {
   router.use("/negocios", negocioRouter);
   router.use("/sucursales", sucursalRouter);
   router.use("/informe", informeRouter);
-
+  router.use("/sales", salesRouter);
 }
 
 module.exports = routes;
