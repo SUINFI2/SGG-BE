@@ -16,7 +16,11 @@ module.exports = (sequelize, DataTypes) => {
     id_state: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    }
+    },
+    ubicacion: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   });
   return Table;
 };
