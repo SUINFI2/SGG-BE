@@ -48,7 +48,7 @@ const findOne = async (id) => {
     };
 } */
 const createSales = async (data) => {
-  const { id_order, items } = data;
+  const { id_order, items, cuentaSucursalId } = data;
 
   //buscar la orden de la venta asi pueda obtener el precio de los productos
   const orderProducts = await orderProduct.findAll({
@@ -96,7 +96,7 @@ const createSales = async (data) => {
     {
       monto: acumuladorSales,
       tipo: "debe",
-      cuentaSucursalId: 1,
+      cuentaSucursalId: cuentaSucursalId,
     },
   ];
   /* createVenta(newSales); */
