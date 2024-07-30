@@ -49,7 +49,7 @@ async function findOne(id) {
     return response;
 }
 async function create(mesaData) {
-    const { id_user, id_state, number } = mesaData;
+    const { id_user, id_state, number, ubicacion } = mesaData;
 
     const user = await models.User.findByPk(id_user);
     if (!user) {
@@ -60,6 +60,7 @@ async function create(mesaData) {
         id_user,
         id_state,
         number,
+        ubicacion
     });
 
     return newTable;

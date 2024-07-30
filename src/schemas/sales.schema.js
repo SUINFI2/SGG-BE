@@ -6,6 +6,7 @@ const number = joi.number().positive();
 
 const createSalesSchema = joi.object({
   id_order: text.required(),
+  sucursalId: text.required(),
   items: joi.array().items(
     joi.object({
       id_cuenta: id.required(),
