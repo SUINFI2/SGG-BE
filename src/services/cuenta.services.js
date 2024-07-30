@@ -1,5 +1,6 @@
 const { default: axios } = require("axios");
 const apiContable = require("../module/apiContable");
+
 const getCuentas = async (query) => {
   const { negocioId, sucursalId, filtro } = query;
   const rta = await apiContable.get(`/cuentas/findAll?negocioId=${negocioId}`);
@@ -9,10 +10,10 @@ const getCuentas = async (query) => {
       "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
     );
   }
-  if (filtro) {
+  /* if (filtro) {
     return rta.data.filter((cuenta) => cuenta.tipo === filtro);
   }
-
+ */
   return rta.data;
 };
 

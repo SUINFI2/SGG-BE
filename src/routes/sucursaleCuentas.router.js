@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
 const { validarJWT } = require("../middleware/validateToken");
-const { getSucursalCuentas } = require("../services/sucursalCuentas.services");
+const {
+  getSucursalCuentas,
+  getSucursalCuentasOne,
+} = require("../services/sucursalCuentas.services");
 
 router.get(
   "/",

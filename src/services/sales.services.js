@@ -4,51 +4,10 @@ const sales = require("../models/sales");
 const apiContable = require("../module/apiContable");
 const boom = require("@hapi/boom");
 const { createVenta } = require("./contabilidad.services");
+const { getSucursalCuentasOne } = require("./sucursalCuentas.services");
 
-/* const findAll = async (negocioId) => {
-
-    const proveedor = await apiContable.get(`/proveedores/findAll?negocioId=${negocioId}`);
-
-    if(proveedor.status!=200){
-      throw boom.notFound(
-        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
-      );
-     }
-
-     const arrayProveedores=[];
-     proveedor.data.forEach(item => {
-      arrayProveedores.push({
-        id: item.id,
-        nombre: item.perfil.nombre + " "+ item.perfil.apellido,
-        email: item.perfil.email,
-        telefono: item.perfil.telefono,
-        direccion: item.perfil.direccion,
-        saldo: 0,
-        estado: "activo",
-        //colocar una funcion ciclica cada dos meses para que verificar
-      });
-     });
-
-    return arrayProveedores;
-}
-const findOne = async (id) => {
-    const proveedor = await apiContable.get(`/proveedores/findOne/${id}`);
-    if(proveedor.status!=200){
-      throw boom.notFound(
-        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
-      );     }
-    return {
-      id: proveedor.data.data.id,
-      nombre: proveedor.data.perfil.nombre + " "+ proveedor.data.perfil.apellido,
-      email: proveedor.data.perfil.email,
-      telefono: proveedor.data.perfil.telefono,
-      direccion: proveedor.data.perfil.direccion,
-      saldo: 0,
-      estado: "activo",
-    };
-} */
 const createSales = async (data) => {
-  const { id_order, items, cuentaSucursalId } = data;
+  const { id_order, items, sucursalId } = data;
 
   //buscar la orden de la venta asi pueda obtener el precio de los productos
   const orderProducts = await orderProduct.findAll({
@@ -91,34 +50,28 @@ const createSales = async (data) => {
     };
   });
 
-  //crear asiento contable
-  const asiento = [
-    {
-      monto: acumuladorSales,
+  const cuentaOne = await getSucursalCuentasOne(sucursalId, "1.1.3");
+
+  const array = newSales.map((item) => {
+    return {
+      cuentaSucursalId: Number(item.id_cuenta),
+      monto: Number(item.amount),
       tipo: "debe",
-      cuentaSucursalId: cuentaSucursalId,
-    },
-  ];
-  /* createVenta(newSales); */
+    };
+  });
+
+  array.push({
+    cuentaSucursalId: cuentaOne.id,
+    monto: acumuladorSales,
+    tipo: "haber",
+  });
+
+  console.log("asiento", array);
+  //crear asiento contable
+  //tengo que devolverle un tipo debe
+  createVenta(array);
   return newSales;
 };
-
-/* const EditProveedor = async (id, body) => {
-    const proveedor = await apiContable.patch(`/proveedores/${id}`,body);
-    if(proveedor.status!=200){
-      throw boom.notFound(
-        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
-      );     }
-    return proveedor.data;
-}
-const deleteProveedor = async (id) => {
-    const proveedor = await apiContable.delete(`/proveedores/${id}`);
-    if(proveedor.status!=200){
-      throw boom.notFound(
-        "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
-      );     }
-    return proveedor.data;
-} */
 
 module.exports = {
   createSales,
