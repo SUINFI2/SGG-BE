@@ -63,24 +63,10 @@ async function createGasto(arrayAsiento) {
 
 }
 
-// filtrar asientos
-async function findVentas(query) {
- 
-}
 
-async function findCompras(query) {
-  
-}
-
-async function findGastos(query) {
-  
-}
 
 module.exports = {
    createCompra,
    createGasto,
-   createVenta,
-   findCompras,
-   findVentas,
-   findGastos
+   createVenta
 }

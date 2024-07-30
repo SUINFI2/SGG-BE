@@ -3,9 +3,18 @@ const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
 const { validarJWT } = require("../middleware/validateToken");
 
+const {informeVentasSchema } = require("../schemas/informe.schema");
+const {informeVentas} = require("../services/informe.services");
+
+
 router.get("/informeVenta/",
+    validatorHandler(informeVentasSchema,'query'),
     async (req, res) => {
         //falta hacer la logica 
+
+        const informeVenta = await informeVentas(req.query);
+        res.json(informeVenta);
+        /*
         res.status(200).json({
             ok: true,
             data: [
@@ -37,7 +46,7 @@ router.get("/informeVenta/",
                     "turno": "Noche"
                 }
             ]
-        })
+        })*/
     }
 );
 
