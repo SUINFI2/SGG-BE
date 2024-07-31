@@ -50,7 +50,12 @@ const createSales = async (data) => {
     };
   });
 
-  const cuentaOne = await getSucursalCuentasOne(sucursalId, "1.1.3");
+  const cuentaOne = await getSucursalCuentasOne({
+    sucursalId: sucursalId,
+    codigo: "1.1.3",
+    sucursalCuentaId: null
+  });
+
 
   const array = newSales.map((item) => {
     return {

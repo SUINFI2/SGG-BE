@@ -3,12 +3,14 @@ const router = express.Router();
 const validatorHandler = require("../middleware/validator.handler");
 const { validarJWT } = require("../middleware/validateToken");
 
-const {informeVentasSchema } = require("../schemas/informe.schema");
-const {informeVentas} = require("../services/informe.services");
+const { informeVentasSchema
+    , getInformesSchema
+} = require("../schemas/informe.schema");
+const { informeVentas, findAllVentas } = require("../services/informe.services");
 
 
 router.get("/informeVenta/",
-    validatorHandler(informeVentasSchema,'query'),
+    validatorHandler(informeVentasSchema, 'query'),
     async (req, res) => {
         //falta hacer la logica 
 
@@ -141,4 +143,24 @@ router.post("/gastos/",
         })
     }
 );
+router.get("/ventas",
+    validatorHandler(getInformesSchema, 'query'),
+    async (req, res) => {
+        try {
+            const informes = await findAllVentas();
+            if (!informes || informes.length === 0) {
+                return res.status(404).json({
+                    ok: false,
+                    message: "No se encontraron informes",
+                });
+            }
+            res.status(200).json({
+                ok: true,
+                data: informes,
+            });
+        } catch (error) {
+            res.status(500).send(`Error al obtener los informes: ${error.message}`);
+        }
+    }
+)
 module.exports = router;

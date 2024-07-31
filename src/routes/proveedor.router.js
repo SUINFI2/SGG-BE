@@ -30,9 +30,12 @@ router.get(
         ok: true,
         data: proveedores
       });
-     
+
     } catch (error) {
-      res.status(500).send("Error al obtener los proveedores");
+      res.status(500).json({
+        message: "Error al obtener los proveedores",
+        error: error.message,
+      })
     }
   }
 );
@@ -47,11 +50,14 @@ router.get(
       const { proveedorId } = req.params;
       const proovedor = await findOne(proveedorId);
       res.status(200).json({
-        ok:"found",
+        ok: "found",
         data: proovedor
       });
     } catch (error) {
-      res.status(500).send("Error al obtener el proveedor");
+      res.status(500).json({
+        message: "Error al obtener el proveedor",
+        error: error.message,
+      })
     }
   }
 );
@@ -68,8 +74,11 @@ router.post(
         ok: "created",
         data: newProveedor
       });
-    } catch (err) {
-      res.status(500).send("Error al crear el proveedor");
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al crear el proveedor",
+        error: error.message,
+      })
     }
   }
 );
@@ -87,8 +96,11 @@ router.patch(
       res.status(200).json({
         proveedor,
       });
-    } catch (err) {
-      res.status(500).send("Error al actualizar del proveedor");
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al actualizar el proveedor",
+        error: error.message,
+      })
     }
   }
 );
@@ -104,8 +116,11 @@ router.delete(
       res.status(200).json({
         proveedor,
       });
-    } catch (err) {
-      res.status(500).send("Error al eliminar el proveedor");
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al eliminar el proveedor",
+        error: error.message,
+      })
     }
   }
 );

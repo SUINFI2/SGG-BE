@@ -16,15 +16,26 @@ async function getSucursalCuentas(sucursalId, codigo) {
   }
   return response.data;
 }
-async function getSucursalCuentasOne(sucursalId, codigo) {
-  const response = await apiContable.get(
-    `/sucursales-cuentas/findOne?sucursalId=${sucursalId}&codigo=${codigo}`
-  );
-
-  if (!response) {
-    throw boom.notFound("Sucursal not found");
+async function getSucursalCuentasOne({ sucursalId, codigo, sucursalCuentaId }) {
+  console.log(sucursalCuentaId)
+  if (sucursalCuentaId && sucursalId) {
+    const response = await apiContable.get(
+      `/sucursales-cuentas/findOne?sucursalId=${sucursalId}&sucursalCuentaId=${sucursalCuentaId}`
+    );
+    if (!response) {
+      throw boom.notFound("Sucursal not found");
+    }
+    return response.data
   }
-  return response.data;
+  if (codigo && sucursalId) {
+    const response = await apiContable.get(
+      `/sucursales-cuentas/findOne?sucursalId=${sucursalId}&codigo=${codigo}`
+    );
+    if (!response) {
+      throw boom.notFound("Sucursal not found");
+    }
+    return response.data
+  }
 }
 module.exports = {
   getSucursalCuentas,
