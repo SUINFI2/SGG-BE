@@ -24,11 +24,12 @@ async function findAll() {
     });
 
     if (!response || response.length === 0) {
-        throw new Error('Mesas no encontradas');
+        return [];
     }
 
     return response;
 }
+
 
 async function findOne(id) {
     const response = await models.Table.findByPk(id, {

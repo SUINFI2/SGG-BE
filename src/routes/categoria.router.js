@@ -19,33 +19,39 @@ const {
 } = require('../schemas/categoria.schema');
 
 //Obtener categorias
-router.get("/", 
-    validatorHandler(queryCategoriaSchema,'query'),
+router.get("/",
+    validatorHandler(queryCategoriaSchema, 'query'),
     async (req, res) => {
-    try {
-        const {negocioId} = req.query;
-        const categorias = await getCategories(negocioId);
-        res.status(200).json({
-            ok: true,
-            data: categorias,
-        });
-    } catch (error) {
-        res.status(500).send("Error al obtener las categorias");
-    }
+        try {
+            const { negocioId } = req.query;
+            const categorias = await getCategories(negocioId);
+            res.status(200).json({
+                ok: true,
+                data: categorias,
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: "Error al obtener las categorias",
+                error: error.message,
+            });
+        }
 
-});
+    });
 //Obtener categoria por id
 router.get("/:categoriaId",
     validatorHandler(getCategoriaSchema, 'params'),
     async (req, res) => {
-    try {
-        const { categoriaId } = req.params;
-        const categoria = await getCategory(categoriaId);
-        res.status(200).json(categoria);
-    } catch (error) {
-        res.status(500).send("Error al obtener la categoria");
-    }
-});
+        try {
+            const { categoriaId } = req.params;
+            const categoria = await getCategory(categoriaId);
+            res.status(200).json(categoria);
+        } catch (error) {
+            res.status(500).json({
+                message: "Error al obtener las categorias",
+                error: error.message,
+            });
+        }
+    });
 //Crear categoria
 router.post("/",
     validatorHandler(createCategoriaSchema, 'body'),
@@ -56,10 +62,10 @@ router.post("/",
             res.status(200).json({
                 newCategoria,
             });
-        } catch (err) {
+        } catch (error) {
             res.status(500).json({
                 message: "Error al crear la categoria",
-                error: err.message
+                error: error.message
             });
         }
     });
@@ -75,8 +81,11 @@ router.patch("/:categoriaId",
             res.status(200).json({
                 categoria,
             });
-        } catch (err) {
-            next(err);
+        } catch (error) {
+            res.status(500).json({
+                message: "Error al editar la categoria",
+                error: error.message
+            });
         }
     });
 router.delete("/:categoriaId",
@@ -88,8 +97,11 @@ router.delete("/:categoriaId",
             res.status(200).json({
                 categoria,
             });
-        } catch (err) {
-            next(err);
+        } catch (error) {
+            res.status(500).json({
+                message: "Error al eliminar la categoria",
+                error: error.message
+            });
         }
     });
 

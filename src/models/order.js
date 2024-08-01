@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     sucursalId: {
       type: DataTypes.STRING(252),
-      allowNull: false
+      allowNull: false,
     },
     id_mesa: {
       type: DataTypes.INTEGER,
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     typeShipping: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM('Mesa', 'Delivery', 'Take away'),
       allowNull: false,
     },
     comentario: {

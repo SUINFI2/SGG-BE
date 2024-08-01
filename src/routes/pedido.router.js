@@ -24,8 +24,11 @@ router.get(
     try {
       const pedidos = await findAll();
       res.json(pedidos);
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al obtener el egreso",
+        error: error.message,
+      });
     }
   }
 );
@@ -39,8 +42,11 @@ router.get(
       const { pedidoId } = req.params;
       const pedido = await findOne(pedidoId);
       res.json(pedido);
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al obtener el egreso",
+        error: error.message,
+      });
     }
   }
 );
@@ -82,8 +88,11 @@ router.patch(
         message: "updated",
         data: pedido,
       });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al obtener el egreso",
+        error: error.message,
+      });
     }
   }
 );
@@ -100,8 +109,11 @@ router.delete(
         message: "deleted",
         data: pedido,
       });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al obtener el egreso",
+        error: error.message,
+      });
     }
   }
 );
