@@ -40,7 +40,7 @@ sequelize
     console.log("Connection has been established successfully.");
 
     // Sincronizar los modelos con la base de datos
-    return sequelize.sync({ alter: true }); //(); //  asegura que las tablas se ajusten a cualquier cambio en los modelos
+    return sequelize.sync(/* { alter: true } */); //(); //  asegura que las tablas se ajusten a cualquier cambio en los modelos
   })
   .then(() => {
     app.listen(port, () => {

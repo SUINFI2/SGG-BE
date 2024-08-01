@@ -6,8 +6,8 @@ const Role = require("./role")(sequelize, DataTypes);
 const Table = require("./table")(sequelize, DataTypes);
 const Order = require("./order")(sequelize, DataTypes);
 const State = require("./state")(sequelize, DataTypes);
-const workday = require("./workday")(sequelize, DataTypes);
-const orderProduct = require("./orderProduct")(sequelize, DataTypes);
+const Workday = require("./workday")(sequelize, DataTypes);
+const OrderProduct = require("./orderProduct")(sequelize, DataTypes);
 const Negocio = require("./negocio")(sequelize, DataTypes);
 const Sucursal = require("./sucursal")(sequelize, DataTypes);
 const Sales = require("./sales")(sequelize, DataTypes);
@@ -32,16 +32,17 @@ User.hasMany(Order, { foreignKey: "id_user" });
 Order.belongsTo(Table, { foreignKey: "id_mesa" });
 Table.hasMany(Order, { foreignKey: "id_mesa" });
 
-//user and workday relationship
-User.hasMany(workday, { foreignKey: "id_user" });
-workday.belongsTo(User, { foreignKey: "id_user" });
+// User and Workday relationship
+User.hasMany(Workday, { foreignKey: "id_user" });
+Workday.belongsTo(User, { foreignKey: "id_user" });
 
-//order and state
+// Order and State relationship
 Order.belongsTo(State, { foreignKey: "id_state" });
 State.hasMany(Order, { foreignKey: "id_state" });
 
-Order.hasMany(orderProduct, { foreignKey: "id_order" });
-orderProduct.belongsTo(Order, { foreignKey: "id_order" });
+// Order and OrderProduct relationship
+Order.hasMany(OrderProduct, { foreignKey: "id_order" });
+OrderProduct.belongsTo(Order, { foreignKey: "id_order" });
 
 // Negocio and Sucursal relationship
 Negocio.hasMany(Sucursal, { foreignKey: "negocioId" });
@@ -55,7 +56,7 @@ User.belongsTo(Sucursal, { foreignKey: "sucursalId" });
 Sucursal.hasMany(Order, { foreignKey: "sucursalId" });
 Order.belongsTo(Sucursal, { foreignKey: "sucursalId" });
 
-//Sales and Order relationship
+// Sales and Order relationship
 Sales.belongsTo(Order, { foreignKey: "id_order" });
 Order.hasMany(Sales, { foreignKey: "id_order" });
 
@@ -66,8 +67,8 @@ module.exports = {
   Table,
   Order,
   State,
-  workday,
-  orderProduct,
+  Workday,
+  OrderProduct,
   Negocio,
   Sucursal,
   Sales,

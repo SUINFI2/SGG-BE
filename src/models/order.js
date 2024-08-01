@@ -1,5 +1,3 @@
-const { ref } = require("joi");
-
 module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define("Order", {
     id_order: {
@@ -17,14 +15,20 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_mesa: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      references: {
+        model: "Tables",
+        key: "id_mesa",
+      },
+      onDelete: "SET NULL",
+      onUpdate: "CASCADE",
     },
     id_state: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     typeShipping: {
-      type: DataTypes.ENUM('Mesa', 'Delivery', 'Take away'),
+      type: DataTypes.ENUM("Mesa", "Delivery", "Take away"),
       allowNull: false,
     },
     comentario: {
@@ -38,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     clientes: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
   });
   return Order;
 };
