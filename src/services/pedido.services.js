@@ -22,7 +22,7 @@ async function findAll() {
         attributes: ["name"],
       },
       {
-        model: models.orderProduct,
+        model: models.OrderProduct,
       },
     ],
   });
@@ -72,7 +72,7 @@ async function create(data) {
   if (items) {
     await Promise.all(
       items.map(async (element) => {
-        await models.orderProduct.create({
+        await models.OrderProduct.create({
           ...element,
           id_order: response.id_order,
           id_prduct: element.id_product,
@@ -90,6 +90,7 @@ async function update(id, body) {
   if (response[0] === 0) {
     throw boom.badRequest('Pedido not updated')
   }
+
 
 
   return response

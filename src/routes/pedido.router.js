@@ -26,7 +26,7 @@ router.get(
       res.json(pedidos);
     } catch (error) {
       res.status(500).json({
-        message: "Error al obtener el egreso",
+        message: "Error al obtener los pedido",
         error: error.message,
       });
     }
@@ -44,7 +44,7 @@ router.get(
       res.json(pedido);
     } catch (error) {
       res.status(500).json({
-        message: "Error al obtener el egreso",
+        message: "Error al obtener el pedido",
         error: error.message,
       });
     }
@@ -67,7 +67,7 @@ router.post(
       });
     } catch (error) {
       res.status(500).json({
-        message: "Error al obtener los pedidos",
+        message: "Error al crear el pedido",
         error: error.message,
       });
     }
@@ -90,7 +90,7 @@ router.patch(
       });
     } catch (error) {
       res.status(500).json({
-        message: "Error al obtener el egreso",
+        message: "Error al actualizar el pedido",
         error: error.message,
       });
     }
@@ -111,7 +111,7 @@ router.delete(
       });
     } catch (error) {
       res.status(500).json({
-        message: "Error al obtener el egreso",
+        message: "Error al eliminar el pedido",
         error: error.message,
       });
     }
