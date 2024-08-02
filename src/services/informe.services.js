@@ -53,7 +53,7 @@ const findAllVentas = async () => {
         });
 
         if (!response || response.length === 0) {
-            throw new Error("No se encontraron informes");
+            return [];
         }
 
         await Promise.all(response.map(async (item) => {

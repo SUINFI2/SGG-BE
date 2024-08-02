@@ -2,13 +2,16 @@ const boom = require('@hapi/boom');
 const models = require('../models');
 const { findOne } = require('../services/productos.services');
 
-async function findAll() {
+async function findAll(query = {}) {
+    const { sucursalId } = query;
+
     try {
-        const response = await models.orderProduct.findAll({
+        const response = await models.OrderProduct.findAll({
             include: [
                 {
                     model: models.Order,
-                    attributes: ['comentario'],
+                    attributes: ['comentario', 'sucursalId'],
+                    where: sucursalId ? { sucursalId } : {},
                     include: [
                         {
                             model: models.Table,
@@ -28,15 +31,19 @@ async function findAll() {
                 }
             ],
         });
-        await Promise.all(response.map(async (item) => {
-            const producto = await findOne(item.id_prduct);
-            item.dataValues.producto = {
-                nombre: producto.nombre
-            };
-        }));
+
+        await Promise.all(
+            response.map(async (item) => {
+                const producto = await findOne(item.id_prduct);
+                item.dataValues.producto = {
+                    nombre: producto.nombre
+                };
+            })
+        );
+
         return response;
     } catch (error) {
-        throw boom.internal("Error al obtener los orderProduct", error);
+        throw boom.internal("Error al obtener los orderProducts", error);
     }
 }
 

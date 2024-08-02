@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  
+
   const OrderProduct = sequelize.define("OrderProduct", {
     id_orderProduct: {
       type: DataTypes.INTEGER,
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     id_order: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    
+
     },
     cnt: {
       type: DataTypes.DOUBLE,
@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE,
       allowNull: false,
     },
+    cuentaSolicitada: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    }
   });
   return OrderProduct;
 };

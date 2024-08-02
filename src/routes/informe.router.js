@@ -149,9 +149,9 @@ router.get("/ventas",
         try {
             const informes = await findAllVentas();
             if (!informes || informes.length === 0) {
-                return res.status(404).json({
-                    ok: false,
-                    message: "No se encontraron informes",
+                return res.status(200).json({
+                    ok: true,
+                    message: "No hay informes",
                 });
             }
             res.status(200).json({
@@ -162,5 +162,5 @@ router.get("/ventas",
             res.status(500).send(`Error al obtener los informes: ${error.message}`);
         }
     }
-)
+);
 module.exports = router;

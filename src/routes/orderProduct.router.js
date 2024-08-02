@@ -16,7 +16,7 @@ const {
 
 router.get("/", async (req, res) => {
   try {
-    const orderProducts = await findAll();
+    const orderProducts = await findAll(req.query);
     res.status(200).json({
       ok: true,
       data: orderProducts,

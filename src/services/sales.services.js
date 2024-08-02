@@ -92,6 +92,7 @@ const createSales = async (data) => {
 };
 
 
+
 module.exports = {
   createSales,
 };

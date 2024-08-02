@@ -55,6 +55,15 @@ async function findOne(id) {
 }
 async function create(data) {
   const { id_mesa, typeShipping, id_user, id_state, sucursalId, clientes, comentario, personas, items } = data;
+
+  const existingOrder = await models.Order.findOne({
+    where: {
+      id_mesa
+    }
+  });
+  if (existingOrder) {
+    throw boom.conflict("Ya existe un pedido activo para esta mesa");
+  }
   const dataOrder = {
     id_mesa,
     typeShipping,
