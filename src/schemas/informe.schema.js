@@ -13,7 +13,8 @@ const informeVentasSchema = joi.object({
     negocioId: text,
     sucursalId: text,
     fechaDesde: date,
-    fechaHasta: date
+    fechaHasta: date,
+    temporalidad:  joi.string().valid('day', 'week', 'month').required()
 });
 const getInformesSchema = joi.object({
     sucursalId: sucursalId.required(),

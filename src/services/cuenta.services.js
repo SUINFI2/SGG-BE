@@ -2,18 +2,28 @@ const { default: axios } = require("axios");
 const apiContable = require("../module/apiContable");
 
 const getCuentas = async (query) => {
-  const { negocioId, sucursalId, filtro } = query;
-  const rta = await apiContable.get(`/cuentas/findAll?negocioId=${negocioId}`);
+  const { negocioId, sucursalId, codigo } = query;
+
+  let options = ``;
+  if(negocioId){
+    options += `/cuentas/findAll?negocioId=${negocioId}`;
+  }
+  if(sucursalId){
+    options = `/sucursales-cuentas/findAll?sucursalId=${sucursalId}`;
+    if(codigo){
+      options += `&codigo=${codigo}`;
+    }
+  }
+  
+  console.log(options);
+  const rta = await apiContable.get(options);
 
   if (rta.status != 200) {
     throw boom.notFound(
       "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
     );
   }
-  /* if (filtro) {
-    return rta.data.filter((cuenta) => cuenta.tipo === filtro);
-  }
- */
+ 
   return rta.data;
 };
 

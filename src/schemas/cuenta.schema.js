@@ -23,9 +23,9 @@ const getCuentaSchema = joi.object({
 });
 
 const queryCuentaSchema = joi.object({
-  negocioId: text.required(),
+  negocioId: text,
   sucursalId: text,
-  filtro: text,
+  codigo: text,
 });
 
 module.exports = {

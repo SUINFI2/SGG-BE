@@ -44,6 +44,11 @@ const findAll = async (query) => {
         item.depositoProducto && item.depositoProducto.id
           ? item.depositoProducto.id
           : null,
+
+          updatedAt:
+          item.depositoProducto && item.depositoProducto.updatedAt
+            ? item.depositoProducto.updatedAt
+            : null,
     });
   });
 

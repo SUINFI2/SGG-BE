@@ -88,6 +88,7 @@ const createSales = async (data) => {
   // Crear asiento contable
   //await createVenta(array);
 
+
   return newSales;
 };
 
