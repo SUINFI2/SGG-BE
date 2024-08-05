@@ -10,7 +10,7 @@ const createWorkday = async (userId) => {
   };
 
   try {
-    const workday = await models.workday.create(data);
+    const workday = await models.Workday.create(data);
     return workday;
   } catch (error) {
     console.error("Error creating workday:", error);
@@ -20,7 +20,7 @@ const createWorkday = async (userId) => {
 
 const endWorkday = async (userId) => {
   try {
-    const workday = await models.workday.findOne({
+    const workday = await models.Workday.findOne({
       where: {
         id_user: userId,
         isActive: true,
@@ -45,7 +45,7 @@ const endWorkday = async (userId) => {
 
 const getWorkday = async (userId) => {
   try {
-    const workday = await models.workday.findOne({
+    const workday = await models.Workday.findOne({
       where: {
         id_user: userId,
         isActive: true,
