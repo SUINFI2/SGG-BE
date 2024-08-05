@@ -6,6 +6,8 @@ const boom = require("@hapi/boom");
 const { createVenta } = require("./contabilidad.services");
 const { getSucursalCuentasOne } = require("./sucursalCuentas.services");
 const models = require("../models");
+const { createEgreso } = require("./egreso.services");
+const apiInventario = require("../module/apiInventario");
 
 const createSales = async (data) => {
   const { id_order, items, sucursalId } = data;
@@ -16,10 +18,9 @@ const createSales = async (data) => {
       id_order: id_order,
     },
   });
-
   // Acumulador de la orden
   const acumuladorOrderProduct = orderProducts.reduce(
-    (acumulador, item) => acumulador + parseFloat(item.precio),
+    (acumulador, item) => acumulador + parseFloat(item.precio) * item.cnt,
     0
   );
 
@@ -59,7 +60,7 @@ const createSales = async (data) => {
   const order = await models.Order.findByPk(id_order);
   if (order) {
     await models.Order.update(
-      { id_mesa: null, id_state: 1 },
+      { id_mesa: null, id_state: 7 },
       { where: { id_order: id_order } }
     );
   }
@@ -68,7 +69,7 @@ const createSales = async (data) => {
   const cuentaOne = await getSucursalCuentasOne({
     sucursalId: sucursalId,
     codigo: "1.1.3",
-    sucursalCuentaId: null
+    sucursalCuentaId: null,
   });
 
   const array = items.map((item) => ({
@@ -83,16 +84,30 @@ const createSales = async (data) => {
     tipo: "haber",
   });
 
-  console.log("asiento", array);
-
   // Crear asiento contable
   await createVenta(array);
 
+  //Egreso
+  //buscar por sucursal los depositos asociados
+  const sucursal = await apiInventario.get(`/sucursales/findOne/${sucursalId}`);
+  if (sucursal.status != 200) {
+    throw boom.notFound(
+      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+    );
+  }
+  //por logica de negocio gastronómico cada sucursal tiene un unico deposito
+  let depositoId = sucursal.data.depositos[0].id;
+
+  const arrayEgreso = orderProducts.map((item) => ({
+    depositoId: depositoId,
+    productoId: item.id_prduct,
+    cantidad: item.cnt,
+  }));
+
+  await createEgreso(arrayEgreso);
 
   return newSales;
 };
-
-
 
 module.exports = {
   createSales,
