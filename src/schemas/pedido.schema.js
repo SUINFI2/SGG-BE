@@ -17,7 +17,11 @@ const createItemOrderProduct = joi.object({
 });
 
 const createPedidoSchema = joi.object({
-    id_mesa: id_mesa.required(),
+    id_mesa: joi.when('typeShipping', {
+        is: joi.string().valid('Take away', 'Delivery'),
+        then: id_mesa.optional().allow(null),
+        otherwise: id_mesa.required()
+      }),
     typeShipping: typeShipping.required(),
     id_user: id_user.required(),
     id_state: id_state.required(),
@@ -32,6 +36,7 @@ const updatePedidoSchema = joi.object({
     id_mesa: id_mesa,
     typeShipping: typeShipping,
     id_state: id_state,
+    items: joi.array().items(createItemOrderProduct)
 
 })
 const getPedidoSchema = joi.object({

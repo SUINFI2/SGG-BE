@@ -1,10 +1,10 @@
 const boom = require('@hapi/boom');
 const models = require('../models');
 const { findOne } = require('../services/productos.services');
+const apiInventario = require ('../module/apiInventario')
 
 async function findAll(query = {}) {
     const { sucursalId } = query;
-
     try {
         const response = await models.OrderProduct.findAll({
             include: [
@@ -32,23 +32,27 @@ async function findAll(query = {}) {
             ],
         });
 
-        await Promise.all(
+        const updatedResponse = await Promise.all(
             response.map(async (item) => {
-                const producto = await findOne(item.id_prduct);
-                if(!producto){
-                    return response;
+                try {
+                    const producto = await findOne(item.id_prduct);
+                    if (producto) {
+                        item.dataValues.producto = {
+                            nombre: producto.nombre
+                        };
+                    }
+                } catch (error) {
+                    console.log(`Producto con id ${item.id_prduct} no encontrado.`);
                 }
-                item.dataValues.producto = {
-                    nombre: producto.nombre
-                };
+                return item;
             })
         );
-
-        return response;
+        return updatedResponse;
     } catch (error) {
         throw boom.internal("Error al obtener los orderProducts", error);
     }
 }
+
 async function update(id, body) {
     try {
         const [updatedRows] = await models.OrderProduct.update(body, { 
@@ -72,5 +76,6 @@ async function update(id, body) {
 
 module.exports = {
     findAll,
-    update
+    update,
+    findOne
 };

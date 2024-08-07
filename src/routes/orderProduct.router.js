@@ -7,7 +7,7 @@ const order = require("../models/order");
 const {
   findAll,
   update
-  //   find,
+  // findOne
   //   create,
   //   remove,
 } = require("../services/orderProduct.services");
@@ -17,10 +17,18 @@ const {
 router.get("/", async (req, res) => {
   try {
     const orderProducts = await findAll(req.query);
-    res.status(200).json({
-      ok: true,
-      data: orderProducts,
-    });
+    if (orderProducts.length === 0) {
+      res.status(200).json({
+        ok: true,
+        message: 'No se encontraron orderProducts',
+        data: orderProducts,
+      });
+    } else {
+      res.status(200).json({
+        ok: true,
+        data: orderProducts,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener los orderProducts",
@@ -31,24 +39,32 @@ router.get("/", async (req, res) => {
 
 //findOne
 
-router.get("/:orderProductId", async (req, res) => {
-  try {
-    const { orderProductId } = req.params;
-    if (!orderProductId) {
-      return res.status(400).send("orderProductId is required");
-    }
-    const orderProduct = await find(orderProductId);
-    res.status(200).json({
-      ok: true,
-      data: orderProduct,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener el orderProduct",
-      error: error.message,
-    });
-  }
-});
+
+// router.get("/:orderProductId", async (req, res) => {
+//   try {
+//       const { orderProductId } = req.params;
+//       if (!orderProductId) {
+//           return res.status(400).send("orderProductId is required");
+//       }
+//       const orderProduct = await findOne(orderProductId);
+//       if (!orderProduct) {
+//           return res.status(404).json({
+//               ok: false,
+//               message: `Producto with id ${orderProductId} not found`
+//           });
+//       }
+//       res.status(200).json({
+//           ok: true,
+//           data: orderProduct,
+//       });
+//   } catch (error) {
+//       res.status(500).json({
+//           message: "Error al obtener el orderProduct",
+//           error: error.message,
+//       });
+//   }
+// });
+
 
 router.patch("/:orderProductId", async (req,res)=>{
   try{
