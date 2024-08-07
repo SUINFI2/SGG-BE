@@ -35,6 +35,9 @@ async function findAll(query = {}) {
         await Promise.all(
             response.map(async (item) => {
                 const producto = await findOne(item.id_prduct);
+                if(!producto){
+                    return response;
+                }
                 item.dataValues.producto = {
                     nombre: producto.nombre
                 };
@@ -46,7 +49,28 @@ async function findAll(query = {}) {
         throw boom.internal("Error al obtener los orderProducts", error);
     }
 }
+async function update(id, body) {
+    try {
+        const [updatedRows] = await models.OrderProduct.update(body, { 
+            where: { id_orderProduct: id }
+        });
+        if (updatedRows === 0) {
+            throw new Error('No se encontró el orderProduct o no se realizaron cambios');
+        }
+        const updatedOrderProduct = await models.OrderProduct.findOne({ where: { id_orderProduct: id } });
+
+        return {
+            message: 'OrderProduct actualizado exitosamente',
+            data: updatedOrderProduct
+        };
+    } catch (error) {
+
+        throw new Error(`Error al actualizar el OrderProduct: ${error.message}`);
+    }
+}
+
 
 module.exports = {
-    findAll
+    findAll,
+    update
 };

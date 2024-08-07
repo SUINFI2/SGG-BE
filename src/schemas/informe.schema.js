@@ -18,7 +18,7 @@ const informeVentasSchema = joi.object({
 });
 const getInformesSchema = joi.object({
     sucursalId: sucursalId.required(),
-    sucursalCuentaId: sucursalCuentaId.required()
+    sucursalCuentaId: sucursalCuentaId
 
 });
 module.exports = {

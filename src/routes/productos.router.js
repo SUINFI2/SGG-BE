@@ -68,8 +68,11 @@ router.post(
       const producto = await createProducts(body);
 
       res.status(200).json({ message: "created", data: producto });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al crear el producto",
+        error: error.message,
+      });
     }
   }
 );
@@ -86,8 +89,11 @@ router.patch(
       res.status(200).json({
         producto,
       });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al actualizar el producto",
+        error: error.message,
+      });
     }
   }
 );
@@ -105,8 +111,11 @@ router.delete(
         message: "deleted",
         data: producto
       });
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al eliminar el producto",
+        error: error.message,
+      });
     }
   }
 );

@@ -147,7 +147,7 @@ router.get("/ventas",
     validatorHandler(getInformesSchema, 'query'),
     async (req, res) => {
         try {
-            const informes = await findAllVentas();
+            const informes = await findAllVentas(req.query);
             if (!informes || informes.length === 0) {
                 return res.status(200).json({
                     ok: true,

@@ -6,9 +6,9 @@ const order = require("../models/order");
 
 const {
   findAll,
+  update
   //   find,
   //   create,
-  //   update,
   //   remove,
 } = require("../services/orderProduct.services");
 
@@ -49,5 +49,22 @@ router.get("/:orderProductId", async (req, res) => {
     });
   }
 });
+
+router.patch("/:orderProductId", async (req,res)=>{
+  try{
+    const {orderProductId} = req.params;
+    const body = req.body;
+    const orderProduct = await update(orderProductId, body)
+    res.json ({
+      message: "updated",
+      data: orderProduct
+    });
+  }catch (error){
+    res.status(500).json({
+      message: "Error al actualizar el orderProduct",
+      error: error.message,
+  })
+  }
+})
 
 module.exports = router;

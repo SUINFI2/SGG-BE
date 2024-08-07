@@ -43,13 +43,25 @@ const informeVentas = async (query) => {
     }
 
 };
-const findAllVentas = async () => {
+const findAllVentas = async (query) => {
+    const { sucursalId, sucursalCuentaId } = query;
+
     try {
+        // Construir el objeto de condición 'where' para 'Sales'
+        const whereCondition = {};
+        if (sucursalCuentaId) {
+            whereCondition.id_cuenta = sucursalCuentaId;
+        }
+
         const response = await models.Sales.findAll({
             attributes: ['amount', 'id_cuenta'],
+            where: whereCondition,
             include: [{
                 model: models.Order,
                 attributes: ['typeShipping', 'clientes', 'id_state'],
+                where: {
+                    sucursalId: sucursalId
+                },
                 include: [{
                     model: models.Table,
                     attributes: ['id_mesa', 'number']
@@ -62,7 +74,11 @@ const findAllVentas = async () => {
         }
 
         await Promise.all(response.map(async (item) => {
-            const cuenta = await getSucursalCuentasOne({ sucursalCuentaId: item.id_cuenta, sucursalId: "58e6a292-83c7-4624-942e-b1622dc659b9", codigo: null });
+            const cuenta = await getSucursalCuentasOne({
+                sucursalCuentaId: item.id_cuenta,
+                sucursalId: sucursalId,
+                codigo: null
+            });
 
             item.dataValues.informe = {
                 nombre: cuenta.cuenta.nombre,
@@ -79,6 +95,7 @@ const findAllVentas = async () => {
         throw new Error("Error al obtener los informes");
     }
 };
+
 
 // Función para separar por día y acumular montos
 function groupByDay(array) {
