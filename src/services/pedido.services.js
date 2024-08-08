@@ -145,18 +145,50 @@ async function create(data) {
 
   return response;
 }
-async function update(id, body) {
-  const response = await models.Order.update(body, {
-    where: { id_order: id }
-  })
-  if (response[0] === 0) {
-    throw boom.badRequest('Pedido not updated')
+async function update(pedidoId, changes) {
+  const { id_mesa, typeShipping, id_user, id_state, sucursalId, clientes, comentario, personas, items } = changes;
+
+  const order = await models.Order.findByPk(pedidoId);
+  if (!order) {
+    throw boom.notFound("Pedido no encontrado");
   }
+  const updatedOrder = await order.update({
+    id_mesa: (typeShipping === 'Take away' || typeShipping === 'Delivery') ? null : id_mesa,
+    typeShipping,
+    id_user,
+    id_state,
+    sucursalId,
+    clientes,
+    comentario,
+    personas
+  });
 
-
-
-  return response
+  if (items) {
+    for (const item of items) {
+      if (item.id_orderProduct) {
+        const orderProduct = await models.OrderProduct.findByPk(item.id_orderProduct);
+        if (orderProduct) {
+          await orderProduct.update({
+            id_product: item.id_product,
+            cnt: item.cnt,
+            precio: item.precio,
+          });
+        }
+      } else {
+        // Crea un nuevo producto si no existe
+        await models.OrderProduct.create({
+          id_order: pedidoId,
+          id_prduct: item.id_product,
+          cnt: item.cnt,
+          precio: item.precio,
+        });
+      }
+    }
+  }
+  return updatedOrder;
 }
+
+
 async function remove(id) {
   const response = await models.Order.destroy({
     where: { id_order: id },
