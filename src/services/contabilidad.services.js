@@ -55,15 +55,16 @@ async function createGasto(arrayAsiento) {
       descripcion: "gasto",
     };
   });
+  console.log(arrayAsiento)
   const rta = await apiContable.post(`/asientos/`, arrayAsiento);
-
+console.log(rta);
   if (rta.status != 200) {
     throw boom.notFound(
       "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
     );
   }
+    return rta.data;
 
-  return rta.data;
 }
 
 

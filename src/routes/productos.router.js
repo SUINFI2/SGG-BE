@@ -8,6 +8,7 @@ const {
   updateProduct,
   deleteProduct,
   findOne,
+  updatePorMargenProduct
 } = require("../services/productos.services");
 
 const {
@@ -15,6 +16,7 @@ const {
   updateProductoSchema,
   getProductoSchema,
   queryProductoSchema,
+  updatePorMargenProductoSchema
 } = require("../schemas/producto.schema");
 
 //obtener prodcutos
@@ -89,6 +91,23 @@ router.patch(
       res.status(200).json({
         producto,
       });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al actualizar el producto",
+        error: error.message,
+      });
+    }
+  }
+);
+//actualizar productos
+router.patch(
+  "/margen/categoria",
+  validatorHandler(updatePorMargenProductoSchema, "body"),
+  async (req, res) => {
+    try {
+      const body = req.body;
+      const producto = await updatePorMargenProduct(body);
+      res.json(producto)
     } catch (error) {
       res.status(500).json({
         message: "Error al actualizar el producto",

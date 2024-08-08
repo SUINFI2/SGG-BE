@@ -41,11 +41,16 @@ const queryProductoSchema = joi.object({
   categoriaId: id
 });
 
-
+const updatePorMargenProductoSchema = joi.object({
+  sucursalId: text,
+  margen: number.required(),
+  categoriaId: id.required()
+});
 
 module.exports = {
   createProductoSchema,
   updateProductoSchema,
   getProductoSchema,
-  queryProductoSchema
+  queryProductoSchema,
+  updatePorMargenProductoSchema
 };
