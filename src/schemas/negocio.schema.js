@@ -12,10 +12,11 @@ const email = joi.string().email();
 
 const nombre = joi.string().min(3).max(50);
 const direccion = joi.string().min(3).max(256);
-
+const userId = joi.number().integer();
 const createNegocioSchema = joi.object({
    nombre: nombre.required(),
-   direccion: direccion.required()
+   direccion: direccion.required(),
+   userId: userId.required()
 })
 const updateNegocioSchema = joi.object({
     nombre: nombre,

@@ -46,7 +46,7 @@ async function findOne(id) {
 }
 async function create(data) {
   const tokenId = await generarTokenId();
-
+  console.log("antes de todo");
   // create negocios
   // contabilidad
   const negocioContable = await apiContable.post(`/negocios/`, {
@@ -58,7 +58,7 @@ async function create(data) {
     console.log(negocioContable.data);
     throw boom.notFound("Negocio not found in contabilidad");
   }
-
+  console.log("negocio creado en contabilidad");
   //inventarios
   const negocioInventario = await apiInventario.post(`/negocios/`, {
     id: tokenId,
@@ -70,7 +70,7 @@ async function create(data) {
     //rollback in contabilidad
     throw boom.notFound("Negocio not found in inventarios");
   }
-
+  console.log("negocio creado en inventarios");
   // gastronomia
   const negocioGastronomico = await models.Negocio.create({
     id: tokenId,
@@ -81,7 +81,7 @@ async function create(data) {
     // rollaback contabilidad
     throw boom.badRequest("Negocio not created");
   }
-
+  console.log("negocio creado en gastronomia");
 
   const sucursal = await createSucursal({
     negocioId: tokenId,

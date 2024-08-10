@@ -28,9 +28,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       field: 'updated_at',
       defaultValue: sequelize.NOW
+    },
+     userId:{
+      allowNull: true,
+        type: DataTypes.INTEGER,
+        field: 'user_id',
+        references: {
+          model: 'Users',
+          key: 'id_user'
+        }
     }
 
-  }, {
+  }, 
+  {
     tableName: 'Negocios',
   });
 
