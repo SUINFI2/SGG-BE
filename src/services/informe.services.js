@@ -2,8 +2,9 @@ const { default: axios } = require("axios");
 const boom = require('@hapi/boom');
 const models = require("../models");
 const Sequelize = require('sequelize');
-const moment = require('moment');
-const momentTimezone = require('moment-timezone');
+// const moment = require('moment');
+// const momentTimezone = require('moment-timezone');
+const moment = require('moment-timezone'); // Usa moment-timezone para manejar zonas horarias
 const {
     getSucursalCuentasOne
 } = require("../services/sucursalCuentas.services");
@@ -99,9 +100,10 @@ const findAllVentas = async (query) => {
     }
 };
 
+
+
 const obtenerArqueoDeCaja = async (query) => {
     const { sucursalId } = query;
-
     const workdays = await models.Workday.findAll({
         where: {
             id_user: {
@@ -111,38 +113,58 @@ const obtenerArqueoDeCaja = async (query) => {
         order: [["start_time", "DESC"]],
         attributes: ['start_time', 'end_time', 'monto_en_caja', 'isActive']
     });
-
     if (!workdays.length) {
         throw boom.notFound('No se encontraron jornadas laborales para la sucursal especificada');
     }
-
-    // Obtener el total de ventas sin filtro por fecha
-    const ventasDelDia = await models.Sales.sum('amount', {
-        include: [{
-            model: models.Order,
-            attributes: [],
-            where: { sucursalId: sucursalId }
-        }]
-    });
-
-    // Preparar el resultado
-    const resultados = workdays.map(workday => {
-        const diferencia = ventasDelDia - (workday.monto_en_caja || 0);
-
-        return {
-            horaDeApertura: workday.start_time,
-            horaDeCierre: workday.end_time,
-            caja: workday.monto_en_caja,
-            diferencia: diferencia,
-            estado: workday.isActive ? 'Abierto' : 'Cerrado',
-        };
-    });
-
+    const today = moment.tz('America/Argentina/Buenos_Aires').format('YYYY-MM-DD');
+    const startOfDay = moment.tz(today, 'YYYY-MM-DD', 'America/Argentina/Buenos_Aires').startOf('day').toISOString();
+    const endOfDay = moment.tz(today, 'YYYY-MM-DD', 'America/Argentina/Buenos_Aires').endOf('day').toISOString();
+    const resultados = await Promise.all(workdays.map(async workday => {
+        try {
+            const ventasDelPeriodo = await models.Sales.sum('amount', {
+                include: [{
+                    model: models.Order,
+                    attributes: [],
+                    where: { sucursalId: sucursalId }
+                }],
+                where: {
+                    createdAt: {
+                        [Sequelize.Op.between]: [startOfDay, endOfDay]
+                    }
+                }
+            });
+            let fechaInforme = 'Fecha no disponible';
+            if (workday.end_time) {
+                const endTime = moment(workday.end_time, 'HH:mm:ss');
+                const endDate = moment(today).set({
+                    hour: endTime.hour(),
+                    minute: endTime.minute(),
+                    second: endTime.second()
+                });
+                fechaInforme = endDate.isValid() ? endDate.format('DD/MM/YY') : 'Fecha no disponible';
+            }
+            const diferencia = (workday.monto_en_caja || 0) - ventasDelPeriodo;
+            return {
+                horaDeApertura: moment(startOfDay).format('YYYY-MM-DD HH:mm:ss'),
+                horaDeCierre: moment(endOfDay).format('YYYY-MM-DD HH:mm:ss'),
+                caja: workday.monto_en_caja,
+                diferencia: diferencia,
+                estado: workday.isActive ? 'Abierto' : 'Cerrado',
+                totalVentas: ventasDelPeriodo || 0,
+                fecha: fechaInforme 
+            };
+        } catch (error) {
+            throw boom.internal('Error al consultar ventas del periodo');
+        }
+    }));
+    const totalVentas = resultados.reduce((acc, cierre) => acc + (cierre.totalVentas || 0), 0);
     return {
-        totalVentas: ventasDelDia,
+        totalVentas: totalVentas,
         cierres: resultados
     };
 };
+
+
 
 
 // Función para separar por día y acumular montos

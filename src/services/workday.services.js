@@ -81,7 +81,6 @@ const cierreCaja = async (userId, montoEnCaja) => {
 
     // Actualizar el monto en caja en la jornada laboral
     workday.monto_en_caja = montoEnCaja;
-    workday.isActive = false; // Marcar la jornada como inactiva
 
     // Guardar los cambios en la base de datos
     await workday.save();
@@ -92,6 +91,7 @@ const cierreCaja = async (userId, montoEnCaja) => {
     throw error;
   }
 };
+
 module.exports = {
   createWorkday,
   endWorkday,
