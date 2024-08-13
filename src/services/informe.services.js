@@ -1,6 +1,9 @@
 const { default: axios } = require("axios");
 const boom = require('@hapi/boom');
 const models = require("../models");
+const Sequelize = require('sequelize');
+const moment = require('moment');
+const momentTimezone = require('moment-timezone');
 const {
     getSucursalCuentasOne
 } = require("../services/sucursalCuentas.services");
@@ -96,6 +99,51 @@ const findAllVentas = async (query) => {
     }
 };
 
+const obtenerArqueoDeCaja = async (query) => {
+    const { sucursalId } = query;
+
+    const workdays = await models.Workday.findAll({
+        where: {
+            id_user: {
+                [Sequelize.Op.not]: null 
+            },
+        },
+        order: [["start_time", "DESC"]],
+        attributes: ['start_time', 'end_time', 'monto_en_caja', 'isActive']
+    });
+
+    if (!workdays.length) {
+        throw boom.notFound('No se encontraron jornadas laborales para la sucursal especificada');
+    }
+
+    // Obtener el total de ventas sin filtro por fecha
+    const ventasDelDia = await models.Sales.sum('amount', {
+        include: [{
+            model: models.Order,
+            attributes: [],
+            where: { sucursalId: sucursalId }
+        }]
+    });
+
+    // Preparar el resultado
+    const resultados = workdays.map(workday => {
+        const diferencia = ventasDelDia - (workday.monto_en_caja || 0);
+
+        return {
+            horaDeApertura: workday.start_time,
+            horaDeCierre: workday.end_time,
+            caja: workday.monto_en_caja,
+            diferencia: diferencia,
+            estado: workday.isActive ? 'Abierto' : 'Cerrado',
+        };
+    });
+
+    return {
+        totalVentas: ventasDelDia,
+        cierres: resultados
+    };
+};
+
 
 // Función para separar por día y acumular montos
 function groupByDay(array) {
@@ -158,5 +206,6 @@ function agregarTurnoYId(arr) {
 
 module.exports = {
     informeVentas,
-    findAllVentas
+    findAllVentas,
+    obtenerArqueoDeCaja
 };

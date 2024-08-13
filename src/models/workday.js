@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    monto_en_caja: {
+      type: DataTypes.FLOAT, 
+      allowNull: true,
+    },
   });
+
   return Workday;
 };

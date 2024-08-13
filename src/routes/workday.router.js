@@ -6,6 +6,7 @@ const {
   createWorkday,
   endWorkday,
   getWorkday,
+  cierreCaja
 } = require("../services/workday.services");
 
 router.post("/start", validarJWT, async (req, res, next) => {
@@ -21,6 +22,20 @@ router.post("/start", validarJWT, async (req, res, next) => {
     next(err);
   }
 });
+
+router.post ("/cierreCaja",  async (req, res, next) => {
+  const { userId, montoEnCaja } = req.body;
+
+  try {
+    const resultado = await cierreCaja(userId, montoEnCaja);
+    res.status(200).json({ message: 'Caja cerrada con éxito', data: resultado });
+  } catch (error) {
+    console.error("Error al cerrar caja:", error);
+    next(error);
+  }
+}
+)
+
 
 router.post("/end", validarJWT, async (req, res, next) => {
   const { userId } = req.body;

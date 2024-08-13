@@ -4,9 +4,9 @@ const validatorHandler = require("../middleware/validator.handler");
 const { validarJWT } = require("../middleware/validateToken");
 
 const { informeVentasSchema
-    , getInformesSchema
+    , getInformesSchema,
 } = require("../schemas/informe.schema");
-const { informeVentas, findAllVentas } = require("../services/informe.services");
+const { informeVentas, findAllVentas, obtenerArqueoDeCaja } = require("../services/informe.services");
 
 
 router.get("/informeVenta/",
@@ -163,4 +163,13 @@ router.get("/ventas",
         }
     }
 );
+
+router.get('/arqueo-caja', async (req, res, next) => {
+    try {
+        const resultado = await obtenerArqueoDeCaja(req.query);
+        res.status(200).json(resultado);
+    } catch (error) {
+        res.status(500).send(`Error al obtener el informe de arqueo caja: ${error.message}`);
+    }
+});
 module.exports = router;

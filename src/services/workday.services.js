@@ -64,8 +64,37 @@ const getWorkday = async (userId) => {
   }
 };
 
+const cierreCaja = async (userId, montoEnCaja) => {
+  try {
+    // Buscar la jornada laboral activa para el usuario
+    const workday = await models.Workday.findOne({
+      where: {
+        id_user: userId,
+        isActive: true,
+      },
+      order: [["start_time", "DESC"]],
+    });
+
+    if (!workday) {
+      throw new Error(`No se encontró una jornada de trabajo activa para el usuario ID ${userId}`);
+    }
+
+    // Actualizar el monto en caja en la jornada laboral
+    workday.monto_en_caja = montoEnCaja;
+    workday.isActive = false; // Marcar la jornada como inactiva
+
+    // Guardar los cambios en la base de datos
+    await workday.save();
+
+    return workday;
+  } catch (error) {
+    console.error("Error al cerrar la caja:", error);
+    throw error;
+  }
+};
 module.exports = {
   createWorkday,
   endWorkday,
   getWorkday,
+  cierreCaja
 };
