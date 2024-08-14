@@ -1,5 +1,11 @@
 const { Sequelize } = require("sequelize");
-require("dotenv").config();
-const sequelize = new Sequelize(process.env.DATABASE_URL);
+
+const  config  = require('./config');
+
+
+const sequelize = new Sequelize(config.production.url,{
+    dialect: 'mysql',
+  logging: true
+});
 
 module.exports = sequelize;

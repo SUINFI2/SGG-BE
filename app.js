@@ -9,7 +9,7 @@ const { sequelize } = require("./src/models");
 const port = process.env.PORT || 3000;
 const morgan = require("morgan");
 const cors = require("cors");
-const config = require("./config/config");
+const {config} = require("./config/config");
 // Configurar CORS
 app.use(
   cors({
@@ -20,9 +20,10 @@ app.use(
 );
 dotenv.config();
 app.use(bodyParser.json());
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: config.SessionSecret,
     resave: false,
     saveUninitialized: true,
   })
@@ -32,21 +33,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(morgan("dev"));
 //cors
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
-// Verificar la conexión a la base de datos
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-
-    // Sincronizar los modelos con la base de datos
-    return sequelize.sync(); //({ alter: true }); //  asegura que las tablas se ajusten a cualquier cambio en los modelos
-  })
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  })
-  .catch((err) => {
-    console.error("Unable to connect to the database:", err);
-  });

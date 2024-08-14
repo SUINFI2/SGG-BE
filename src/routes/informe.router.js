@@ -6,7 +6,7 @@ const { validarJWT } = require("../middleware/validateToken");
 const { informeVentasSchema
     , getInformesSchema,
 } = require("../schemas/informe.schema");
-const { informeVentas, findAllVentas, obtenerArqueoDeCaja } = require("../services/informe.services");
+const { informeVentas, findAllVentas, obtenerArqueoDeCaja,informeGastos } = require("../services/informe.services");
 
 
 router.get("/informeVenta/",
@@ -16,39 +16,16 @@ router.get("/informeVenta/",
 
         const informeVenta = await informeVentas(req.query);
         res.json(informeVenta);
-        /*
-        res.status(200).json({
-            ok: true,
-            data: [
-                {
-                    "id": 1,
-                    "date": "Julio 24",
-                    "month": 7,
-                    "year": 2022,
-                    "Ingresos": 50000,
-                    "Ventas": 2338,
-                    "turno": "Mañana"
-                },
-                {
-                    "id": 2,
-                    "date": "Feb 22",
-                    "month": 2,
-                    "year": 2022,
-                    "Ingresos": 100000,
-                    "Ventas": 3248,
-                    "turno": "Tarde"
-                },
-                {
-                    "id": 3,
-                    "date": "Ene 19",
-                    "month": 1,
-                    "year": 2022,
-                    "Ingresos": 50000,
-                    "Ventas": 4238,
-                    "turno": "Noche"
-                }
-            ]
-        })*/
+        
+    }
+);
+router.get("/informeGasto/",
+    validatorHandler(informeVentasSchema, 'query'),
+    async (req, res) => {
+
+        const informeVenta = await informeGastos(req.query);
+        res.json(informeVenta);
+        
     }
 );
 

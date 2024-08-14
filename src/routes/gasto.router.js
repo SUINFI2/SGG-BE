@@ -7,7 +7,7 @@ const {
     create,
 } = require("../services/gasto.services");
 
-const {createGastoSchema} = require('../schemas/gasto.schema');
+const {createGastoSchema,queryGastoSchema} = require('../schemas/gasto.schema');
 
 
 //create
@@ -29,6 +29,19 @@ router.post("/",
         }
     });
 
-
+    router.get("/",
+        validatorHandler(queryGastoSchema, 'query'),
+        async (req, res) => {
+            try {
+                const query = req.query;
+                const gastos = await create(query);
+                res.status(200).json(gastos);
+            } catch (error) {
+                res.status(500).json({
+                    message: "Error al crear el gasto",
+                    error: error.message,
+                });
+            }
+        });
 
 module.exports = router;
