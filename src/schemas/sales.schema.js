@@ -1,0 +1,21 @@
+const joi = require("joi");
+
+const id = joi.number().integer();
+const text = joi.string();
+const number = joi.number().positive();
+const tipo = joi.string().valid('tick', 'fcta').length(4);
+const createSalesSchema = joi.object({
+  id_order: text.required(),
+  sucursalId: text.required(),
+  items: joi.array().items(
+    joi.object({
+      id_cuenta: id.required(),
+      amount: text.required(),
+    })
+  ),
+  tipo: tipo.required()
+});
+
+module.exports = {
+  createSalesSchema,
+};
