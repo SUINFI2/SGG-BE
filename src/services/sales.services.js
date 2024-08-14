@@ -10,7 +10,7 @@ const { createEgreso } = require("./egreso.services");
 const apiInventario = require("../module/apiInventario");
 
 const createSales = async (data) => {
-  const { id_order, items, sucursalId } = data;
+  const { id_order, items, sucursalId, tipo } = data;
 
   // Buscar la orden de la venta para obtener el precio de los productos
   const orderProducts = await models.OrderProduct.findAll({
@@ -47,12 +47,14 @@ const createSales = async (data) => {
       id_order: id_order,
       amount: item.amount,
       id_cuenta: item.id_cuenta,
+      tipo: tipo
     });
 
     return {
       id_order: id_order,
       amount: item.amount,
       id_cuenta: item.id_cuenta,
+      tipo: item.tipo
     };
   });
 

@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    tipo: {
+      type: DataTypes.STRING(4),
+      allowNull: true,
+    },
     amount: {
       type: DataTypes.DOUBLE,
       allowNull: false,
