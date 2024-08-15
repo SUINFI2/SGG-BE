@@ -5,6 +5,7 @@ const { validarJWT } = require("../middleware/validateToken");
 
 const {
     create,
+    findAll
 } = require("../services/gasto.services");
 
 const {createGastoSchema,queryGastoSchema} = require('../schemas/gasto.schema');
@@ -34,7 +35,7 @@ router.post("/",
         async (req, res) => {
             try {
                 const query = req.query;
-                const gastos = await create(query);
+                const gastos = await findAll(query);
                 res.status(200).json(gastos);
             } catch (error) {
                 res.status(500).json({
