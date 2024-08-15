@@ -143,10 +143,12 @@ router.get("/ventas",
 
 router.get('/arqueo-caja', async (req, res, next) => {
     try {
-        const resultado = await obtenerArqueoDeCaja(req.query);
+        const { sucursalId } = req.query;
+        const resultado = await obtenerArqueoDeCaja(sucursalId); 
         res.status(200).json(resultado);
     } catch (error) {
         res.status(500).send(`Error al obtener el informe de arqueo caja: ${error.message}`);
     }
 });
+
 module.exports = router;

@@ -1,7 +1,7 @@
 module.exports={
   //en donde va encontrar la configuracion de cual es la conexion a la base de datos.
   //el "cli" de las migraciones tendran sus propias conexiones, independientmente de la app
-  'config': './config/database.js',
+  'config': './config/configMigrations.js',
   // en donde encontrara los modelos
   'models-path': './src/models/index.js',
   // en donde encontrara las migraciones

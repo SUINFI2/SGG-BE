@@ -1,6 +1,6 @@
 const boom = require("@hapi/boom");
 const models = require("../models");
-
+const Sequelize = require('sequelize');
 const createWorkday = async (userId) => {
   const data = {
     id_user: userId,
@@ -66,29 +66,44 @@ const getWorkday = async (userId) => {
 
 const cierreCaja = async (userId, montoEnCaja) => {
   try {
-    // Buscar la jornada laboral activa para el usuario
-    const workday = await models.Workday.findOne({
+    // Buscar la caja abierta más reciente para el usuario
+    const caja = await models.Caja.findOne({
       where: {
         id_user: userId,
-        isActive: true,
+        estado: 'abierta'
       },
-      order: [["start_time", "DESC"]],
+      order: [['fecha_apertura', 'DESC']],
     });
 
-    if (!workday) {
-      throw new Error(`No se encontró una jornada de trabajo activa para el usuario ID ${userId}`);
+    if (!caja) {
+      throw new Error(`No se encontró una caja abierta para el usuario ID ${userId}`);
     }
+    caja.monto_caja = montoEnCaja;
+    caja.fecha_cierre = new Date();
+    caja.estado = 'cerrada';
+    await caja.save();
 
-    // Actualizar el monto en caja en la jornada laboral
-    workday.monto_en_caja = montoEnCaja;
-
-    // Guardar los cambios en la base de datos
-    await workday.save();
-
-    return workday;
+    return caja;
   } catch (error) {
     console.error("Error al cerrar la caja:", error);
     throw error;
+  }
+};
+
+const abrirCaja = async (id_user, sucursalId, montoInicial) => {
+  try {
+      const aperturaCaja = await models.Caja.create({
+          id_user: id_user,
+          SucursalId: sucursalId,
+          monto_inicial: montoInicial,
+          fecha_apertura: new Date(),
+          estado: 'abierta',
+      });
+
+      return aperturaCaja;
+  } catch (error) {
+      console.error('Error al abrir la caja:', error);
+      throw boom.internal('No se pudo abrir la caja');
   }
 };
 
@@ -96,5 +111,6 @@ module.exports = {
   createWorkday,
   endWorkday,
   getWorkday,
-  cierreCaja
+  cierreCaja,
+  abrirCaja
 };
