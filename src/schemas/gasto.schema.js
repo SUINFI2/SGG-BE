@@ -21,6 +21,8 @@ const createGastoSchema = joi.object({
       amount: number.required(),
     })
 });
+
+
 const queryGastoSchema = joi.object({
   negocioId: text,
   sucursalId: text,

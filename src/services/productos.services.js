@@ -72,7 +72,7 @@ async function createProducts(body) {
     categoriaId: body.categoriaId,
   };
   if (body.imagen) {
-    newProducto.imagen = imagen;
+    newProducto.imagen = body.imagen;
   }
 
   const producto = await apiInventario.post(`/productos/`, newProducto);
