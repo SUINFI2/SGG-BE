@@ -5,12 +5,9 @@ const Sequelize = require('sequelize');
 // const moment = require('moment');
 // const momentTimezone = require('moment-timezone');
 const moment = require('moment-timezone'); // Usa moment-timezone para manejar zonas horarias
-const egresoService = require('./egreso.services');
-const ingresoService = require('./ingreso.services');
-const { cierreCaja, abrirCaja } = require('./workday.services');
 const { Op } = require('sequelize')
 const { Caja, Sales, User } = require('../models'); // Asegúrate de importar los modelos correctos
-
+const {findAll} = require ('./gasto.services')
 const {
     getSucursalCuentasOne
 } = require("../services/sucursalCuentas.services");
@@ -119,57 +116,79 @@ const findAllVentas = async (query) => {
         throw new Error("Error al obtener los informes");
     }
 };
+async function obtenerEgresos({ sucursalId, fechaDesde, fechaHasta }) {
+  try {
+    const egresos = await findAll({
+      sucursalId: sucursalId,
+      fechaDesde: fechaDesde,
+      fechaHasta: fechaHasta,
+    });
+
+    if (egresos && Array.isArray(egresos)) {
+      return egresos.reduce((total, egreso) => total + egreso.total, 0);
+    }
+
+    return 0;
+  } catch (error) {
+    console.error('Error al obtener los egresos:', error);
+    return 0;
+  }
+}
 
 async function obtenerArqueoDeCaja(sucursalId) {
-    try {
-      // Obtener todos los registros de caja para la sucursal
-      const registrosCaja = await Caja.findAll({
-        where: { SucursalId: sucursalId },
-        order: [['fecha_apertura', 'DESC']]
-      });
-      if (!registrosCaja || registrosCaja.length === 0) {
-        throw new Error('No se encontraron registros de caja para la sucursal especificada');
-      }
-      const arqueos = await Promise.all(
-        registrosCaja.map(async (registro) => {
-
-          const usuario = await User.findByPk(registro.id_user);
-  
-          const totalVentas = await Sales.sum('amount', {
-            where: {
-              createdAt: {
-                [Op.between]: [registro.fecha_apertura, registro.fecha_cierre || new Date()] 
-              }
-            }
-          });
-          const ventasTotal = totalVentas || 0;
-          const montoTotalCaja = (registro.monto_inicial || 0) + (registro.monto_caja || 0);
-          const diferencia = montoTotalCaja - ventasTotal; 
-          const estado = registro.fecha_cierre ? 'cerrada' : 'abierta';
-  
-          return {
-            fecha_apertura: registro.fecha_apertura,
-            fecha_cierre: registro.fecha_cierre,
-            monto_inicial: registro.monto_inicial,
-            totalVentas: ventasTotal,
-            monto_caja: registro.monto_caja || 0,
-            diferencia: diferencia, 
-            estado: estado, 
-            aperturaUser: usuario ? {
-              id: usuario.id_user,
-              name: usuario.name
-            } : null 
-          };
-        })
-      );
-      return arqueos;
-    } catch (error) {
-      throw new Error(`Error al obtener el informe de arqueo caja: ${error.message}`);
+  try {
+    // Obtener todos los registros de caja para la sucursal
+    const registrosCaja = await Caja.findAll({
+      where: { SucursalId: sucursalId },
+      order: [['fecha_apertura', 'DESC']]
+    });
+    if (!registrosCaja || registrosCaja.length === 0) {
+      throw new Error('No se encontraron registros de caja para la sucursal especificada');
     }
+    const arqueos = await Promise.all(
+      registrosCaja.map(async (registro) => {
+        const usuario = await User.findByPk(registro.id_user);
+        // Obtener el total de ventas entre apertura y cierre de caja
+        const totalVentas = await Sales.sum('amount', {
+          where: {
+            createdAt: {
+              [Op.between]: [registro.fecha_apertura, registro.fecha_cierre || new Date()]
+            }
+          }
+        });
+        // Obtener los egresos realizados en el período de apertura y cierre de caja
+        const totalEgresos = await obtenerEgresos({
+          sucursalId: sucursalId,
+          fechaDesde: registro.fecha_apertura,
+          fechaHasta: registro.fecha_cierre || new Date() 
+        });
+        const ventasCalculadas = (registro.monto_inicial || 0) + totalVentas - totalEgresos;
+        // Calcular la diferencia como ventasCalculadas - (monto_caja - totalEgresos)
+        const diferencia = ventasCalculadas - ((registro.monto_caja || 0) - totalEgresos);
+
+        const estado = registro.fecha_cierre ? 'cerrada' : 'abierta';
+        return {
+          fecha_apertura: registro.fecha_apertura,
+          fecha_cierre: registro.fecha_cierre,
+          monto_inicial: registro.monto_inicial,
+          totalVentas: totalVentas || 0, 
+          monto_caja: registro.monto_caja || 0,
+          totalEgresos: totalEgresos,
+          diferencia: diferencia, 
+          montoFinal: ventasCalculadas,
+          estado: estado,
+          aperturaUser: usuario ? {
+            id: usuario.id_user,
+            name: usuario.name
+          } : null
+        };
+      })
+    );
+    return arqueos;
+  } catch (error) {
+    throw new Error(`Error al obtener el informe de arqueo caja: ${error.message}`);
   }
-  
-
-
+}
 module.exports = {
     informeVentas,
     findAllVentas,
