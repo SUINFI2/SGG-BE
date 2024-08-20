@@ -11,7 +11,7 @@ const sucursalId = joi.string().uuid();
 const limit = joi.number().integer();
 const offset = joi.number().integer();
 const email = joi.string().email();
-
+const idToken = joi.string().max(36).min(36);
 
 const createUsuarioSchema = joi.object({
     usuario: usuario.required(),
@@ -36,6 +36,8 @@ const getUsuarioSchema = joi.object({
     usuarioId: id.required()
 })
 const getUsuariosSchema = joi.object({
+    sucursalId: idToken,
+    negocioId: idToken
 })
 
 module.exports = {

@@ -22,7 +22,7 @@ router.get(
   async (req, res, next) => {
     try {
       console.log(req.query)
-      const usuarios = await findAll();
+      const usuarios = await findAll(req.query);
       res.json(usuarios);
     } catch (err) {
       next(err);

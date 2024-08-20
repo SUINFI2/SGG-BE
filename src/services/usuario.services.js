@@ -1,16 +1,34 @@
 const boom = require('@hapi/boom');
 const models = require('../models');
 const { Association } = require('sequelize');
+const sucursal = require('../models/sucursal');
 
 
-async function findAll() {
-    const response = await models.User.findAll({
+async function findAll(query) {
+
+    let options = {
         include
             : [{
                 model: models.Role,
                 attributes: ['name']
             }]
-    });
+    }
+
+    const {sucursalId, negocioId} = query;
+    if(sucursalId){
+
+        options.where={sucursalId:sucursalId}
+        
+    }else if(negocioId){
+        options.include.push({
+            as: 'sucursalId',
+            model: 'Sucursal',
+            where: {
+                 negocioId :negocioId   
+            }
+        })
+    }
+    const response = await models.User.findAll(options);
     if (!response) {
         throw boom.notFound('Usuario not found');
     }

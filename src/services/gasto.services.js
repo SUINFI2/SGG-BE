@@ -37,7 +37,7 @@ const findAll = async (query) => {
 
   const { negocioId, sucursalId, fechaDesde, fechaHasta} = query;
 
-  const options = `/asientos/findAll/?descripcion=gasto`;
+  let options = `/asientos/findAll/?descripcion=gasto`;
 
   // falta agregar descripcion=venta
   if (negocioId) {
