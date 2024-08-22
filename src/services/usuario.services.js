@@ -4,36 +4,37 @@ const { Association } = require('sequelize');
 const sucursal = require('../models/sucursal');
 
 
-async function findAll(query) {
-
-    let options = {
-        include
-            : [{
-                model: models.Role,
-                attributes: ['name']
-            }]
+async function findAll(query = {}) {
+    const { sucursalId, negocioId } = query;
+    try {
+      const response = await models.User.findAll({
+        include: [
+          {
+            model: models.Sucursal,
+            attributes: ['nombre'],
+            where: sucursalId ? { id: sucursalId } : {},
+            include: [
+              {
+                model: models.Negocio,
+                attributes: ['nombre'],
+                where: negocioId ? { id: negocioId } : {},
+              },
+            ],
+          },
+          {
+            model: models.Role,
+            attributes: ['name'],
+          },
+        ],
+      });
+      return response;
+    } catch (error) {
+      console.error('Error finding users:', error);
+      throw error;
     }
-
-    const {sucursalId, negocioId} = query;
-    if(sucursalId){
-
-        options.where={sucursalId:sucursalId}
-        
-    }else if(negocioId){
-        options.include.push({
-            as: 'sucursalId',
-            model: 'Sucursal',
-            where: {
-                 negocioId :negocioId   
-            }
-        })
-    }
-    const response = await models.User.findAll(options);
-    if (!response) {
-        throw boom.notFound('Usuario not found');
-    }
-    return response;
-}
+  }
+  
+  
 async function findOne(id) {
     try {
         const response = await models.User.findByPk(id, {

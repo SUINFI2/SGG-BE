@@ -5,6 +5,7 @@ const { Association } = require("sequelize");
 const apiInventario = require("../module/apiInventario");
 const apiContable = require("../module/apiContable");
 const service = require("../services/productos.services");
+const { Op } = require('sequelize');
 
 const { findOne: findProducto } = require('../services/productos.services');
 
@@ -106,17 +107,24 @@ async function findOne(id) {
 async function create(data) {
   const { id_mesa, typeShipping, id_user, id_state, sucursalId, clientes, comentario, personas, items } = data;
 
- 
+  // Verificar si es un pedido en mesa (no "Take away" o "Delivery")
   if (typeShipping !== 'Take away' && typeShipping !== 'Delivery') {
+    // Verificar si existe un pedido activo para la mesa
     const existingOrder = await models.Order.findOne({
       where: {
-        id_mesa
-      }
+        id_mesa: id_mesa,
+        id_state: {
+          [Op.ne]: 7, // Verifica que el estado no sea 7 (pedido cerrado)
+        },
+      },
     });
+
     if (existingOrder) {
       throw boom.conflict("Ya existe un pedido activo para esta mesa");
     }
   }
+
+  // Preparar los datos de la orden
   const dataOrder = {
     id_mesa: (typeShipping === 'Take away' || typeShipping === 'Delivery') ? null : id_mesa,
     typeShipping,
@@ -127,17 +135,21 @@ async function create(data) {
     comentario,
     personas
   };
+
+  // Crear la orden
   const response = await models.Order.create(dataOrder);
   if (!response) {
     throw boom.badRequest("Pedido not created");
   }
+
+  // Crear los productos de la orden si se especificaron
   if (items) {
     await Promise.all(
       items.map(async (element) => {
         await models.OrderProduct.create({
           ...element,
           id_order: response.id_order,
-          id_prduct: element.id_product,
+          id_prduct: element.id_product, // Asegúrate de que el campo sea "id_product" si es el correcto
         });
       })
     );
@@ -145,6 +157,7 @@ async function create(data) {
 
   return response;
 }
+
 async function update(pedidoId, changes) {
   const { id_mesa, typeShipping, id_user, id_state, sucursalId, clientes, comentario, personas, items } = changes;
 

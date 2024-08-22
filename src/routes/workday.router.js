@@ -11,9 +11,9 @@ const {
 } = require("../services/workday.services");
 
 router.post("/start", validarJWT, async (req, res, next) => {
-  const { userId } = req.body;
+  const { id_user} = req.body;
   try {
-    const workday = await createWorkday(userId);
+    const workday = await createWorkday(id_user);
     res.status(201).json({
       ok: true,
       message: "Workday started",
@@ -56,9 +56,9 @@ router.post ("/cierreCaja",  async (req, res, next) => {
 
 
 router.post("/end", validarJWT, async (req, res, next) => {
-  const { userId } = req.body;
+  const { id_user } = req.body;
   try {
-    const workday = await endWorkday(userId);
+    const workday = await endWorkday(id_user);
 
     if (!workday) {
       return res.status(400).json({

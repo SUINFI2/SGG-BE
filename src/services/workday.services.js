@@ -1,9 +1,9 @@
 const boom = require("@hapi/boom");
 const models = require("../models");
 const Sequelize = require('sequelize');
-const createWorkday = async (userId) => {
+const createWorkday = async (id_user) => {
   const data = {
-    id_user: userId,
+    id_user: id_user,
     start_time: new Date(),
     end_time: null,
     isActive: true,
@@ -18,18 +18,18 @@ const createWorkday = async (userId) => {
   }
 };
 
-const endWorkday = async (userId) => {
+const endWorkday = async (id_user) => {
   try {
     const workday = await models.Workday.findOne({
       where: {
-        id_user: userId,
+        id_user: id_user,
         isActive: true,
       },
       order: [["start_time", "DESC"]],
     });
 
     if (!workday) {
-      throw new Error(`No active workday found for user ID ${userId}`);
+      throw new Error(`No active workday found for user ID ${id_user}`);
     }
     workday.end_time = new Date();
     workday.isActive = false;

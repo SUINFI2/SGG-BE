@@ -4,7 +4,8 @@ const models = require("../models");
 const Sequelize = require('sequelize');
 // const moment = require('moment');
 // const momentTimezone = require('moment-timezone');
-const moment = require('moment-timezone'); // Usa moment-timezone para manejar zonas horarias
+//const moment = require('moment-timezone'); // Usa moment-timezone para manejar zonas horarias
+const moment = require('moment');
 const { Op } = require('sequelize')
 const { Caja, Sales, User } = require('../models'); // Asegúrate de importar los modelos correctos
 const {findAll} = require ('./gasto.services')
@@ -65,56 +66,58 @@ const informeGastos = async (query) => {
 
 
 const findAllVentas = async (query) => {
-    const { sucursalId, sucursalCuentaId } = query;
+  const { sucursalId, sucursalCuentaId } = query;
 
-    try {
-        // Construir el objeto de condición 'where' para 'Sales'
-        const whereCondition = {};
-        if (sucursalCuentaId) {
-            whereCondition.id_cuenta = sucursalCuentaId;
-        }
+  try {
+      // Construir el objeto de condición 'where' para 'Sales'
+      const whereCondition = {};
+      if (sucursalCuentaId) {
+          whereCondition.id_cuenta = sucursalCuentaId;
+      }
 
-        const response = await models.Sales.findAll({
-            attributes: ['amount', 'id_cuenta'],
-            where: whereCondition,
-            include: [{
-                model: models.Order,
-                attributes: ['typeShipping', 'clientes', 'id_state'],
-                where: {
-                    sucursalId: sucursalId
-                },
-                include: [{
-                    model: models.Table,
-                    attributes: ['id_mesa', 'number']
-                }],
-            }]
-        });
+      const response = await models.Sales.findAll({
+          attributes: ['amount', 'id_cuenta'],
+          where: whereCondition,
+          include: [{
+              model: models.Order,
+              attributes: ['typeShipping', 'clientes', 'id_state'],
+              where: {
+                  sucursalId: sucursalId
+              },
+              include: [{
+                  model: models.Table,
+                  attributes: ['id_mesa', 'number']
+              }],
+          }]
+      });
 
-        if (!response || response.length === 0) {
-            return [];
-        }
+      if (!response || response.length === 0) {
+          return [];
+      }
 
-        await Promise.all(response.map(async (item) => {
-            const cuenta = await getSucursalCuentasOne({
-                sucursalCuentaId: item.id_cuenta,
-                sucursalId: sucursalId,
-                codigo: null
-            });
+      await Promise.all(response.map(async (item) => {
+          const cuenta = await getSucursalCuentasOne({
+              sucursalCuentaId: item.id_cuenta,
+              sucursalId: sucursalId,
+              codigo: null
+          });
 
-            item.dataValues.informe = {
-                nombre: cuenta.cuenta.nombre,
-                tipo: cuenta.cuenta.tipo,
-                codigo: cuenta.cuenta.codigo,
-            };
-        }));
+          item.dataValues.informe = {
+              nombre: cuenta.cuenta.nombre,
+              tipo: cuenta.cuenta.tipo,
+              codigo: cuenta.cuenta.codigo,
+          };
 
-        console.log(response);
-        return response;
+          // Formatear la fecha con Moment.js
+          item.dataValues.fecha = moment(item.createdAt).format('DD/MM/YYYY');
+      }));
 
-    } catch (error) {
-        console.log(error);
-        throw new Error("Error al obtener los informes");
-    }
+      return response;
+
+  } catch (error) {
+      console.log(error);
+      throw new Error("Error al obtener los informes");
+  }
 };
 async function obtenerEgresos({ sucursalId, fechaDesde, fechaHasta }) {
   try {
@@ -142,12 +145,19 @@ async function obtenerArqueoDeCaja(sucursalId) {
       where: { SucursalId: sucursalId },
       order: [['fecha_apertura', 'DESC']]
     });
+
+    // Si no hay registros de caja, retornar 200 OK con un mensaje
     if (!registrosCaja || registrosCaja.length === 0) {
-      throw new Error('No se encontraron registros de caja para la sucursal especificada');
+      return {
+        status: 200,
+        message: 'No hay informes de arqueo de caja para la sucursal especificada.'
+      };
     }
+
     const arqueos = await Promise.all(
       registrosCaja.map(async (registro) => {
         const usuario = await User.findByPk(registro.id_user);
+
         // Obtener el total de ventas entre apertura y cierre de caja
         const totalVentas = await Sales.sum('amount', {
           where: {
@@ -156,17 +166,22 @@ async function obtenerArqueoDeCaja(sucursalId) {
             }
           }
         });
+
         // Obtener los egresos realizados en el período de apertura y cierre de caja
         const totalEgresos = await obtenerEgresos({
           sucursalId: sucursalId,
           fechaDesde: registro.fecha_apertura,
           fechaHasta: registro.fecha_cierre || new Date() 
         });
+
+        // Calcular ventas calculadas usando la fórmula proporcionada
         const ventasCalculadas = (registro.monto_inicial || 0) + totalVentas - totalEgresos;
+
         // Calcular la diferencia como ventasCalculadas - (monto_caja - totalEgresos)
         const diferencia = ventasCalculadas - ((registro.monto_caja || 0) - totalEgresos);
 
         const estado = registro.fecha_cierre ? 'cerrada' : 'abierta';
+
         return {
           fecha_apertura: registro.fecha_apertura,
           fecha_cierre: registro.fecha_cierre,
@@ -174,7 +189,7 @@ async function obtenerArqueoDeCaja(sucursalId) {
           totalVentas: totalVentas || 0, 
           monto_caja: registro.monto_caja || 0,
           totalEgresos: totalEgresos,
-          diferencia: diferencia, 
+          diferencia: diferencia,
           montoFinal: ventasCalculadas,
           estado: estado,
           aperturaUser: usuario ? {
@@ -184,9 +199,13 @@ async function obtenerArqueoDeCaja(sucursalId) {
         };
       })
     );
-    return arqueos;
+
+    return {
+      status: 200,
+      data: arqueos
+    };
   } catch (error) {
-    throw new Error(`Error al obtener el informe de arqueo caja: ${error.message}`);
+    throw new Error(`Error al obtener el informe de arqueo de caja: ${error.message}`);
   }
 }
 module.exports = {

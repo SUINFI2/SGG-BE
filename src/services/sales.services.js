@@ -60,12 +60,13 @@ const createSales = async (data) => {
 
   // Actualizar el estado del pedido y quitar la mesa
   const order = await models.Order.findByPk(id_order);
-  if (order) {
-    await models.Order.update(
-      { id_mesa: null, id_state: 7 },
-      { where: { id_order: id_order } }
-    );
-  }
+if (order) {
+  await models.Order.update(
+    { id_state: 7 }, // Cambia el estado sin modificar el id_mesa
+    { where: { id_order: id_order } }
+  );
+}
+
 
   // Obtener cuenta para el asiento contable
   const cuentaOne = await getSucursalCuentasOne({

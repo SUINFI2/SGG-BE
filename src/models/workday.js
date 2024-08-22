@@ -20,11 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
-    },
-    monto_en_caja: {
-      type: DataTypes.FLOAT, 
-      allowNull: true,
-    },
+    }
   });
 
   return Workday;
