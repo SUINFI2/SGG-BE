@@ -62,11 +62,14 @@ const createSales = async (data) => {
   const order = await models.Order.findByPk(id_order);
 if (order) {
   await models.Order.update(
-    { id_state: 7 }, // Cambia el estado sin modificar el id_mesa
+    {
+      id_state: 7, // Cambia el estado
+      id_mesa: null, // Desasocia la mesa
+      numero_mesa_finalizada: order.id_mesa // Guarda el número de la mesa
+    },
     { where: { id_order: id_order } }
   );
 }
-
 
   // Obtener cuenta para el asiento contable
   const cuentaOne = await getSucursalCuentasOne({

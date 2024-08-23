@@ -43,6 +43,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    numero_mesa_finalizada: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   });
   return Order;
 };

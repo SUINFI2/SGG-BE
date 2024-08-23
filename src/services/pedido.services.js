@@ -38,11 +38,24 @@ async function findAll(query = {}) {
     const updatedResponse = await Promise.all(
       response.map(async (item) => {
         try {
-          // Iterar sobre los productos en el pedido
+          // Verificar si la mesa ha sido desvinculada del pedido
+          if (item.Table === null && item.numero_mesa_finalizada) {
+            // Obtener la información de la mesa finalizada
+            const mesaFinalizada = await models.Table.findOne({
+              attributes: ['id_mesa', 'number'],
+              where: { id_mesa: item.numero_mesa_finalizada }
+            });
+
+            if (mesaFinalizada) {
+              item.dataValues.id_mesa_finalizada = mesaFinalizada.id_mesa;
+              item.dataValues.numero_mesa_finalizada = mesaFinalizada.number;
+            }
+          }
+
+          // Procesar los productos en el pedido
           const orderProducts = await Promise.all(
             item.OrderProducts.map(async (orderProduct) => {
               try {
-                // Convertir id_prduct a número si es necesario
                 const productoId = Number(orderProduct.id_prduct);
                 if (isNaN(productoId)) {
                   throw new Error(`ID del producto no válido: ${orderProduct.id_prduct}`);
@@ -58,7 +71,6 @@ async function findAll(query = {}) {
                 }
               } catch (error) {
                 console.error(`Error al obtener el producto con id ${orderProduct.id_prduct}: ${error.message}`);
-                // Asignar nombre vacío o algún valor por defecto si el producto no se encuentra
                 orderProduct.dataValues.producto = {
                   nombre: "Desconocido",
                 };
@@ -81,6 +93,7 @@ async function findAll(query = {}) {
     throw boom.internal("Error al obtener los pedidos", error);
   }
 }
+
 
 async function findOne(id) {
   const response = await models.Order.findByPk(id, {

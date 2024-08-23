@@ -63,62 +63,77 @@ const informeGastos = async (query) => {
     }
     return rta.data;
 };
-
-
 const findAllVentas = async (query) => {
   const { sucursalId, sucursalCuentaId } = query;
 
   try {
-      // Construir el objeto de condición 'where' para 'Sales'
-      const whereCondition = {};
-      if (sucursalCuentaId) {
-          whereCondition.id_cuenta = sucursalCuentaId;
-      }
+    const whereCondition = {};
+    if (sucursalCuentaId) {
+      whereCondition.id_cuenta = sucursalCuentaId;
+    }
 
-      const response = await models.Sales.findAll({
-          attributes: ['amount', 'id_cuenta'],
-          where: whereCondition,
-          include: [{
-              model: models.Order,
-              attributes: ['typeShipping', 'clientes', 'id_state'],
-              where: {
-                  sucursalId: sucursalId
-              },
-              include: [{
-                  model: models.Table,
-                  attributes: ['id_mesa', 'number']
-              }],
-          }]
+    const response = await models.Sales.findAll({
+      attributes: ['amount', 'id_cuenta', 'createdAt'],
+      where: whereCondition,
+      include: [{
+        model: models.Order,
+        attributes: ['typeShipping', 'clientes', 'id_state', 'numero_mesa_finalizada'],
+        where: {
+          sucursalId: sucursalId
+        },
+        include: [{
+          model: models.Table,
+          attributes: ['id_mesa', 'number']
+        }],
+      }]
+    });
+
+    if (!response || response.length === 0) {
+      return [];
+    }
+
+    await Promise.all(response.map(async (item) => {
+      const cuenta = await getSucursalCuentasOne({
+        sucursalCuentaId: item.id_cuenta,
+        sucursalId: sucursalId,
+        codigo: null
       });
 
-      if (!response || response.length === 0) {
-          return [];
+      item.dataValues.informe = {
+        nombre: cuenta.cuenta.nombre,
+        tipo: cuenta.cuenta.tipo,
+        codigo: cuenta.cuenta.codigo,
+      };
+
+      // Formatear la fecha con Moment.js
+      item.dataValues.fecha = moment(item.createdAt).format('DD/MM/YYYY');
+
+      // Asignar el número de mesa en caso de que Table sea null
+      if (item.Order && item.Order.Table === null && item.Order.numero_mesa_finalizada) {
+        const mesaFinalizada = await models.Table.findOne({
+          attributes: ['number'],
+          where: { id_mesa: item.Order.numero_mesa_finalizada }
+        });
+        item.dataValues.id_mesa_finalizada = item.Order.numero_mesa_finalizada;
+        item.dataValues.numero_mesa = mesaFinalizada ? mesaFinalizada.number : null;
+
+        // Eliminar numero_mesa_finalizada de la respuesta
+        delete item.Order.dataValues.numero_mesa_finalizada;
+      } else if (item.Order && item.Order.Table) {
+        item.dataValues.id_mesa_finalizada = item.Order.Table.id_mesa;
+        item.dataValues.numero_mesa = item.Order.Table.number;
       }
+    }));
 
-      await Promise.all(response.map(async (item) => {
-          const cuenta = await getSucursalCuentasOne({
-              sucursalCuentaId: item.id_cuenta,
-              sucursalId: sucursalId,
-              codigo: null
-          });
-
-          item.dataValues.informe = {
-              nombre: cuenta.cuenta.nombre,
-              tipo: cuenta.cuenta.tipo,
-              codigo: cuenta.cuenta.codigo,
-          };
-
-          // Formatear la fecha con Moment.js
-          item.dataValues.fecha = moment(item.createdAt).format('DD/MM/YYYY');
-      }));
-
-      return response;
+    return response;
 
   } catch (error) {
-      console.log(error);
-      throw new Error("Error al obtener los informes");
+    console.log(error);
+    throw new Error("Error al obtener los informes");
   }
 };
+
+
 async function obtenerEgresos({ sucursalId, fechaDesde, fechaHasta }) {
   try {
     const egresos = await findAll({
