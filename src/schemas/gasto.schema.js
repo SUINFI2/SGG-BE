@@ -8,13 +8,12 @@ const date = joi.date();
 
 const createGastoSchema = joi.object({
   userId: id.required(),
-  sucursalId: text.required(),
   medioPago: id.required(), //cuentaSucursalId
   proveedor: id.required(), //cuentaSucursalId
   importe: number.required(),
-  categoria: text,
-  tipo: text,
-  comprobante: text,
+  categoria: text.required(),
+  tipo: text.required(),
+  comprobante: text.required(),
 });
 
 

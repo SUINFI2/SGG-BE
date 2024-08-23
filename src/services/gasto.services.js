@@ -4,44 +4,35 @@ const apiContable = require("../module/apiContable");
 const models = require("../models");
 
 const create = async (data) => {
-console.log(data)
-  const gasto = await models.Gasto.create({
-    userId: data.userId,
-    codigoAsiento: "prueba",
-    categoria: "prueba",
-    tipo: "prueba",
-    comprobante: "prueba"
-  });
-  if(!gasto){throw boom.notAcceptable('Gasto no creado')}
-  return gasto;
-  /*
-  const array = data.cuentasOrigen.map((item) => ({
-    cuentaSucursalId: Number(item.id_cuenta),
-    monto: Number(item.amount),
+
+  const array = [{
+    cuentaSucursalId: data.medioPago,
+    monto: data.importe,
     tipo: "haber",
-  }));
-
-  array.push({
-    cuentaSucursalId: data.cuentaDestino.id_cuenta,
-    monto: Number(data.cuentaDestino.amount),
+    descripcion: 'gasto'
+  },{
+    cuentaSucursalId: data.proveedor,
+    monto: data.importe,
     tipo: "debe",
-  });
-
-
-  const arrayAsiento = array.map((item) => {
-    return {
-      ...item,
-      descripcion: "gasto",
-    };
-  });
-  const rta = await apiContable.post(`/asientos/`, arrayAsiento);
+    descripcion: 'gasto'
+  }];
+  const rta = await apiContable.post(`/asientos/`, array);
   if (rta.status != 200) {
     throw boom.notFound(
       "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
     );
   }
-  return rta.data;*/
 
+  const gasto = await models.Gasto.create({
+    userId: data.userId,
+    codigoAsiento: rta.data.data.codigo,
+    categoria: data.categoria,
+    tipo: data.tipo,
+    comprobante: data.comprobante
+  });
+  if(!gasto){throw boom.notAcceptable('Gasto no creado')}
+  return gasto;
+ 
 }
 
 const findAll = async (query) => {
