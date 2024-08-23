@@ -5,21 +5,16 @@ const text = joi.string();
 const number = joi.number().positive();
 const date = joi.date();
 
-const cuentaDestino = joi.object({
 
-});
 const createGastoSchema = joi.object({
+  userId: id.required(),
   sucursalId: text.required(),
-  cuentasOrigen: joi.array().items(
-    joi.object({
-      id_cuenta: id.required(),
-      amount: number.required(),
-    })
-  ),
-  cuentaDestino: joi.object({
-      id_cuenta: id.required(),
-      amount: number.required(),
-    })
+  medioPago: id.required(), //cuentaSucursalId
+  proveedor: id.required(), //cuentaSucursalId
+  importe: number.required(),
+  categoria: text,
+  tipo: text,
+  comprobante: text,
 });
 
 

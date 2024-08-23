@@ -1,9 +1,20 @@
 
 const boom = require("@hapi/boom");
 const apiContable = require("../module/apiContable");
+const models = require("../models");
 
 const create = async (data) => {
-
+console.log(data)
+  const gasto = await models.Gasto.create({
+    userId: data.userId,
+    codigoAsiento: "prueba",
+    categoria: "prueba",
+    tipo: "prueba",
+    comprobante: "prueba"
+  });
+  if(!gasto){throw boom.notAcceptable('Gasto no creado')}
+  return gasto;
+  /*
   const array = data.cuentasOrigen.map((item) => ({
     cuentaSucursalId: Number(item.id_cuenta),
     monto: Number(item.amount),
@@ -29,7 +40,7 @@ const create = async (data) => {
       "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
     );
   }
-  return rta.data;
+  return rta.data;*/
 
 }
 

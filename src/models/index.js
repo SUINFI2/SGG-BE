@@ -13,6 +13,8 @@ const Negocio = require("./negocio")(sequelize, DataTypes);
 const Sucursal = require("./sucursal")(sequelize, DataTypes);
 const Sales = require("./sales")(sequelize, DataTypes);
 const Caja = require ("./caja")(sequelize, DataTypes);
+const Gasto = require ("./gasto")(sequelize, DataTypes);
+
 
 // User and Role relationship
 User.belongsTo(Role, { foreignKey: "id_rol" });
@@ -68,6 +70,8 @@ User.hasMany(Caja,{foreignKey: 'id_user'});
 Caja.belongsTo(Sucursal, {foreignKey:"SucursalId"})
 Sucursal.hasMany(Caja,{foreignKey:"SucursalId"})
 
+Gasto.belongsTo(User, {foreignKey:"userId"})
+
 
 module.exports = {
   sequelize,
@@ -81,5 +85,6 @@ module.exports = {
   Negocio,
   Sucursal,
   Sales,
-  Caja
+  Caja,
+  Gasto
 };

@@ -16,6 +16,7 @@ router.post("/",
     validatorHandler(createGastoSchema, 'body'),
     async (req, res) => {
         try {
+            console.log('hola entre en router')
             const body = req.body;
             const gasto = await create(body);
             res.status(200).json({
