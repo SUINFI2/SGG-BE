@@ -63,9 +63,9 @@ const createSales = async (data) => {
 if (order) {
   await models.Order.update(
     {
-      id_state: 7, // Cambia el estado
-      id_mesa: null, // Desasocia la mesa
-      numero_mesa_finalizada: order.id_mesa // Guarda el número de la mesa
+      id_state: 7, 
+      id_mesa: null, 
+      numero_mesa_finalizada: order.id_mesa 
     },
     { where: { id_order: id_order } }
   );

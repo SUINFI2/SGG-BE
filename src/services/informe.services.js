@@ -117,7 +117,6 @@ const findAllVentas = async (query) => {
         item.dataValues.id_mesa_finalizada = item.Order.numero_mesa_finalizada;
         item.dataValues.numero_mesa = mesaFinalizada ? mesaFinalizada.number : null;
 
-        // Eliminar numero_mesa_finalizada de la respuesta
         delete item.Order.dataValues.numero_mesa_finalizada;
       } else if (item.Order && item.Order.Table) {
         item.dataValues.id_mesa_finalizada = item.Order.Table.id_mesa;

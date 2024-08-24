@@ -38,21 +38,16 @@ async function findAll(query = {}) {
     const updatedResponse = await Promise.all(
       response.map(async (item) => {
         try {
-          // Verificar si la mesa ha sido desvinculada del pedido
           if (item.Table === null && item.numero_mesa_finalizada) {
-            // Obtener la información de la mesa finalizada
             const mesaFinalizada = await models.Table.findOne({
               attributes: ['id_mesa', 'number'],
               where: { id_mesa: item.numero_mesa_finalizada }
             });
-
             if (mesaFinalizada) {
               item.dataValues.id_mesa_finalizada = mesaFinalizada.id_mesa;
               item.dataValues.numero_mesa_finalizada = mesaFinalizada.number;
             }
           }
-
-          // Procesar los productos en el pedido
           const orderProducts = await Promise.all(
             item.OrderProducts.map(async (orderProduct) => {
               try {
@@ -70,7 +65,6 @@ async function findAll(query = {}) {
                   throw new Error('Nombre del producto no encontrado en la respuesta');
                 }
               } catch (error) {
-                console.error(`Error al obtener el producto con id ${orderProduct.id_prduct}: ${error.message}`);
                 orderProduct.dataValues.producto = {
                   nombre: "Desconocido",
                 };
@@ -81,15 +75,12 @@ async function findAll(query = {}) {
 
           item.dataValues.OrderProducts = orderProducts;
         } catch (error) {
-          console.error(`Error al procesar los productos del pedido con id ${item.id}: ${error.message}`);
         }
         return item;
       })
     );
-
     return updatedResponse;
   } catch (error) {
-    console.error(`Error en findAll: ${error.message}`);
     throw boom.internal("Error al obtener los pedidos", error);
   }
 }
