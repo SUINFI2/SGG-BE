@@ -16,7 +16,7 @@ const userId = joi.number().integer();
 const createNegocioSchema = joi.object({
    nombre: nombre.required(),
    direccion: direccion.required(),
-   userId: userId.required()
+   userId: userId
 })
 const updateNegocioSchema = joi.object({
     nombre: nombre,
