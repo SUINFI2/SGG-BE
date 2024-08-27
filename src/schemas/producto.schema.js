@@ -46,11 +46,17 @@ const updatePorMargenProductoSchema = joi.object({
   margen: number.required(),
   categoriaId: id.required()
 });
+const updatePorMargenProductoSeleccionadosSchema = joi.object({
+  sucursalId: text,
+  margen: number.required(),
+  productos: joi.array().items(joi.number().integer()),
+});
 
 module.exports = {
   createProductoSchema,
   updateProductoSchema,
   getProductoSchema,
   queryProductoSchema,
-  updatePorMargenProductoSchema
+  updatePorMargenProductoSchema,
+  updatePorMargenProductoSeleccionadosSchema
 };

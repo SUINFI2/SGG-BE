@@ -38,7 +38,7 @@ const getCuenta = async (id) => {
 };
 
 const createCuenta = async (body) => {
-  const rta = await apiContable.get(`/cuentas/`, body);
+  const rta = await apiContable.post(`/sucursales-cuentas/`, body);
 
   if (rta.status != 200) {
     throw boom.notFound(

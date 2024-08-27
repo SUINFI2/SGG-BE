@@ -193,6 +193,21 @@ async function updatePorMargenProduct(body) {
   }
   return newProds.data.data;
 }
+async function updatePorMargenProductSeleccionados(body) {
+  console.log(body);
+  const newProds = await apiInventario.patch(
+    `/productos/subirMargen/seleccionados`,
+    body
+  );
+ 
+  if (newProds.status != 200) {
+    throw boom.notFound(
+      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+      // cuando notifiquen de estos errores es ESENCIAL que ingresen a la terminar del server y registrar presisamente xq fue el error
+    );
+  }
+  return newProds.data.data;
+}
 
 async function deleteProduct(id) {
   const producto = await apiInventario.delete(`/productos/${id}`);
@@ -214,4 +229,5 @@ module.exports = {
   deleteProduct,
   findOne,
   updatePorMargenProduct,
+  updatePorMargenProductSeleccionados
 };

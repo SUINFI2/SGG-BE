@@ -8,7 +8,8 @@ const {
   updateProduct,
   deleteProduct,
   findOne,
-  updatePorMargenProduct
+  updatePorMargenProduct,
+  updatePorMargenProductSeleccionados
 } = require("../services/productos.services");
 
 const {
@@ -16,7 +17,8 @@ const {
   updateProductoSchema,
   getProductoSchema,
   queryProductoSchema,
-  updatePorMargenProductoSchema
+  updatePorMargenProductoSchema,
+  updatePorMargenProductoSeleccionadosSchema
 } = require("../schemas/producto.schema");
 
 //obtener prodcutos
@@ -107,6 +109,23 @@ router.patch(
     try {
       const body = req.body;
       const producto = await updatePorMargenProduct(body);
+      res.json(producto)
+    } catch (error) {
+      res.status(500).json({
+        message: "Error al actualizar el producto",
+        error: error.message,
+      });
+    }
+  }
+);
+//actualizar productos
+router.patch(
+  "/margen/seleccionados",
+  validatorHandler(updatePorMargenProductoSeleccionadosSchema, "body"),
+  async (req, res) => {
+    try {
+      const body = req.body;
+      const producto = await updatePorMargenProductSeleccionados(body);
       res.json(producto)
     } catch (error) {
       res.status(500).json({

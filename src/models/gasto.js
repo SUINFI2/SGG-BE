@@ -2,6 +2,7 @@
 module.exports = (Sequelize, DataTypes) => {
  
   const Gasto = Sequelize.define("Gasto", {
+    
     id: {
       allowNull: false,
       autoIncrement: true,
