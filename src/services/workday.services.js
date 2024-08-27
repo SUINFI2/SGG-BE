@@ -1,11 +1,12 @@
 const boom = require("@hapi/boom");
 const models = require("../models");
 const Sequelize = require('sequelize');
+const moment = require('moment-timezone');
+
 const createWorkday = async (id_user) => {
   const data = {
     id_user: id_user,
-    start_time: new Date(),
-    end_time: null,
+    start_time: moment().tz('America/Argentina/Buenos_Aires').format('YYYY-MM-DD HH:mm:ss'),
     isActive: true,
   };
 
@@ -13,7 +14,6 @@ const createWorkday = async (id_user) => {
     const workday = await models.Workday.create(data);
     return workday;
   } catch (error) {
-    console.error("Error creating workday:", error);
     throw error;
   }
 };

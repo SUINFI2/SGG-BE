@@ -32,9 +32,14 @@ async function findAll(query = {}) {
     });
 
     if (!response || response.length === 0) {
-      throw boom.notFound("Pedidos no encontrados");
+      // Devuelve un 200 OK con un mensaje personalizado cuando no hay pedidos
+      return {
+        statusCode: 200,
+        message: "No hay pedidos disponibles",
+      };
     }
 
+    // Continúa con el procesamiento si se encontraron pedidos
     const updatedResponse = await Promise.all(
       response.map(async (item) => {
         try {

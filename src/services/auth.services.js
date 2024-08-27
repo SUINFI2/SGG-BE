@@ -6,6 +6,8 @@ const { generateToken } = require("../helpers/jwt");
 // Función para registrar un usuario
 async function register(user) {
   const { email, password, name, id_rol, active, sucursalId } = user;
+
+  // Buscar la sucursal
   const sucursal = await Sucursal.findOne({
     where: { id: sucursalId },
   });
@@ -14,8 +16,10 @@ async function register(user) {
     throw new Error("Sucursal no encontrada");
   }
 
+  // Obtener el ID del negocio
   const negocioId = sucursal.negocioId;
 
+  // Buscar el negocio
   const negocio = await Negocio.findOne({
     where: { id: negocioId },
   });
@@ -24,7 +28,9 @@ async function register(user) {
     throw new Error("Negocio no encontrado");
   }
 
-  const generatedEmail = `${name}@${negocio.nombre.replace(/\s/g, '')}.com`;
+  // Generar el nuevo email reemplazando el dominio por el nombre del negocio
+  const [nombreUsuario] = email.split('@'); 
+  const generatedEmail = `${nombreUsuario}@${negocio.nombre.replace(/\s/g, '')}.com`;
 
   const existingUser = await User.findOne({
     where: {
@@ -36,7 +42,6 @@ async function register(user) {
     throw new Error("El usuario ya existe");
   }
 
-  // Crear un nuevo usuario en la base de datos
   const salt = bcrypt.genSaltSync();
 
   const newUser = await User.create({
@@ -48,10 +53,8 @@ async function register(user) {
     sucursalId
   });
 
-  // Devolver el usuario creado
   return { user: newUser };
 }
-
 
 // Función para iniciar sesión
 async function login(user) {
