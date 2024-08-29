@@ -37,7 +37,18 @@ async function getSucursalCuentasOne({ sucursalId, codigo, sucursalCuentaId }) {
     return response.data
   }
 }
+async function createSucursalCuentas(body) {
+  const response = await apiContable.post(
+    `/sucursales-cuentas/`,body
+  );
+
+  if (!response.status!=200) {
+    throw boom.notFound("Sucursal not found");
+  }
+  return response.data;
+}
 module.exports = {
   getSucursalCuentas,
   getSucursalCuentasOne,
+  createSucursalCuentas
 };
