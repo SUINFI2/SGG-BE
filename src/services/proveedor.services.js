@@ -77,7 +77,16 @@ const createProveedor = async (data) => {
 
   }
 
-  return { proveedor: proveedor.data.data, perfil: perfil.data.data };
+  return { 
+     nombre: perfil.data.data.nombre,
+     apellido: perfil.data.data.apellido,
+     createdAt: perfil.data.data.createdAt,
+     cedula: perfil.data.data.cedula,
+     tipCedula: perfil.data.data.tipCedula,
+     razonSocial: perfil.data.data.razonSocial,
+     telefono: perfil.data.data.telefono,
+     email: perfil.data.data.email,
+    };
 }
 
 const EditProveedor = async (id, body) => {
