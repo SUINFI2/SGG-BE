@@ -9,12 +9,15 @@ const create = async (data) => {
     cuentaSucursalId: data.medioPago,
     monto: data.importe,
     tipo: "haber",
-    descripcion: 'gasto'
+    descripcion: 'gasto',
+    categoria: data.categoria
   },{
     cuentaSucursalId: data.proveedor,
     monto: data.importe,
     tipo: "debe",
-    descripcion: 'gasto'
+    descripcion: 'gasto',
+    categoria: data.categoria
+
   }];
   const rta = await apiContable.post(`/asientos/`, array);
   if (rta.status != 200) {
@@ -37,7 +40,7 @@ const create = async (data) => {
 
 const findAll = async (query) => {
 
-  const { negocioId, sucursalId, fechaDesde, fechaHasta} = query;
+  const { negocioId, sucursalId, fechaDesde, fechaHasta, categoria} = query;
 
   let options = `/asientos/findAll/?descripcion=gasto`;
 
@@ -53,6 +56,9 @@ const findAll = async (query) => {
   }
   if (fechaHasta) {
     options += `&fechaHasta=${fechaHasta}`
+  }
+  if (categoria) {
+    options += `&categoria=${categoria}`
   }
   const rta = await apiContable.get(options);
   if (rta.status != 200) {

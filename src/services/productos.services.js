@@ -19,6 +19,8 @@ const findAll = async (query) => {
       "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
     );
   }
+
+  return productos.data;
   const arrayProducts = [];
   await productos.data.forEach(async (item) => {
     arrayProducts.push({

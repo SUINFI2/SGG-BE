@@ -21,6 +21,7 @@ const informeRouter = require("./informe.router");
 const salesRouter = require("./sales.router");
 const sucursalesCuentasRouter = require("./sucursaleCuentas.router");
 const gastoRouter = require("./gasto.router");
+const categoriaGastoRouter = require("./categoriaGasto.router");
 
 function routes(app) {
   const router = express.Router();
@@ -47,6 +48,8 @@ function routes(app) {
   router.use("/gastos", gastoRouter);
 
   router.use("/sucursales-cuentas", sucursalesCuentasRouter);
+  router.use("/categoriaGastos", categoriaGastoRouter);
+
 }
 
 module.exports = routes;
