@@ -2,6 +2,7 @@ const boom = require('@hapi/boom');
 const models = require('../models');
 const { Association } = require('sequelize');
 const sucursal = require('../models/sucursal');
+const bcrypt = require("bcrypt");
 
 
 async function findAll(query = {}) {
@@ -66,6 +67,11 @@ async function create(data) {
 
 async function update(id, body) {
     console.log(id, body)
+    const {password} = body;
+    if(password){
+      const salt = bcrypt.genSaltSync();
+      body.password = bcrypt.hashSync(password, salt);
+    }
     const response = await models.User.update(body, {
         where: { id_user: id }
     });

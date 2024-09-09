@@ -14,6 +14,7 @@ router.post(
   validatorHandler(registerSchema, "body"),
   async (req, res, next) => {
     try {
+      console.log('Hol')
       const body = req.body;
       const newUser = await register(body);
       res.status(201).json({
