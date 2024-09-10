@@ -16,6 +16,14 @@ const createGastoSchema = joi.object({
   comprobante: text.required(),
 });
 
+const updateGastoSchema = joi.object({
+  categoria: text,
+  tipo: text,
+  comprobante: text,
+});
+const getGastoSchema = joi.object({
+  codigo: text.required(),
+});
 
 const queryGastoSchema = joi.object({
   negocioId: text,
@@ -24,7 +32,12 @@ const queryGastoSchema = joi.object({
   fechaHasta: date,
   temporalidad:  joi.string().valid('day', 'week', 'month')
 });
+
+
+
 module.exports = {
   createGastoSchema,
-  queryGastoSchema
+  queryGastoSchema,
+  getGastoSchema,
+  updateGastoSchema
 };

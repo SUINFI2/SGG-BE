@@ -5,10 +5,12 @@ const { validarJWT } = require("../middleware/validateToken");
 
 const {
     create,
-    findAll
+    findAll,
+    deleteGasto,
+    update
 } = require("../services/gasto.services");
 
-const {createGastoSchema,queryGastoSchema} = require('../schemas/gasto.schema');
+const {createGastoSchema,queryGastoSchema, getGastoSchema, updateGastoSchema} = require('../schemas/gasto.schema');
 
 
 //create
@@ -45,5 +47,36 @@ router.post("/",
                 });
             }
         });
+
+    router.patch("/:codigo",
+        validatorHandler(getGastoSchema, 'params'),
+            validatorHandler(updateGastoSchema, 'body'),
+            async (req, res) => {
+                try {
+                    const {codigo} = req.params;
+                    const gastos = await update(codigo, req.body);
+                    res.status(200).json(gastos);
+                } catch (error) {
+                    res.status(500).json({
+                        message: "Error al crear el gasto",
+                        error: error.message,
+                    });
+                }
+            });
+
+    router.delete("/:codigo",
+                validatorHandler(getGastoSchema, 'params'),
+                async (req, res) => {
+                    try {
+                        const {codigo} = req.params;
+                        const gastos = await deleteGasto(codigo);
+                        res.status(200).json(gastos);
+                    } catch (error) {
+                        res.status(500).json({
+                            message: "Error al crear el gasto",
+                            error: error.message,
+                        });
+                    }
+                });
 
 module.exports = router;

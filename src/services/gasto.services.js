@@ -70,7 +70,28 @@ const findAll = async (query) => {
 
 }
 
+const deleteGasto = async (codigo) => {
+  const rta = await apiContable.delete(`/asientos/${codigo}`);
+  if (rta.status != 200) {
+    throw boom.notFound(
+      "Ups.... Algo no salio bien!  Notifica al backend encargado la url endpoint"
+    );
+  }
+  const gasto = await models.Gasto.findOne({
+    where:{codigoAsiento: codigo}
+  });
+  if(!gasto){throw boom.notAcceptable('Gasto no creado')}
+  return gasto;
+ 
+}
+
+const update = async (codigo, data) => {
+
+
+}
 module.exports = {
   create,
-  findAll
+  findAll,
+  deleteGasto,
+  update
 };
